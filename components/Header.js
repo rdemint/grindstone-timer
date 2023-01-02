@@ -22,7 +22,7 @@ export default function Header() {
     ]
 
 return(
-    <div className="flex bg-slate-900 shadow-md shadow-slate-700 items-center justify-between p-6">
+    <div className="flex bg-slate-900 shadow-md shadow-slate-200 items-center justify-between p-6">
         <Link href="/#" className="text-slate-200">hangboard timer</Link>
         <section id="desktop-menu" className='hidden md:block'>
             {navList.map((item)=> (

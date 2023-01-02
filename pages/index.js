@@ -1,6 +1,6 @@
 import Head from 'next/head'
-import Image from 'next/image'
-import styles from '../styles/Home.module.css'
+import Hero from '../components/Hero'
+import Timer from '../components/Timer'
 
 export default function Home() {
   return (
@@ -12,9 +12,8 @@ export default function Home() {
       </Head>
 
       <main className="bg-slate-900">
-        <h1 className="text-2xl text-slate-200">
-          A hangboard timer.
-        </h1>
+        <Hero />
+        <Timer />
       </main>
     </div>
   )
