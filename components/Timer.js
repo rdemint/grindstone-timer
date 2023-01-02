@@ -14,9 +14,10 @@ export default function Timer() {
         setTime(10)
     }
 
+    
     useEffect(()=> {
         let interval = null
-        if (isActive && isPaused == false) {
+        if (isActive && isPaused == false && time > 0) {
             interval = setInterval(()=> setTime(time-1), 1000)
         }
         return () => clearInterval(interval)
