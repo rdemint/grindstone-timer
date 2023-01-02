@@ -26,7 +26,7 @@ export default function Timer() {
     return (
         <div className="flex flex-col justify-center items-center w-full">
 
-                <div className="flex flex-col bg-slate-700 h-24 border border-slate-600 rounded max-w-5xl border-white">
+                <div className="flex flex-col bg-slate-700 border border-slate-600 rounded max-w-5xl border-white p-8">
                     <div className="h-24 bg-slate-700 justify-center text-center flex space-x-4">
                         <div>{time}</div>
                     </div>
