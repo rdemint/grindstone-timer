@@ -8,7 +8,7 @@ export default function Home() {
       <Head>
         <title>Grindstone Timer</title>
         <meta name="description" content="A hangboarding interval timer" />
-        <link rel="icon" href="/favicon.ico" />
+        <link rel="icon" href="/raines_fav.png" />
       </Head>
 
       <main className="bg-slate-900">
