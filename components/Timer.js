@@ -11,66 +11,81 @@ export default function Timer() {
         restInterval: 90,
         numIntervals: 10
     })
+//refactor
+    const timerStatuses = {reset: 'reset', start: 'start', pause: 'pause', complete: 'complete'}
+    const intervalTypes = {restInterval: 'restInterval', workInterval: 'workInterval'}
 
-    
-    let [currentInterval, setCurrentInterval] = useState(1)
+    const [timer, setTimer] = useState({
+        status: timerStatuses.reset,
+        currentInterval: 1,
+        currentIntervalType: intervalTypes.restInterval,
+        // time: 0
+    })
+//refactor 
     
     let [time, setTime] = useState(workoutConfig.workInterval)
     
-    const [timerIsActive, setTimerActive] = useState(false)
-    const [timerisPaused, setTimerPaused] = useState(false)
-    const [workoutIsComplete, setWorkoutComplete] = useState(false)
-
-    let [isResting, setIsResting] = useState(true)
 
     const handleStartTimer = () => {
-        setTimerActive(true)
-        setTimerPaused(false)
-        setIsResting(false)
+        setTimer({
+            ...timer,
+            status: timerStatuses.start,
+        })
 
     }
 
+    const handlePauseTimer = () => {
+        setTimer({
+            ...timer,
+            status: timerStatuses.pause
+        })
+    }
+
     const handleResetTimer = () => {
-        setWorkoutComplete(false)
-        setTimerActive(false)
-        setIsResting(true)
-        setCurrentInterval(0)
-        setTimerPaused(false)
+        setTimer({
+            ...timer,
+            status: timerStatuses.reset,
+            currentInterval: 1,
+            currentIntervalType: intervalTypes.workInterval,
+        })
+        
         setTime(workoutConfig.workInterval)
     }
 
     
     const completeInterval = () => {
-        if(!isResting && timerIsActive) {
-            setTimerToRestInterval()
-            
-        } 
-        else if(isResting && timerIsActive) {
-               setTimerToWorkInterval() 
-            }        
-    }
-
-    const setTimerToWorkInterval = () => {
-        if(currentInterval < workoutConfig.numIntervals) {
-            setCurrentInterval(currentInterval+1)
-            setTime(workoutConfig.workInterval)
-            setIsResting(false)
-        }    
-        else if(currentInterval == workoutConfig.numIntervals) {
-            setWorkoutComplete(true)            
-        }
-    }
-
-    const setTimerToRestInterval = () => {
+        
+        if(timer.currentIntervalType == intervalTypes.workInterval) {
+            setTimer({
+                ...timer,
+                currentIntervalType: intervalTypes.restInterval
+            })
             setTime(workoutConfig.restInterval)
-            setIsResting(true)
+        } 
+        else if(timer.currentIntervalType === intervalTypes.restInterval) {
+            if(timer.currentInterval < workoutConfig.numIntervals) {
+                setTimer(
+                    {
+                        ...timer, 
+                        currentInterval: timer.currentInterval+1,
+                        currentIntervalType: intervalTypes.workInterval
+                    })
+                setTime(workoutConfig.workInterval)
+            }    
+            else if(timer.currentInterval === workoutConfig.numIntervals) {
+                setTimer({
+                    ...timer,
+                    status: timerStatuses.complete
+                })
+            }
+        }        
     }
 
     const getTimerTheme = () => {
-        if(!isResting && !workoutIsComplete) {
+        if(timer.status === timerStatuses.start && timer.currentIntervalType === intervalTypes.workInterval) {
             return 'bg-green-700'
         }
-        else if(workoutIsComplete) {
+        else if(timer.status === timerStatuses.complete) {
             return 'bg-yellow-500'
         }
         else {
@@ -82,10 +97,9 @@ export default function Timer() {
     
     useEffect(()=> {
         let interval = null
-        if (timerIsActive && timerisPaused == false && time > 0) {
+        if (timer.status === timerStatuses.start && time > 0) {
             interval = setInterval(()=> setTime(time-1), 1000)
         }
-        // else if time = 0 or < 0 then need to bump interval and switch between rest or active
         else if (time <= 0) {
            completeInterval()
         }
@@ -98,17 +112,17 @@ export default function Timer() {
                 <div className={`flex flex-col ${ getTimerTheme() } justify-between rounded max-w-5xl p-8 h-96`}>
                 <div className="flex justify-center text-center space-x-4">
                         <div>INTERVAL</div>
-                        <div>{currentInterval} / {workoutConfig.numIntervals}</div>
+                        <div>{timer.currentInterval} / {workoutConfig.numIntervals}</div>
                     </div>
                     <div className="justify-center items-center text-center flex space-x-4 text-6xl h-24">
                         {
-                            isResting && timerIsActive ? <div className="text-slate-300">REST:</div> : <div>WORK:</div>
+                            timer.currentIntervalType === intervalTypes.restInterval ? <div className="text-slate-300">REST:</div> : <div>WORK:</div>
                         }
                         <div className="text-6xl">{time}</div>
                     </div>
                     <div className="flex items-center justify-center space-x-4 text-slate-100">
                         <button onClick={()=> handleStartTimer()} id="startTimer"  className="bg-green-500  rounded p-2 w-16">START</button>
-                        <button onClick={()=> setTimerPaused(true)} id="pauseTimer" className="bg-sky-600  rounded p-2 w-16">PAUSE</button>
+                        <button onClick={()=> handlePauseTimer()} id="pauseTimer" className="bg-sky-600  rounded p-2 w-16">PAUSE</button>
                         <button onClick={()=> handleResetTimer()} id="resetTimer" className="bg-pink-600 rounded p-2 w-16">RESET</button>
                     </div>
                 </div>
