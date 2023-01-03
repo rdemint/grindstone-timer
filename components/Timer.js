@@ -11,7 +11,7 @@ export default function Timer() {
         restInterval: 90,
         numIntervals: 10
     })
-//refactor
+
     const timerStatuses = {reset: 'reset', start: 'start', pause: 'pause', complete: 'complete'}
     const intervalTypes = {restInterval: 'restInterval', workInterval: 'workInterval'}
 
@@ -19,9 +19,8 @@ export default function Timer() {
         status: timerStatuses.reset,
         currentInterval: 1,
         currentIntervalType: intervalTypes.restInterval,
-        // time: 0
+
     })
-//refactor 
     
     let [time, setTime] = useState(workoutConfig.workInterval)
     
