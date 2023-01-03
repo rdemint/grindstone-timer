@@ -79,7 +79,7 @@ export default function Timer() {
             return 'bg-yellow-500'
         }
         else {
-            return 'bg-slate-700'
+            return 'bg-slate-800'
         }
 
     }
@@ -100,36 +100,35 @@ export default function Timer() {
 
     return (
         <div className="flex flex-col space-y-6 justify-center items-center w-full">
-
-                <div className={`flex flex-col ${ getTimerTheme() } rounded max-w-5xl p-8`}>
-                <div className="justify-center text-center flex space-x-4">
-                        <div>Current interval</div>
+                <div className={`flex flex-col ${ getTimerTheme() } justify-between rounded max-w-5xl p-8 h-96`}>
+                <div className="flex justify-center text-center space-x-4">
+                        <div>INTERVAL</div>
                         <div>{currentInterval} / {intervals}</div>
                     </div>
-                    <div className="justify-center items-center text-center flex space-x-4 text-4xl h-24">
+                    <div className="justify-center items-center text-center flex space-x-4 text-6xl h-24">
                         {
-                            isResting && timerIsActive ? <div className="text-slate-300">Rest:</div> : <div>Work:</div>
+                            isResting && timerIsActive ? <div className="text-slate-300">REST:</div> : <div>WORK:</div>
                         }
-                        <div className="text-4xl">{time}</div>
+                        <div className="text-6xl">{time}</div>
                     </div>
                     <div className="flex items-center justify-center space-x-4 text-slate-100">
-                        <button onClick={()=> handleStartTimer()} id="startTimer" className="bg-emerald-600  rounded p-2">Start</button>
-                        <button onClick={()=> setTimerPaused(true)} id="pauseTimer" className="bg-sky-600  rounded p-2">Pause</button>
-                        <button onClick={()=> handleResetTimer()} id="resetTimer" className="bg-pink-600 rounded p-2">Reset</button>
+                        <button onClick={()=> handleStartTimer()} id="startTimer"  className="bg-green-500  rounded p-2 w-16">START</button>
+                        <button onClick={()=> setTimerPaused(true)} id="pauseTimer" className="bg-sky-600  rounded p-2 w-16">PAUSE</button>
+                        <button onClick={()=> handleResetTimer()} id="resetTimer" className="bg-pink-600 rounded p-2 w-16">RESET</button>
                     </div>
                 </div>
                 <div className="flex flex-col space-y-4 bg-slate-700 rounded max-w-5xl p-8">
                     <form className="flex justify-center space-x-4">
                         <label className="w-12">Work</label>
-                        <input className="w-8 bg-slate-500 rounded px-1" type="text" value={workInterval} onChange={(e)=> handleSetWorkInterval(e.target.value)}/>
-                    </form>
-                    <form className="flex justify-center space-x-4">
-                        <label className="w-12"l>Rest</label>
-                        <input className="w-8 bg-slate-500 rounded px-1" type="text" value={restInterval} onChange={(e)=> setRestInterval(e.target.value)}/>
-                    </form>
-                    <form className="flex justify-center space-x-4">
-                        <label className="w-12"l>Intervals</label>
-                        <input className="w-8 bg-slate-500 rounded px-1" type="text" value={intervals} onChange={(e)=> setIntervals(e.target.value)}/>
+                        <input className="w-8 bg-slate-500 rounded px-1 text-center" type="text" value={workInterval} onChange={(e)=> handleSetWorkInterval(e.target.value)}/>
+                    </form> 
+                    <form className="flex justify-center space-x-4"> 
+                        <label className="w-12"l>Rest</label> 
+                        <input className="w-8 bg-slate-500 rounded px-1 text-center" type="text" value={restInterval} onChange={(e)=> setRestInterval(e.target.value)}/>
+                    </form> 
+                    <form className="flex justify-center space-x-4"> 
+                        <label className="w-12"l>Intervals</label> 
+                        <input className="w-8 bg-slate-500 rounded px-1 text-center" type="text" value={intervals} onChange={(e)=> setIntervals(e.target.value)}/>
                     </form>
                 </div>
         </div>
