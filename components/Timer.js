@@ -1,12 +1,16 @@
 import React, {useState, useReducer, useEffect, use} from "react"
 import useSound from "use-sound"
+import { useCountdownTimer } from "use-countdown-timer"
 
 export default function Timer() {
+
+
 
     const [playPopFx] = useSound('/sounds/pop.mp3')
     const [playIntroFx] = useSound('/sounds/intro.wav')
     const [playSwitchFx] = useSound('/sounds/switch.wav')
     const [playEndFx] = useSound('/sounds/end.wav')
+
     
     let [workoutConfig, setWorkoutConfig] = useState({
         prepInterval: 3,
@@ -16,100 +20,104 @@ export default function Timer() {
     })
 
 
-    const timerStatuses = {notStarted: 'notstarted', started: 'started', paused: 'paused', completed: 'completed'}
     const intervalTypes = {restInterval: 'REST', workInterval: 'WORK', prepInterval: 'PREP', completedInterval: 'DONE!'}
+    const [currentIntervalType, setCurrentIntervalType] = useState(intervalTypes.prepInterval)
 
-    const initTimer = {
-        status: timerStatuses.notStarted,
-        currentInterval: 1,
-        currentIntervalType: intervalTypes.prepInterval,
-    }
-    
-    const [timer, setTimer] = useState(initTimer)
-    
-    let [time, setTime] = useState(workoutConfig.prepInterval)
-    
-
-    const handleStartTimer = () => {
-        playIntroFx()
-        setTimer({
-            ...timer,
-            status: timerStatuses.started,
-        })
-
-    }
-
-    const handlePauseTimer = () => {
-        setTimer({
-            ...timer,
-            status: timerStatuses.paused
-        })
-    }
-
-    const handleResetTimer = () => {
-        setTimer(initTimer)
-        setTime(workoutConfig.prepInterval)
-    }
-
-    
     const completeInterval = () => {
-
-        if(timer.currentIntervalType == intervalTypes.prepInterval) {
-            //work interval always follows prep
-            
-            setTimer({
-                ...timer,
-                currentIntervalType: intervalTypes.workInterval,
-            })
-            setTime(workoutConfig.workInterval)
+        if(currentIntervalType == intervalTypes.prepInterval) {
+            setCurrentIntervalType(intervalTypes.workInterval)
+            setCurrentTimer(workTimer)
+            workTimer.start()
             playSwitchFx()
         }
         
-        if(timer.currentIntervalType == intervalTypes.workInterval) {
-            //rest interval always follows work interval
-            setTimer({
-                ...timer,
-                currentIntervalType: intervalTypes.restInterval
-            })
-            setTime(workoutConfig.restInterval)
+        if(currentIntervalType == intervalTypes.workInterval) {
+            setCurrentIntervalType(intervalTypes.restInterval)
+            setCurrentTimer(restTimer)
+            restTimer.start()
             playSwitchFx()
         } 
-        else if(timer.currentIntervalType == intervalTypes.restInterval) {
-            //increment interval once rest is completed
-            if(timer.currentInterval < workoutConfig.numIntervals) {
-                setTimer(
-                    {
-                        ...timer, 
-                        currentInterval: timer.currentInterval+1,
-                        currentIntervalType: intervalTypes.workInterval
-                    })
-                setTime(workoutConfig.workInterval)
+        else if(currentIntervalType == intervalTypes.restInterval) {
+            if(currentInterval < workoutConfig.numIntervals) {
+                setCurrentIntervalType(intervalTypes.workInterval)
+                setCurrentTimer(workTimer)
+                interval = ++interval
+                workTimer.start()
                 playSwitchFx()
             }    
-            else if(timer.currentInterval == workoutConfig.numIntervals) {
-                //all intervals are complete
-                console.log('complete!')
-                setTimer({
-                    ...timer,
-                    status: timerStatuses.completed,
-                    currentIntervalType: intervalTypes.completedInterval
-                })
+            else if(currentInterval == workoutConfig.numIntervals) {
+                setCurrentIntervalType(intervalTypes.completedInterval)
                 playEndFx()
             }
 
             else {
-                console.log(typeof timer.currentInterval)
-                console.log(typeof workoutConfig.numIntervals)
+                //
             }
         }        
     }
 
+    let prepTimer = useCountdownTimer({
+        timer: workoutConfig.prepInterval*1000,
+        autostart: false,
+        onExpire: completeInterval
+    })
+
+    const updatePrepTimer = (seconds) => {
+        prepTimer = {
+            ...prepTimer,
+            timer: seconds
+        }
+    }
+
+    const workTimer = useCountdownTimer({
+        timer: workoutConfig.workInterval * 1000, 
+        onExpire: completeInterval
+    })
+
+    const restTimer = useCountdownTimer({
+        timer: workoutConfig.restInterval * 1000,
+        onExpire: completeInterval
+    })
+
+    let [currentTimer, setCurrentTimer] = useState(prepTimer)
+
+    let currentInterval = 1
+
+
+    const handleTimerConfig = (e) => {
+        setWorkoutConfig({
+            ...workoutConfig,
+            prepInterval: e.target.value
+        })
+    }
+
+    const handleStartTimer = () => {
+        playIntroFx()
+        prepTimer.start()
+    }
+
+    const handlePauseTimer = () => {
+        switch(currentIntervalType) {
+            case intervalTypes.prepInterval: prepTimer.pause()
+            case intervalTypes.workInterval: workTimer.pause()
+            case intervalTypes.restInterval: restTimer.pause()
+        } 
+    }
+
+    const handleResetTimer = () => {
+        setCurrentIntervalType(prepTimer)
+        prepTimer.reset()
+        workTimer.reset()
+        restTimer.reset()
+    }
+
+
     const getTimerTheme = () => {
-        if(timer.status === timerStatuses.completed) {
+        if(currentIntervalType === intervalTypes.completedInterval) {
             return 'bg-yellow-500'
         }
 
-        else if(timer.status === timerStatuses.started && timer.currentIntervalType === intervalTypes.workInterval) {
+        else if(currentIntervalType === intervalTypes.workInterval) {
             return 'bg-green-700'
         }
         else {
@@ -118,19 +126,6 @@ export default function Timer() {
 
     }
 
-    
-    useEffect(()=> {
-        let interval = null
-        if (timer.status === timerStatuses.started && time > 0) {
-            interval = setInterval(()=> {
-                setTime(time-1)
-            }, 1000)
-        }
-        else if (time <= 0) {
-           completeInterval()
-        }
-        return () => clearInterval(interval)
-    })
 
 
     return (
@@ -138,12 +133,15 @@ export default function Timer() {
                 <div className={`flex flex-col ${ getTimerTheme() } justify-between rounded-sm max-w-5xl p-8 h-96 md:w-2/3`}>
                 <div className="flex justify-center text-center space-x-4">
                         <div>INTERVAL</div>
-                        <div>{timer.currentInterval} / {workoutConfig.numIntervals}</div>
+                        <div>{currentInterval} / {workoutConfig.numIntervals}</div>
                     </div>
                     <div className="flex flex-col justify-center items-center text-center space-y-4 text-6xl h-24">
-                        <div>{timer.currentIntervalType}</div>
-                        <div>{time}</div>
-                        
+                        <div>{currentIntervalType}</div>
+                        <div>
+                            { currentIntervalType === intervalTypes.prepInterval && <div>{prepTimer.countdown / 1000}</div>}
+                            { currentIntervalType === intervalTypes.workInterval && <div>{workTimer.countdown / 1000}</div>}
+                            { currentIntervalType === intervalTypes.restInterval && <div>{restTimer.countdown / 1000}</div>}
+                        </div>
                     </div>
                     <div className="flex items-center justify-center space-x-4 text-slate-100">
                         <button onClick={()=> handleStartTimer()} id="startTimer"  className="bg-green-500  rounded p-2 w-16">START</button>
@@ -155,17 +153,11 @@ export default function Timer() {
                     <form className="flex flex-col md:flex-row items-center justify-center">
                         <div className="flex justify-between p-2">
                             <label className="px-2">Prep</label> 
-                            <input className="w-8 bg-slate-500 rounded px-1 text-center" type="text" value={workoutConfig.prepInterval} 
-                                onChange={(e)=> {
-                                    setWorkoutConfig({...workoutConfig, prepInterval: e.target.value})
-                                    setTime(e.target.value)
-                                    }}/>
+                            <input className="w-8 bg-slate-500 rounded px-1 text-center" type="text" value={workoutConfig.prepInterval} onChange={(e)=> {handleTimerConfig(e)}}/>
                         </div>
                         <div className="flex justify-between p-2">
                             <label className="px-2">Work</label>
-                            <input className="w-8 bg-slate-500 rounded px-1 text-center" type="text" value={workoutConfig.workInterval} onChange={(e)=> {
-                                setWorkoutConfig({...workoutConfig, workInterval: e.target.value})
-                                }}/>
+                            <input className="w-8 bg-slate-500 rounded px-1 text-center" type="text" value={workoutConfig.workInterval} onChange={(e)=> {setWorkoutConfig({...workoutConfig, workInterval: e.target.value})}}/>
                         </div>
                         <div className="flex justify-between p-2">
                             <label className="px-2">Rest</label> 
