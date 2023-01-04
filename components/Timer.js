@@ -1,6 +1,10 @@
-import React, {useState, useReducer, useEffect} from "react"
+import React, {useState, useReducer, useEffect, use} from "react"
+import useSound from "use-sound"
 
 export default function Timer() {
+
+    const [playPop] = useSound('/sounds/pop.mp3')
+    // const [playIntro] = useSound('/sounds/intro.wav')
     
     let [workoutConfig, setWorkoutConfig] = useState({
         prepInterval: 3,
@@ -48,11 +52,13 @@ export default function Timer() {
 
         if(timer.currentIntervalType == intervalTypes.prepInterval) {
             //work interval always follows prep
+            
             setTimer({
                 ...timer,
                 currentIntervalType: intervalTypes.workInterval,
             })
             setTime(workoutConfig.workInterval)
+            playPop()
         }
         
         if(timer.currentIntervalType == intervalTypes.workInterval) {
@@ -102,7 +108,12 @@ export default function Timer() {
     useEffect(()=> {
         let interval = null
         if (timer.status === timerStatuses.started && time > 0) {
-            interval = setInterval(()=> setTime(time-1), 1000)
+            interval = setInterval(()=> {
+                if(timer.currentIntervalType === intervalTypes.workInterval) {
+                    playPop()
+                } 
+                setTime(time-1)
+            }, 1000)
         }
         else if (time <= 0) {
            completeInterval()
