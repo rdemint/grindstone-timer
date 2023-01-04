@@ -134,7 +134,7 @@ export default function Timer() {
 
 
     return (
-        <div className="flex flex-col space-y-6 justify-center items-center w-full">
+        <div className="flex flex-col space-y-6 justify-center items-center w-full py-8 bg-slate-800">
                 <div className={`flex flex-col ${ getTimerTheme() } justify-between rounded max-w-5xl p-8 h-96`}>
                 <div className="flex justify-center text-center space-x-4">
                         <div>INTERVAL</div>
