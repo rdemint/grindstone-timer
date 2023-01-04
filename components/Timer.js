@@ -129,18 +129,26 @@ export default function Timer() {
                         <button onClick={()=> handleResetTimer()} id="resetTimer" className="bg-pink-600 rounded p-2 w-16">RESET</button>
                     </div>
                 </div>
-                <div className="flex flex-col space-y-4 bg-slate-700 rounded max-w-5xl p-8">
-                    <form className="flex-col space-y-4 md:flex-row md:space-x-4 justify-center">
-                        <label className="w-12"l>Prep</label> 
-                        <input className="w-8 bg-slate-500 rounded px-1 text-center" type="text" value={workoutConfig.prepInterval} onChange={(e)=> setWorkoutConfig({...workoutConfig, prepInterval: e.target.value})}/>
-                        <label className="w-12">Work</label>
-                        <input className="w-8 bg-slate-500 rounded px-1 text-center" type="text" value={workoutConfig.workInterval} onChange={(e)=> {
-                            setWorkoutConfig({...workoutConfig, workInterval: e.target.value})
-                            }}/>
-                        <label className="w-12"l>Rest</label> 
-                        <input className="w-8 bg-slate-500 rounded px-1 text-center" type="text" value={workoutConfig.restInterval} onChange={(e)=> setWorkoutConfig({...workoutConfig, restInterval: e.target.value})}/>
-                        <label className="w-12"l>Intervals</label> 
-                        <input className="w-8 bg-slate-500 rounded px-1 text-center" type="text" value={workoutConfig.numIntervals} onChange={(e)=> setWorkoutConfig({...workoutConfig, numIntervals: e.target.value})}/>
+                <div className="bg-slate-700 rounded p-8">
+                    <form className="flex flex-col md:flex-row">
+                        <div className="flex justify-between p-2">
+                            <label className="px-2">Prep</label> 
+                            <input className="w-8 bg-slate-500 rounded px-1 text-center" type="text" value={workoutConfig.prepInterval} onChange={(e)=> setWorkoutConfig({...workoutConfig, prepInterval: e.target.value})}/>
+                        </div>
+                        <div className="flex justify-between p-2">
+                            <label className="px-2">Work</label>
+                            <input className="w-8 bg-slate-500 rounded px-1 text-center" type="text" value={workoutConfig.workInterval} onChange={(e)=> {
+                                setWorkoutConfig({...workoutConfig, workInterval: e.target.value})
+                                }}/>
+                        </div>
+                        <div className="flex justify-between p-2">
+                            <label className="px-2">Rest</label> 
+                            <input className="w-8 bg-slate-500 rounded px-1 text-center" type="text" value={workoutConfig.restInterval} onChange={(e)=> setWorkoutConfig({...workoutConfig, restInterval: e.target.value})}/>
+                        </div>
+                        <div className="flex justify-between p-2">
+                            <label className="px-2">Intervals</label> 
+                            <input className="w-8 bg-slate-500 rounded px-1 text-center" type="text" value={workoutConfig.numIntervals} onChange={(e)=> setWorkoutConfig({...workoutConfig, numIntervals: e.target.value})}/>
+                        </div>
                     </form>
                 </div>
         </div>
