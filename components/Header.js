@@ -52,7 +52,7 @@ return(
                                 leaveFrom="translate-x-0"
                                 leaveTo="-translate-x-full"
                             >
-                                <Dialog.Panel className="relative flex w-full max-w-[85%] flex-1 flex-col overflow-y-auto overflow-y-auto bg-night-900 pt-5 pb-4">
+                                <Dialog.Panel className="relative flex w-full max-w-[85%] flex-1 flex-col overflow-y-auto overflow-y-auto bg-slate-800 pt-5 pb-4">
                                     <Transition.Child
                                         as={Fragment}
                                         enter="ease-in-out duration-300"
@@ -73,7 +73,7 @@ return(
                                             </button>
                                         </div>
                                     </Transition.Child>
-                                    <div className="pl-6 text-night-300">
+                                    <div className="pl-6 text-slate-200">
                                         { navList.map((item)=> (
                                                 <Link key={item.name} href={item.href} onClick={()=> setSidebarOpen(false)} className="block p-3">{item.name}</Link>
                                         ))}
