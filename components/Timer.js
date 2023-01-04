@@ -113,7 +113,7 @@ export default function Timer() {
             return 'bg-green-700'
         }
         else {
-            return 'bg-slate-700'
+            return 'bg-slate-800'
         }
 
     }
@@ -134,8 +134,8 @@ export default function Timer() {
 
 
     return (
-        <div className="flex flex-col space-y-6 justify-center items-center w-full py-8 bg-slate-800">
-                <div className={`flex flex-col ${ getTimerTheme() } justify-between rounded max-w-5xl p-8 h-96`}>
+        <div className="flex flex-col space-y-6 justify-center items-center w-full py-8">
+                <div className={`flex flex-col ${ getTimerTheme() } justify-between rounded-sm max-w-5xl p-8 h-96 md:w-2/3`}>
                 <div className="flex justify-center text-center space-x-4">
                         <div>INTERVAL</div>
                         <div>{timer.currentInterval} / {workoutConfig.numIntervals}</div>
@@ -151,8 +151,8 @@ export default function Timer() {
                         <button onClick={()=> handleResetTimer()} id="resetTimer" className="bg-pink-600 rounded p-2 w-16">RESET</button>
                     </div>
                 </div>
-                <div className="bg-slate-700 rounded p-8">
-                    <form className="flex flex-col md:flex-row">
+                <div className="bg-slate-800 rounded-sm p-8 md:w-2/3">
+                    <form className="flex flex-col md:flex-row items-center justify-center">
                         <div className="flex justify-between p-2">
                             <label className="px-2">Prep</label> 
                             <input className="w-8 bg-slate-500 rounded px-1 text-center" type="text" value={workoutConfig.prepInterval} 

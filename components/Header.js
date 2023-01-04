@@ -18,8 +18,8 @@ export default function Header() {
     ]
 
 return(
-    <div className="flex bg-slate-800 shadow-md shadow-slate-700 items-center justify-between p-6">
-        <Link href="/#" className="text-slate-200">hangboard timer</Link>
+    <div className="flex bg-gray-900 shadow-md shadow-slate-700 items-center justify-between p-6">
+        <Link href="/#" className="text-slate-200 text-xs md:text-sm">grindstone timer</Link>
         <section id="desktop-menu" className='hidden md:block'>
             {navList.map((item)=> (
                 <Link key={item.name} href={item.href} className="px-3 hover:underline underline-offset-8">{item.name}</Link>
