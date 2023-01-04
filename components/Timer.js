@@ -1,6 +1,12 @@
-import React, {useState, useReducer, useEffect} from "react"
+import React, {useState, useReducer, useEffect, use} from "react"
+import useSound from "use-sound"
 
 export default function Timer() {
+
+    const [playPopFx] = useSound('/sounds/pop.mp3')
+    const [playIntroFx] = useSound('/sounds/intro.wav')
+    const [playSwitchFx] = useSound('/sounds/switch.wav')
+    const [playEndFx] = useSound('/sounds/end.wav')
     
     let [workoutConfig, setWorkoutConfig] = useState({
         prepInterval: 3,
@@ -9,8 +15,9 @@ export default function Timer() {
         numIntervals: 10
     })
 
+
     const timerStatuses = {notStarted: 'notstarted', started: 'started', paused: 'paused', completed: 'completed'}
-    const intervalTypes = {restInterval: 'REST', workInterval: 'WORK', prepInterval: 'PREP'}
+    const intervalTypes = {restInterval: 'REST', workInterval: 'WORK', prepInterval: 'PREP', completedInterval: 'DONE!'}
 
     const initTimer = {
         status: timerStatuses.notStarted,
@@ -24,6 +31,7 @@ export default function Timer() {
     
 
     const handleStartTimer = () => {
+        playIntroFx()
         setTimer({
             ...timer,
             status: timerStatuses.started,
@@ -48,11 +56,13 @@ export default function Timer() {
 
         if(timer.currentIntervalType == intervalTypes.prepInterval) {
             //work interval always follows prep
+            
             setTimer({
                 ...timer,
                 currentIntervalType: intervalTypes.workInterval,
             })
             setTime(workoutConfig.workInterval)
+            playSwitchFx()
         }
         
         if(timer.currentIntervalType == intervalTypes.workInterval) {
@@ -62,8 +72,9 @@ export default function Timer() {
                 currentIntervalType: intervalTypes.restInterval
             })
             setTime(workoutConfig.restInterval)
+            playSwitchFx()
         } 
-        else if(timer.currentIntervalType === intervalTypes.restInterval) {
+        else if(timer.currentIntervalType == intervalTypes.restInterval) {
             //increment interval once rest is completed
             if(timer.currentInterval < workoutConfig.numIntervals) {
                 setTimer(
@@ -73,13 +84,22 @@ export default function Timer() {
                         currentIntervalType: intervalTypes.workInterval
                     })
                 setTime(workoutConfig.workInterval)
+                playSwitchFx()
             }    
-            else if(timer.currentInterval === workoutConfig.numIntervals) {
+            else if(timer.currentInterval == workoutConfig.numIntervals) {
                 //all intervals are complete
+                console.log('complete!')
                 setTimer({
                     ...timer,
-                    status: timerStatuses.completed
+                    status: timerStatuses.completed,
+                    currentIntervalType: intervalTypes.completedInterval
                 })
+                playEndFx()
+            }
+
+            else {
+                console.log(typeof timer.currentInterval)
+                console.log(typeof workoutConfig.numIntervals)
             }
         }        
     }
@@ -102,7 +122,9 @@ export default function Timer() {
     useEffect(()=> {
         let interval = null
         if (timer.status === timerStatuses.started && time > 0) {
-            interval = setInterval(()=> setTime(time-1), 1000)
+            interval = setInterval(()=> {
+                setTime(time-1)
+            }, 1000)
         }
         else if (time <= 0) {
            completeInterval()
@@ -133,7 +155,11 @@ export default function Timer() {
                     <form className="flex flex-col md:flex-row">
                         <div className="flex justify-between p-2">
                             <label className="px-2">Prep</label> 
-                            <input className="w-8 bg-slate-500 rounded px-1 text-center" type="text" value={workoutConfig.prepInterval} onChange={(e)=> setWorkoutConfig({...workoutConfig, prepInterval: e.target.value})}/>
+                            <input className="w-8 bg-slate-500 rounded px-1 text-center" type="text" value={workoutConfig.prepInterval} 
+                                onChange={(e)=> {
+                                    setWorkoutConfig({...workoutConfig, prepInterval: e.target.value})
+                                    setTime(e.target.value)
+                                    }}/>
                         </div>
                         <div className="flex justify-between p-2">
                             <label className="px-2">Work</label>

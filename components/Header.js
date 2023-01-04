@@ -13,7 +13,7 @@ export default function Header() {
     const navList = [
         {
             name: "About",
-            href: "#aboutme"
+            href: "/about"
         },
     ]
 
