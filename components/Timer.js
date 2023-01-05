@@ -117,6 +117,13 @@ export default function Timer() {
         }
     }
 
+    // const configMap = [
+    //     {
+    //         name: "Prep",
+    //         value: workoutConfig.prepInterval,
+
+    //     }
+    // ]
 
 
     return (
@@ -133,28 +140,28 @@ export default function Timer() {
                     {workoutStatus === workoutStatusOptions.rest && <div>{restTimer.countdown / 1000}</div>}
                 </div>
                 <div className="flex items-center justify-center space-x-4 text-slate-100">
-                    <button onClick={() => handleStartTimer()} id="startTimer" className="bg-green-500  rounded p-2 w-16">START</button>
-                    <button onClick={() => handlePauseTimer()} id="pauseTimer" className="bg-sky-600  rounded p-2 w-16">PAUSE</button>
-                    <button onClick={() => handleResetTimer()} id="resetTimer" className="bg-pink-600 rounded p-2 w-16">RESET</button>
+                    <button onClick={() => handleStartTimer()} id="startTimer" className="bg-green-500  rounded p-2 w-16 md:w-36">START</button>
+                    <button onClick={() => handlePauseTimer()} id="pauseTimer" className="bg-sky-600  rounded p-2 w-16 md:w-36">PAUSE</button>
+                    <button onClick={() => handleResetTimer()} id="resetTimer" className="bg-pink-600 rounded p-2 w-16 md:w-36">RESET</button>
                 </div>
             </div>
-            <div className="bg-slate-800 rounded-sm p-8 md:w-2/3">
+            <div className="bg-slate-700 rounded-sm p-8">
                 <form className="flex flex-col justify-between md:flex-row md:items-center">
-                    <div className="flex justify-between p-2">
-                        <label className="px-2">Prep</label>
-                        <input className="w-8 bg-slate-500 rounded px-1 text-center" type="text" value={workoutConfig.prepInterval} onChange={(e) => { setWorkoutConfig({ ...workoutConfig, prepInterval: e.target.value})}} />
+                    <div className="flex justify-between p-2 items-center">
+                        <label className="px-4 text-lg">Prep</label>
+                        <input className="w-12 bg-slate-500 rounded p-1 text-xl text-center" type="text" value={workoutConfig.prepInterval} onChange={(e) => { setWorkoutConfig({ ...workoutConfig, prepInterval: e.target.value})}} />
                     </div>
-                    <div className="flex justify-between p-2">
-                        <label className="px-2">Work</label>
-                        <input className="w-8 bg-slate-500 rounded px-1 text-center" type="text" value={workoutConfig.workInterval} onChange={(e) => { setWorkoutConfig({ ...workoutConfig, workInterval: e.target.value })}} />
+                    <div className="flex justify-between p-2 items-center">
+                        <label className="px-4 text-lg">Work</label>
+                        <input className="w-12 bg-slate-500 rounded p-1 text-xl text-center" type="text" value={workoutConfig.workInterval} onChange={(e) => { setWorkoutConfig({ ...workoutConfig, workInterval: e.target.value })}} />
                     </div>
-                    <div className="flex justify-between p-2">
-                        <label className="px-2">Rest</label>
-                        <input className="w-8 bg-slate-500 rounded px-1 text-center" type="text" value={workoutConfig.restInterval} onChange={(e) => { setWorkoutConfig({ ...workoutConfig, restInterval: e.target.value })}} />
+                    <div className="flex justify-between p-2 items-center">
+                        <label className="px-4 text-lg">Rest</label>
+                        <input className="w-12 bg-slate-500 rounded p-1 text-xl text-center" type="text" value={workoutConfig.restInterval} onChange={(e) => { setWorkoutConfig({ ...workoutConfig, restInterval: e.target.value })}} />
                     </div>
-                    <div className="flex justify-between p-2">
-                        <label className="px-2">Intervals</label>
-                        <input className="w-8 bg-slate-500 rounded px-1 text-center" type="text" value={workoutConfig.numIntervals} onChange={(e) => setWorkoutConfig({ ...workoutConfig, numIntervals: e.target.value })} />
+                    <div className="flex justify-between p-2 items-center">
+                        <label className="px-4 text-lg">Intervals</label>
+                        <input className="w-12 bg-slate-500 rounded p-1 text-xl text-center" type="text" value={workoutConfig.numIntervals} onChange={(e) => setWorkoutConfig({ ...workoutConfig, numIntervals: e.target.value })} />
                     </div>
                 </form>
             </div>
