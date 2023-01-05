@@ -13,12 +13,41 @@ export default function Timer() {
 
     const workoutStatusOptions = { ready: 'Ready', rest: 'REST', work: 'WORK', prep: 'PREP', completed: 'DONE!' }
 
-    const [workoutConfig, setWorkoutConfig] = useState({
-        prepInterval: 3,
+    const defaultWorkout = {
+        name: 'Default',
+        prepInterval: 12,
         workInterval: 10,
         restInterval: 90,
-        numIntervals: 10
-    })
+        numIntervals: 8
+    }
+
+    const quickWorkouts = [
+        {
+            name: 'High intensity',
+            prepInterval: 12,
+            workInterval: 10,
+            restInterval: 180,
+            numIntervals: 8
+        },
+        {
+            name: 'Quick and light',
+            prepInterval: 12,
+            workInterval: 8,
+            restInterval: 45,
+            numIntervals: 4
+        },
+        {
+            name: 'Ultralight',
+            prepInterval: 12,
+            workInterval: 8,
+            restInterval: 15,
+            numIntervals: 4
+        }
+
+    ]
+
+
+    const [workoutConfig, setWorkoutConfig] = useState(defaultWorkout)
 
     const [workoutStatus, setWorkoutStatus] = useState(workoutStatusOptions.ready)
     const [currentInterval, setCurrentInterval] = useState(1)
@@ -128,7 +157,7 @@ export default function Timer() {
 
     return (
         <div className="flex flex-col space-y-6 justify-center items-center w-full py-8">
-            <div className={`flex flex-col ${getTimerTheme()} justify-between rounded-sm max-w-5xl p-8 h-96 md:w-2/3`}>
+            <section name="timerdisplay" className={`flex flex-col ${getTimerTheme()} justify-between rounded-sm max-w-5xl p-8 h-96 md:w-2/3`}>
                 <div className="flex justify-center text-center space-x-4">
                     <div>INTERVAL</div>
                     <div>{currentInterval} / {workoutConfig.numIntervals}</div>
@@ -144,8 +173,8 @@ export default function Timer() {
                     <button onClick={() => handlePauseTimer()} id="pauseTimer" className="bg-sky-600  rounded p-2 w-16 md:w-36">PAUSE</button>
                     <button onClick={() => handleResetTimer()} id="resetTimer" className="bg-pink-600 rounded p-2 w-16 md:w-36">RESET</button>
                 </div>
-            </div>
-            <div className="bg-slate-700 rounded-sm p-8">
+            </section>
+            <section name="workoutconfig" className="bg-slate-700 rounded-sm p-8">
                 <form className="flex flex-col justify-between md:flex-row md:items-center">
                     <div className="flex justify-between p-2 items-center">
                         <label className="px-4 text-lg">Prep</label>
@@ -164,7 +193,7 @@ export default function Timer() {
                         <input className="w-12 bg-slate-500 rounded p-1 text-xl text-center" type="text" value={workoutConfig.numIntervals} onChange={(e) => setWorkoutConfig({ ...workoutConfig, numIntervals: e.target.value })} />
                     </div>
                 </form>
-            </div>
+            </section>
         </div>
     )
 
