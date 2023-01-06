@@ -2,6 +2,8 @@ import React, { useState, useEffect } from "react"
 import useSound from "use-sound"
 import { useCountdownTimer } from "use-countdown-timer"
 import WorkoutOption from "./WorkoutOption"
+import defaultWorkout from "../lib/defaultWorkout"
+import quickWorkouts from "../lib/quickWorkouts"
 
 export default function Timer() {
 
@@ -12,38 +14,7 @@ export default function Timer() {
 
     const workoutStatusOptions = { ready: 'Ready', rest: 'REST', work: 'WORK', prep: 'PREP', completed: 'DONE!' }
 
-    const defaultWorkout = {
-        name: 'Default',
-        prepInterval: 12,
-        workInterval: 10,
-        restInterval: 90,
-        numIntervals: 8
-    }
-
-    const quickWorkouts = [
-        {
-            name: 'High intensity',
-            prepInterval: 12,
-            workInterval: 10,
-            restInterval: 180,
-            numIntervals: 8
-        },
-        {
-            name: 'Quick and light',
-            prepInterval: 12,
-            workInterval: 8,
-            restInterval: 45,
-            numIntervals: 4
-        },
-        {
-            name: 'Ultralight',
-            prepInterval: 12,
-            workInterval: 8,
-            restInterval: 15,
-            numIntervals: 4
-        }
-
-    ]
+    
 
 
     const [workoutConfig, setWorkoutConfig] = useState(defaultWorkout)
@@ -161,8 +132,9 @@ export default function Timer() {
                     {workoutStatus === workoutStatusOptions.rest && <div>{restTimer.countdown / 1000}</div>}
                 </div>
                 <div className="flex items-center justify-center space-x-4 text-slate-100">
-                    <button onClick={() => handleStartTimer()} id="startTimer" className="bg-green-500 rounded p-2 w-16 md:w-36 hover:scale-105">START</button>
-                    <button onClick={() => handlePauseTimer()} id="pauseTimer" className="bg-sky-600  rounded p-2 w-16 md:w-36 hover:scale-105">PAUSE</button>
+                    {!prepTimer.isRunning && !workTimer.isRunning && !restTimer.isRunning ?
+                        <button onClick={() => handleStartTimer()} id="startTimer" className="bg-green-500 rounded p-2 w-16 md:w-36 hover:scale-105">START</button> :
+                        <button onClick={() => handlePauseTimer()} id="pauseTimer" className="bg-sky-600  rounded p-2 w-16 md:w-36 hover:scale-105">PAUSE</button>}
                     <button onClick={() => handleResetTimer()} id="resetTimer" className="bg-pink-600 rounded p-2 w-16 md:w-36 hover:scale-105">RESET</button>
                 </div>
             </section>
