@@ -1,6 +1,7 @@
 import React, { useState, useReducer, useEffect, use } from "react"
 import useSound from "use-sound"
 import { useCountdownTimer } from "use-countdown-timer"
+import WorkoutOption from "./workoutOption"
 
 export default function Timer() {
 
@@ -55,7 +56,6 @@ export default function Timer() {
     useEffect(()=> {
         handleResetTimer()
     }, [workoutConfig])
-
     const completeInterval = () => {
         if (workoutStatus == workoutStatusOptions.prep) {
             setWorkoutStatus(workoutStatusOptions.work)
@@ -146,14 +146,6 @@ export default function Timer() {
         }
     }
 
-    // const configMap = [
-    //     {
-    //         name: "Prep",
-    //         value: workoutConfig.prepInterval,
-
-    //     }
-    // ]
-
 
     return (
         <div className="flex flex-col space-y-6 justify-center items-center w-full py-8">
@@ -162,7 +154,7 @@ export default function Timer() {
                     <div>INTERVAL</div>
                     <div>{currentInterval} / {workoutConfig.numIntervals}</div>
                 </div>
-                <div className="flex flex-col justify-center items-center text-center space-y-4 text-6xl h-24">
+                <div className="flex flex-col justify-center items-center text-center space-y-4 text-6xl h-24 text-slate-50">
                     <div>{workoutStatus}</div>
                     {workoutStatus === workoutStatusOptions.prep && <div>{prepTimer.countdown / 1000}</div>}
                     {workoutStatus === workoutStatusOptions.work && <div>{workTimer.countdown / 1000}</div>}
@@ -174,7 +166,9 @@ export default function Timer() {
                     <button onClick={() => handleResetTimer()} id="resetTimer" className="bg-pink-600 rounded p-2 w-16 md:w-36">RESET</button>
                 </div>
             </section>
-            <section name="workoutconfig" className="bg-slate-700 rounded-sm p-8">
+            <section name="workoutconfig">
+                <h2 className="text-center">Workout</h2>
+                <div className="bg-slate-700 rounded-sm p-8 mt-4">
                 <form className="flex flex-col justify-between md:flex-row md:items-center">
                     <div className="flex justify-between p-2 items-center">
                         <label className="px-4 text-lg">Prep</label>
@@ -193,6 +187,24 @@ export default function Timer() {
                         <input className="w-12 bg-slate-500 rounded p-1 text-xl text-center" type="text" value={workoutConfig.numIntervals} onChange={(e) => setWorkoutConfig({ ...workoutConfig, numIntervals: e.target.value })} />
                     </div>
                 </form>
+                </div>
+            </section>
+            <section>
+                <h2 className="text-center mt-8">Quick Workout Options</h2>
+                { quickWorkouts.map(
+                    (workout)=> (
+                        <div key={workout.name} className="flex flex-col m-4 bg-slate-800 rounded-sm">
+                            <WorkoutOption 
+                                name={workout.name}
+                                prepInterval={workout.prepInterval} 
+                                workInterval={workout.workInterval}
+                                restInterval={workout.restInterval}
+                                numIntervals={workout.numIntervals}
+                                setWorkoutConfig={setWorkoutConfig}
+                                />
+                        </div>
+                    )
+                )}
             </section>
         </div>
     )
