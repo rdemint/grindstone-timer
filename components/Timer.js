@@ -193,7 +193,7 @@ export default function Timer() {
                 <h2 className="text-center mt-8">Quick Workout Options</h2>
                 { quickWorkouts.map(
                     (workout)=> (
-                        <div key={workout.name} className="flex flex-col m-4 bg-slate-800 rounded-sm">
+                        <div key={workout.name} className="flex flex-col">
                             <WorkoutOption 
                                 name={workout.name}
                                 prepInterval={workout.prepInterval} 
