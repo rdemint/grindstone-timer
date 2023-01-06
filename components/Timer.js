@@ -1,11 +1,9 @@
-import React, { useState, useReducer, useEffect, use } from "react"
+import React, { useState, useEffect } from "react"
 import useSound from "use-sound"
 import { useCountdownTimer } from "use-countdown-timer"
-import WorkoutOption from "./workoutOption"
+import WorkoutOption from "./WorkoutOption"
 
 export default function Timer() {
-
-
 
     const [playPopFx] = useSound('/sounds/pop.mp3')
     const [playIntroFx] = useSound('/sounds/intro.wav')
@@ -56,6 +54,8 @@ export default function Timer() {
     useEffect(() => {
         handleResetTimer()
     }, [workoutConfig])
+
+
     const completeInterval = () => {
         if (workoutStatus == workoutStatusOptions.prep) {
             setWorkoutStatus(workoutStatusOptions.work)
