@@ -1,10 +1,9 @@
-import React, { useState, useReducer, useEffect, use } from "react"
+import React, { useState, useEffect } from "react"
 import useSound from "use-sound"
 import { useCountdownTimer } from "use-countdown-timer"
+import WorkoutOption from "./WorkoutOption"
 
 export default function Timer() {
-
-
 
     const [playPopFx] = useSound('/sounds/pop.mp3')
     const [playIntroFx] = useSound('/sounds/intro.wav')
@@ -52,9 +51,10 @@ export default function Timer() {
     const [workoutStatus, setWorkoutStatus] = useState(workoutStatusOptions.ready)
     const [currentInterval, setCurrentInterval] = useState(1)
 
-    useEffect(()=> {
+    useEffect(() => {
         handleResetTimer()
     }, [workoutConfig])
+
 
     const completeInterval = () => {
         if (workoutStatus == workoutStatusOptions.prep) {
@@ -71,7 +71,7 @@ export default function Timer() {
         else if (workoutStatus == workoutStatusOptions.rest) {
             if (currentInterval < workoutConfig.numIntervals) {
                 setWorkoutStatus(workoutStatusOptions.work)
-                setCurrentInterval(currentInterval+1)
+                setCurrentInterval(currentInterval + 1)
                 workTimer.start()
                 playSwitchFx()
             }
@@ -87,7 +87,7 @@ export default function Timer() {
     }
 
     const prepTimer = useCountdownTimer({
-        timer: workoutConfig.prepInterval*1000,
+        timer: workoutConfig.prepInterval * 1000,
         expireImmediate: true,
         onExpire: completeInterval
     })
@@ -131,7 +131,7 @@ export default function Timer() {
     }
 
 
-    
+
 
     const getTimerTheme = () => {
         if (workoutStatus === workoutStatusOptions.completed) {
@@ -146,14 +146,6 @@ export default function Timer() {
         }
     }
 
-    // const configMap = [
-    //     {
-    //         name: "Prep",
-    //         value: workoutConfig.prepInterval,
-
-    //     }
-    // ]
-
 
     return (
         <div className="flex flex-col space-y-6 justify-center items-center w-full py-8">
@@ -162,37 +154,57 @@ export default function Timer() {
                     <div>INTERVAL</div>
                     <div>{currentInterval} / {workoutConfig.numIntervals}</div>
                 </div>
-                <div className="flex flex-col justify-center items-center text-center space-y-4 text-6xl h-24">
+                <div className="flex flex-col justify-center items-center text-center space-y-4 text-6xl h-24 text-slate-50">
                     <div>{workoutStatus}</div>
                     {workoutStatus === workoutStatusOptions.prep && <div>{prepTimer.countdown / 1000}</div>}
                     {workoutStatus === workoutStatusOptions.work && <div>{workTimer.countdown / 1000}</div>}
                     {workoutStatus === workoutStatusOptions.rest && <div>{restTimer.countdown / 1000}</div>}
                 </div>
                 <div className="flex items-center justify-center space-x-4 text-slate-100">
-                    <button onClick={() => handleStartTimer()} id="startTimer" className="bg-green-500  rounded p-2 w-16 md:w-36">START</button>
-                    <button onClick={() => handlePauseTimer()} id="pauseTimer" className="bg-sky-600  rounded p-2 w-16 md:w-36">PAUSE</button>
-                    <button onClick={() => handleResetTimer()} id="resetTimer" className="bg-pink-600 rounded p-2 w-16 md:w-36">RESET</button>
+                    <button onClick={() => handleStartTimer()} id="startTimer" className="bg-green-500 rounded p-2 w-16 md:w-36 hover:scale-105">START</button>
+                    <button onClick={() => handlePauseTimer()} id="pauseTimer" className="bg-sky-600  rounded p-2 w-16 md:w-36 hover:scale-105">PAUSE</button>
+                    <button onClick={() => handleResetTimer()} id="resetTimer" className="bg-pink-600 rounded p-2 w-16 md:w-36 hover:scale-105">RESET</button>
                 </div>
             </section>
-            <section name="workoutconfig" className="bg-slate-700 rounded-sm p-8">
-                <form className="flex flex-col justify-between md:flex-row md:items-center">
-                    <div className="flex justify-between p-2 items-center">
-                        <label className="px-4 text-lg">Prep</label>
-                        <input className="w-12 bg-slate-500 rounded p-1 text-xl text-center" type="text" value={workoutConfig.prepInterval} onChange={(e) => { setWorkoutConfig({ ...workoutConfig, prepInterval: e.target.value})}} />
-                    </div>
-                    <div className="flex justify-between p-2 items-center">
-                        <label className="px-4 text-lg">Work</label>
-                        <input className="w-12 bg-slate-500 rounded p-1 text-xl text-center" type="text" value={workoutConfig.workInterval} onChange={(e) => { setWorkoutConfig({ ...workoutConfig, workInterval: e.target.value })}} />
-                    </div>
-                    <div className="flex justify-between p-2 items-center">
-                        <label className="px-4 text-lg">Rest</label>
-                        <input className="w-12 bg-slate-500 rounded p-1 text-xl text-center" type="text" value={workoutConfig.restInterval} onChange={(e) => { setWorkoutConfig({ ...workoutConfig, restInterval: e.target.value })}} />
-                    </div>
-                    <div className="flex justify-between p-2 items-center">
-                        <label className="px-4 text-lg">Intervals</label>
-                        <input className="w-12 bg-slate-500 rounded p-1 text-xl text-center" type="text" value={workoutConfig.numIntervals} onChange={(e) => setWorkoutConfig({ ...workoutConfig, numIntervals: e.target.value })} />
-                    </div>
-                </form>
+            <section name="workoutconfig">
+                <h2 className="text-center">Workout</h2>
+                <div className="bg-slate-700 rounded-sm p-8 mt-4">
+                    <form className="flex flex-col justify-between md:flex-row md:items-center">
+                        <div className="flex justify-between p-2 items-center">
+                            <label className="px-4 text-lg">Prep</label>
+                            <input className="w-12 bg-slate-500 rounded p-1 text-xl text-center  hover:scale-105" type="text" value={workoutConfig.prepInterval} onChange={(e) => { setWorkoutConfig({ ...workoutConfig, prepInterval: e.target.value }) }} />
+                        </div>
+                        <div className="flex justify-between p-2 items-center">
+                            <label className="px-4 text-lg">Work</label>
+                            <input className="w-12 bg-slate-500 rounded p-1 text-xl text-center  hover:scale-105" type="text" value={workoutConfig.workInterval} onChange={(e) => { setWorkoutConfig({ ...workoutConfig, workInterval: e.target.value }) }} />
+                        </div>
+                        <div className="flex justify-between p-2 items-center">
+                            <label className="px-4 text-lg">Rest</label>
+                            <input className="w-12 bg-slate-500 rounded p-1 text-xl text-center hover:scale-105" type="text" value={workoutConfig.restInterval} onChange={(e) => { setWorkoutConfig({ ...workoutConfig, restInterval: e.target.value }) }} />
+                        </div>
+                        <div className="flex justify-between p-2 items-center">
+                            <label className="px-4 text-lg">Intervals</label>
+                            <input className="w-12 bg-slate-500 rounded p-1 text-xl text-center hover:scale-105" type="text" value={workoutConfig.numIntervals} onChange={(e) => setWorkoutConfig({ ...workoutConfig, numIntervals: e.target.value })} />
+                        </div>
+                    </form>
+                </div>
+            </section>
+            <section>
+                <h2 className="text-center mt-8">Quick Workout Options</h2>
+                {quickWorkouts.map(
+                    (workout) => (
+                        <div key={workout.name} className="flex flex-col">
+                            <WorkoutOption
+                                name={workout.name}
+                                prepInterval={workout.prepInterval}
+                                workInterval={workout.workInterval}
+                                restInterval={workout.restInterval}
+                                numIntervals={workout.numIntervals}
+                                setWorkoutConfig={setWorkoutConfig}
+                            />
+                        </div>
+                    )
+                )}
             </section>
         </div>
     )
