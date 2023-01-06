@@ -1,7 +1,7 @@
 export default function WorkoutOption ({name, prepInterval, workInterval, restInterval, numIntervals, setWorkoutConfig}) {
 
     return(
-        <div className="m-4 bg-slate-800 rounded-xl hover:bg-slate-700">
+        <div className="m-4 bg-slate-800 rounded-xl hover:bg-slate-700 hover:scale-105">
             <button onClick={()=>setWorkoutConfig({name, prepInterval, workInterval, restInterval, numIntervals})}>
                 <div className="flex justify-between p-2 items-center">
                     <p className="px-4 text-lg text-center">{name}</p>
