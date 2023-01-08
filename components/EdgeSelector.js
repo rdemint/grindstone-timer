@@ -8,10 +8,10 @@ function EdgeCol({ edgeMap, handleEdgeClick, currentEdge }) {
                 {
                     edgeMap.map(
                         (row) => (
-                            <div className="flex space-x-1 h-10">
+                            <div key={row[0]} className="flex space-x-1 h-10">
                                 {row.map(
                                     (edge) => (
-                                        <button onClick={() => handleEdgeClick(edge)} className={`bg-slate-400 h-10 w-1/2 rounded-md ${currentEdge == edge ? 'bg-sky-400' : ''}`}>{edge}</button>
+                                        <button key={edge} onClick={() => handleEdgeClick(edge)} className={`bg-slate-400 h-10 w-1/2 rounded-md ${currentEdge == edge ? 'bg-green-400 text-slate-800' : ''}`}>{edge}</button>
                                     ))}
                             </div>
                         ))
@@ -23,17 +23,10 @@ function EdgeCol({ edgeMap, handleEdgeClick, currentEdge }) {
 
 
 
-export default function EdgeSelector() {
+export default function EdgeSelector({edgeMap, leftHand, setLeftHand, rightHand, setRightHand}) {
 
 
-    const [leftHand, setLeftHand] = useState()
-    const [rightHand, setRightHand] = useState()
 
-    const edgeMap = [
-        [10, 8],
-        [30, 25],
-        [20, 15],
-    ]
 
     return (
         <section name="edge-selector">

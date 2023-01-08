@@ -8,17 +8,26 @@ import EdgeSelector from "./EdgeSelector"
 
 export default function Timer() {
 
+
+    const workoutStatusOptions = { ready: 'Ready', rest: 'REST', work: 'WORK', prep: 'PREP', completed: 'DONE!' }
+
+    const edgeMap = [
+        [10, 8],
+        [30, 25],
+        [20, 15],
+    ]
     const [playPopFx] = useSound('/sounds/pop.mp3')
     const [playIntroFx] = useSound('/sounds/intro.wav')
     const [playSwitchFx] = useSound('/sounds/switch.wav')
     const [playEndFx] = useSound('/sounds/end.wav')
 
-    const workoutStatusOptions = { ready: 'Ready', rest: 'REST', work: 'WORK', prep: 'PREP', completed: 'DONE!' }
-
     const [workoutConfig, setWorkoutConfig] = useState(defaultWorkout)
-
     const [workoutStatus, setWorkoutStatus] = useState(workoutStatusOptions.ready)
     const [currentInterval, setCurrentInterval] = useState(1)
+
+    const [leftHand, setLeftHand] = useState()
+    const [rightHand, setRightHand] = useState()
+
 
     useEffect(() => {
         handleResetTimer()
@@ -136,6 +145,7 @@ export default function Timer() {
                     <button onClick={() => handleResetTimer()} id="resetTimer" className="bg-pink-600 rounded p-2 w-16 md:w-36 hover:scale-105">RESET</button>
                 </div>
             </section>
+            <EdgeSelector edgeMap={edgeMap} leftHand={leftHand} setLeftHand={setLeftHand} rightHand={rightHand} setRightHand={setRightHand} />
             <section name="workoutconfig">
                 <h2 className="text-center">Workout</h2>
                 <div className="bg-slate-700 rounded-sm p-8 mt-4">
@@ -159,7 +169,6 @@ export default function Timer() {
                     </form>
                 </div>
             </section>
-            <EdgeSelector />
             <section>
                 <h2 className="text-center mt-8">Quick Workout Options</h2>
                 {quickWorkouts.map(
