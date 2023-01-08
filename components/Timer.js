@@ -2,8 +2,10 @@ import React, { useState, useEffect } from "react"
 import useSound from "use-sound"
 import { useCountdownTimer } from "use-countdown-timer"
 import WorkoutOption from "./WorkoutOption"
+import WorkoutSummary from "./WorkoutSummary"
 import defaultWorkout from "../lib/defaultWorkout"
 import quickWorkouts from "../lib/quickWorkouts"
+import { workoutInterval } from "../lib/workoutInterval"
 import EdgeSelector from "./EdgeSelector"
 
 export default function Timer() {
@@ -16,17 +18,20 @@ export default function Timer() {
         [30, 25],
         [20, 15],
     ]
+
+    
     const [playPopFx] = useSound('/sounds/pop.mp3')
     const [playIntroFx] = useSound('/sounds/intro.wav')
     const [playSwitchFx] = useSound('/sounds/switch.wav')
     const [playEndFx] = useSound('/sounds/end.wav')
-
+    
     const [workoutConfig, setWorkoutConfig] = useState(defaultWorkout)
     const [workoutStatus, setWorkoutStatus] = useState(workoutStatusOptions.ready)
     const [currentInterval, setCurrentInterval] = useState(1)
+    const [workoutSummary, setWorkoutSummary] = useState([])
 
-    const [leftHand, setLeftHand] = useState()
-    const [rightHand, setRightHand] = useState()
+    const [leftHand, setLeftHand] = useState(30)
+    const [rightHand, setRightHand] = useState(30)
 
 
     useEffect(() => {
@@ -47,6 +52,9 @@ export default function Timer() {
             restTimer.start()
         }
         else if (workoutStatus == workoutStatusOptions.rest) {
+            setWorkoutSummary(workoutSummary.push(
+                {leftHand: leftHand, rightHand: rightHand, workTime: workoutConfig.workInterval, restTime: workoutConfig.restInterval}
+            ))
             if (currentInterval < workoutConfig.numIntervals) {
                 setWorkoutStatus(workoutStatusOptions.work)
                 setCurrentInterval(currentInterval + 1)
@@ -146,6 +154,7 @@ export default function Timer() {
                 </div>
             </section>
             <EdgeSelector edgeMap={edgeMap} leftHand={leftHand} setLeftHand={setLeftHand} rightHand={rightHand} setRightHand={setRightHand} />
+            <WorkoutSummary workoutSummary={workoutSummary} />
             <section name="workoutconfig">
                 <h2 className="text-center">Workout</h2>
                 <div className="bg-slate-700 rounded-sm p-8 mt-4">
