@@ -2,8 +2,15 @@ import {useState } from 'react'
 
 export default function EdgeSelector() {
 
+
     const [leftHand, setLeftHand] = useState()
     const [rightHand, setRightHand] = useState()
+
+    const edgeMap = [
+            [10,8],
+            [30, 25],
+            [20, 15],
+        ]
 
     return (
         <section name="edge-selector">
@@ -11,16 +18,16 @@ export default function EdgeSelector() {
                     <div className="flex space-x-4 items-center">
                         <div className="bg-slate-600 flex flex-col space-y-4 w-48">
                             <div className="flex space-x-1 h-10">
-                                <button className="bg-slate-400 h-10 w-1/2 rounded-md">10</button>
-                                <button className="bg-slate-400 h-10 w-1/2 rounded-md">8</button>
+                                <button onClick={()=> setLeftHand(10)} className="bg-slate-400 h-10 w-1/2 rounded-md">10</button>
+                                <button onClick={()=> setLeftHand(8)} className="bg-slate-400 h-10 w-1/2 rounded-md">8</button>
                             </div>
                             <div className="flex space-x-1 h-10">
-                                <button className="bg-slate-400 h-10 w-1/2 rounded-md">30</button>
-                                <button className="bg-slate-400 h-10 w-1/2 rounded-md">25</button>
+                                <button onClick={()=> setLeftHand(30)} className="bg-slate-400 h-10 w-1/2 rounded-md">30</button>
+                                <button onClick={()=> setLeftHand(25)} className="bg-slate-400 h-10 w-1/2 rounded-md">25</button>
                             </div>
                             <div className="flex space-x-1 h-10">
-                                <button className="bg-slate-400 h-10 w-1/2 rounded-md">20</button>
-                                <button className="bg-slate-400 h-10 w-1/2 rounded-md">15</button>
+                                <button onClick={()=> setLeftHand(20)} className="bg-slate-400 h-10 w-1/2 rounded-md">20</button>
+                                <button onClick={()=> setLeftHand(15)} className="bg-slate-400 h-10 w-1/2 rounded-md">15</button>
                             </div>
                         </div>
                         <div>
@@ -28,21 +35,24 @@ export default function EdgeSelector() {
                         </div>
                         <div className="bg-slate-600 flex flex-col space-y-4 w-48">
                             <div className="flex space-x-1 h-10">
-                                <button className="bg-slate-400 h-10 w-1/2 rounded-md">10</button>
-                                <button className="bg-slate-400 h-10 w-1/2 rounded-md">8</button>
+                                <button onClick={()=> setRightHand(10)} className="bg-slate-400 h-10 w-1/2 rounded-md">10</button>
+                                <button onClick={()=> setRightHand(8)} className="bg-slate-400 h-10 w-1/2 rounded-md">8</button>
                             </div>
                             <div className="flex space-x-1 h-10">
-                                <button className="bg-slate-400 h-10 w-1/2 rounded-md">30</button>
-                                <button className="bg-slate-400 h-10 w-1/2 rounded-md">25</button>
+                                <button onClick={()=> setRightHand(30)} className="bg-slate-400 h-10 w-1/2 rounded-md">30</button>
+                                <button onClick={()=> setRightHand(8)} className="bg-slate-400 h-10 w-1/2 rounded-md">25</button>
                             </div>
                             <div className="flex space-x-1 h-10">
-                                <button className="bg-slate-400 h-10 w-1/2 rounded-md">20</button>
-                                <button className="bg-slate-400 h-10 w-1/2 rounded-md">15</button>
+                                <button onClick={()=> setRightHand(15)} className="bg-slate-400 h-10 w-1/2 rounded-md">20</button>
+                                <button onClick={()=> setRightHand(8)} className="bg-slate-400 h-10 w-1/2 rounded-md">15</button>
                             </div>
                         </div>
                     </div>
                 </div>
-                <div className="flex justify-between space-x-4 p-8">
+                //
+                
+                //
+                <div className="flex justify-between space-x-4 p-8 text-slate-300">
                     <div className="flex space-x-4">
                         <h3>Left hand</h3>
                         <p>10</p>

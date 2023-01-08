@@ -4,6 +4,7 @@ import { useCountdownTimer } from "use-countdown-timer"
 import WorkoutOption from "./WorkoutOption"
 import defaultWorkout from "../lib/defaultWorkout"
 import quickWorkouts from "../lib/quickWorkouts"
+import EdgeSelector from "./EdgeSelector"
 
 export default function Timer() {
 
@@ -13,9 +14,6 @@ export default function Timer() {
     const [playEndFx] = useSound('/sounds/end.wav')
 
     const workoutStatusOptions = { ready: 'Ready', rest: 'REST', work: 'WORK', prep: 'PREP', completed: 'DONE!' }
-
-    
-
 
     const [workoutConfig, setWorkoutConfig] = useState(defaultWorkout)
 
@@ -161,6 +159,7 @@ export default function Timer() {
                     </form>
                 </div>
             </section>
+            <EdgeSelector />
             <section>
                 <h2 className="text-center mt-8">Quick Workout Options</h2>
                 {quickWorkouts.map(
