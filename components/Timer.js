@@ -46,16 +46,17 @@ export default function Timer() {
         }
 
         if (workoutStatus == workoutStatusOptions.work) {
-            playSwitchFx()
-            setWorkoutStatus(workoutStatusOptions.rest)
-            restTimer.start()
-        }
-        else if (workoutStatus == workoutStatusOptions.rest) {
             setWorkoutSummary([
                 ...workoutSummary,
                 {leftHand: leftHand, rightHand: rightHand, workTime: workoutConfig.workInterval, restTime: workoutConfig.restInterval}
             ]
             )
+            playSwitchFx()
+            setWorkoutStatus(workoutStatusOptions.rest)
+            restTimer.start()
+        }
+        else if (workoutStatus == workoutStatusOptions.rest) {
+            
             if (currentInterval < workoutConfig.numIntervals) {
                 setWorkoutStatus(workoutStatusOptions.work)
                 setCurrentInterval(currentInterval + 1)
