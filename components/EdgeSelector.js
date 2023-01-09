@@ -42,11 +42,11 @@ export default function EdgeSelector({edgeMap, leftHand, setLeftHand, rightHand,
             <div className="flex justify-between space-x-4 p-8 text-slate-300">
                 <div className="flex space-x-4">
                     <h3>Left hand</h3>
-                    <p>{leftHand}</p>
+                    <p>{leftHand}mm</p>
                 </div>
                 <div className="flex space-x-4">
                     <h3>Right hand</h3>
-                    <p>{rightHand}</p>
+                    <p>{rightHand}mm</p>
                 </div>
             </div>
         </section>

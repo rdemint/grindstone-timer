@@ -5,7 +5,6 @@ import WorkoutOption from "./WorkoutOption"
 import WorkoutSummary from "./WorkoutSummary"
 import defaultWorkout from "../lib/defaultWorkout"
 import quickWorkouts from "../lib/quickWorkouts"
-import { workoutInterval } from "../lib/workoutInterval"
 import EdgeSelector from "./EdgeSelector"
 
 export default function Timer() {
@@ -31,7 +30,7 @@ export default function Timer() {
     const [workoutSummary, setWorkoutSummary] = useState([])
 
     const [leftHand, setLeftHand] = useState(30)
-    const [rightHand, setRightHand] = useState(30)
+    const [rightHand, setRightHand] = useState()
 
 
     useEffect(() => {
@@ -52,9 +51,11 @@ export default function Timer() {
             restTimer.start()
         }
         else if (workoutStatus == workoutStatusOptions.rest) {
-            setWorkoutSummary(workoutSummary.push(
+            setWorkoutSummary([
+                ...workoutSummary,
                 {leftHand: leftHand, rightHand: rightHand, workTime: workoutConfig.workInterval, restTime: workoutConfig.restInterval}
-            ))
+            ]
+            )
             if (currentInterval < workoutConfig.numIntervals) {
                 setWorkoutStatus(workoutStatusOptions.work)
                 setCurrentInterval(currentInterval + 1)
