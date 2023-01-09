@@ -2,25 +2,36 @@ import React, { useState, useEffect } from "react"
 import useSound from "use-sound"
 import { useCountdownTimer } from "use-countdown-timer"
 import WorkoutOption from "./WorkoutOption"
+import WorkoutSummary from "./WorkoutSummary"
 import defaultWorkout from "../lib/defaultWorkout"
 import quickWorkouts from "../lib/quickWorkouts"
+import EdgeSelector from "./EdgeSelector"
 
 export default function Timer() {
 
+
+    const workoutStatusOptions = { unconfigured: 'Please select an edge', ready: 'Ready', rest: 'REST', work: 'WORK', prep: 'PREP', completed: 'DONE!' }
+
+    const edgeMap = [
+        [10, 8],
+        [30, 25],
+        [20, 15],
+    ]
+
+    
     const [playPopFx] = useSound('/sounds/pop.mp3')
     const [playIntroFx] = useSound('/sounds/intro.wav')
     const [playSwitchFx] = useSound('/sounds/switch.wav')
     const [playEndFx] = useSound('/sounds/end.wav')
-
-    const workoutStatusOptions = { ready: 'Ready', rest: 'REST', work: 'WORK', prep: 'PREP', completed: 'DONE!' }
-
     
-
-
     const [workoutConfig, setWorkoutConfig] = useState(defaultWorkout)
-
-    const [workoutStatus, setWorkoutStatus] = useState(workoutStatusOptions.ready)
+    const [workoutStatus, setWorkoutStatus] = useState(workoutStatusOptions.unconfigured)
     const [currentInterval, setCurrentInterval] = useState(1)
+    const [workoutSummary, setWorkoutSummary] = useState([])
+
+    const [leftHand, setLeftHand] = useState(30)
+    const [rightHand, setRightHand] = useState(30)
+
 
     useEffect(() => {
         handleResetTimer()
@@ -35,11 +46,17 @@ export default function Timer() {
         }
 
         if (workoutStatus == workoutStatusOptions.work) {
+            setWorkoutSummary([
+                ...workoutSummary,
+                {leftHand: leftHand, rightHand: rightHand, workTime: workoutConfig.workInterval, restTime: workoutConfig.restInterval}
+            ]
+            )
             playSwitchFx()
             setWorkoutStatus(workoutStatusOptions.rest)
             restTimer.start()
         }
         else if (workoutStatus == workoutStatusOptions.rest) {
+            
             if (currentInterval < workoutConfig.numIntervals) {
                 setWorkoutStatus(workoutStatusOptions.work)
                 setCurrentInterval(currentInterval + 1)
@@ -101,6 +118,28 @@ export default function Timer() {
         restTimer.reset()
     }
 
+    const handleRightHandClick = (newEdge) => {
+        setRightHand((oldEdge)=> {
+            if(newEdge === oldEdge) {
+                return 'None'
+            }
+            else {
+                return newEdge
+            }
+        })
+    }
+
+    const handleLeftHandClick = (newEdge) => {
+        setLeftHand((oldEdge)=> {
+            if(newEdge === oldEdge) {
+                return 'None'
+            }
+            else {
+                return newEdge
+            }
+        })
+    }
+
 
 
 
@@ -138,8 +177,10 @@ export default function Timer() {
                     <button onClick={() => handleResetTimer()} id="resetTimer" className="bg-pink-600 rounded p-2 w-16 md:w-36 hover:scale-105">RESET</button>
                 </div>
             </section>
+            <EdgeSelector edgeMap={edgeMap} leftHand={leftHand} setLeftHand={handleLeftHandClick} rightHand={rightHand} setRightHand={handleRightHandClick} />
+            <WorkoutSummary workoutSummary={workoutSummary} />
             <section name="workoutconfig">
-                <h2 className="text-center">Workout</h2>
+                <h2 className="text-center">Customize Workout</h2>
                 <div className="bg-slate-700 rounded-sm p-8 mt-4">
                     <form className="flex flex-col justify-between md:flex-row md:items-center">
                         <div className="flex justify-between p-2 items-center">
