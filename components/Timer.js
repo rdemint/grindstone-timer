@@ -30,7 +30,7 @@ export default function Timer() {
     const [workoutSummary, setWorkoutSummary] = useState([])
 
     const [leftHand, setLeftHand] = useState(30)
-    const [rightHand, setRightHand] = useState()
+    const [rightHand, setRightHand] = useState(30)
 
 
     useEffect(() => {
@@ -157,7 +157,7 @@ export default function Timer() {
             <EdgeSelector edgeMap={edgeMap} leftHand={leftHand} setLeftHand={setLeftHand} rightHand={rightHand} setRightHand={setRightHand} />
             <WorkoutSummary workoutSummary={workoutSummary} />
             <section name="workoutconfig">
-                <h2 className="text-center">Workout</h2>
+                <h2 className="text-center">Customize Workout</h2>
                 <div className="bg-slate-700 rounded-sm p-8 mt-4">
                     <form className="flex flex-col justify-between md:flex-row md:items-center">
                         <div className="flex justify-between p-2 items-center">

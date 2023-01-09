@@ -1,10 +1,7 @@
-import { useState } from 'react'
-
-
 function EdgeCol({ edgeMap, handleEdgeClick, currentEdge }) {
     return (
         <>
-            <div className="bg-slate-600 flex flex-col space-y-4 w-48">
+            <div className="bg-slate-600 flex flex-col space-y-4 w-24">
                 {
                     edgeMap.map(
                         (row) => (
@@ -23,30 +20,32 @@ function EdgeCol({ edgeMap, handleEdgeClick, currentEdge }) {
 
 
 
-export default function EdgeSelector({edgeMap, leftHand, setLeftHand, rightHand, setRightHand}) {
-
-
-
+export default function EdgeSelector({ edgeMap, leftHand, setLeftHand, rightHand, setRightHand }) {
 
     return (
         <section name="edge-selector">
-            <div className="bg-slate-700 rounded-md pt-8 pb-2 px-2 mt-4">
-                <div className="flex space-x-4 items-center">
+            <div className="bg-slate-700 rounded-md pt-1 pb-2 px-2 mt-4">
+                <div className=' flex space-x-1 mb-4'>
+                    <button onClick={()=> setLeftHand('Jug')} className={`bg-slate-400 h-8 w-1/2 px-2 rounded-md ${leftHand === 'Jug' ? 'bg-green-400 text-slate-800' : '' }`}>Jug</button>
+                    <button onClick={()=> setRightHand('Jug')} className={`bg-slate-400 h-8 w-1/2 px-2 rounded-md ${rightHand === 'Jug' ? 'bg-green-400 text-slate-800' : ''}`}>Jug</button>
+                </div>
+                <div className="flex space-x-4 items-center justify-center">
                     <EdgeCol edgeMap={edgeMap} handleEdgeClick={setLeftHand} currentEdge={leftHand} />
-                    <div>
-                        <button className="bg-slate-500 h-12 w-24 rounded-md">Slot</button>
+                    <div className="flex space-x-1">
+                        <button onClick={()=> setLeftHand('Slot')} className={`bg-slate-400 h-8 w-1/2 px-2 rounded-md ${leftHand === 'Slot' ? 'bg-green-400 text-slate-800' : ''}`}>Slot</button>
+                        <button onClick={()=> setRightHand('Slot')} className={`bg-slate-400 h-8 w-1/2 px-2 rounded-md ${rightHand === 'Slot' ? 'bg-green-400 text-slate-800' : ''}`}>Slot</button>
                     </div>
                     <EdgeCol edgeMap={edgeMap} handleEdgeClick={setRightHand} currentEdge={rightHand} />
                 </div>
             </div>
-            <div className="flex justify-between space-x-4 p-8 text-slate-300">
+            <div className="flex justify-between space-x-4 p-4 text-slate-300">
                 <div className="flex space-x-4">
-                    <h3>Left hand</h3>
-                    <p>{leftHand}mm</p>
+                    <h3>Left:</h3>
+                    <p>{leftHand}</p>
                 </div>
                 <div className="flex space-x-4">
-                    <h3>Right hand</h3>
-                    <p>{rightHand}mm</p>
+                    <h3>Right:</h3>
+                    <p>{rightHand}</p>
                 </div>
             </div>
         </section>
