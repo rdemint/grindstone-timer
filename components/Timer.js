@@ -10,7 +10,7 @@ import EdgeSelector from "./EdgeSelector"
 export default function Timer() {
 
 
-    const workoutStatusOptions = { ready: 'Ready', rest: 'REST', work: 'WORK', prep: 'PREP', completed: 'DONE!' }
+    const workoutStatusOptions = { unconfigured: 'Please select an edge', ready: 'Ready', rest: 'REST', work: 'WORK', prep: 'PREP', completed: 'DONE!' }
 
     const edgeMap = [
         [10, 8],
@@ -25,7 +25,7 @@ export default function Timer() {
     const [playEndFx] = useSound('/sounds/end.wav')
     
     const [workoutConfig, setWorkoutConfig] = useState(defaultWorkout)
-    const [workoutStatus, setWorkoutStatus] = useState(workoutStatusOptions.ready)
+    const [workoutStatus, setWorkoutStatus] = useState(workoutStatusOptions.unconfigured)
     const [currentInterval, setCurrentInterval] = useState(1)
     const [workoutSummary, setWorkoutSummary] = useState([])
 
@@ -117,6 +117,28 @@ export default function Timer() {
         restTimer.reset()
     }
 
+    const handleRightHandClick = (newEdge) => {
+        setRightHand((oldEdge)=> {
+            if(newEdge === oldEdge) {
+                return 'None'
+            }
+            else {
+                return newEdge
+            }
+        })
+    }
+
+    const handleLeftHandClick = (newEdge) => {
+        setLeftHand((oldEdge)=> {
+            if(newEdge === oldEdge) {
+                return 'None'
+            }
+            else {
+                return newEdge
+            }
+        })
+    }
+
 
 
 
@@ -154,7 +176,7 @@ export default function Timer() {
                     <button onClick={() => handleResetTimer()} id="resetTimer" className="bg-pink-600 rounded p-2 w-16 md:w-36 hover:scale-105">RESET</button>
                 </div>
             </section>
-            <EdgeSelector edgeMap={edgeMap} leftHand={leftHand} setLeftHand={setLeftHand} rightHand={rightHand} setRightHand={setRightHand} />
+            <EdgeSelector edgeMap={edgeMap} leftHand={leftHand} setLeftHand={handleLeftHandClick} rightHand={rightHand} setRightHand={handleRightHandClick} />
             <WorkoutSummary workoutSummary={workoutSummary} />
             <section name="workoutconfig">
                 <h2 className="text-center">Customize Workout</h2>

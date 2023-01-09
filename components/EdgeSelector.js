@@ -1,14 +1,14 @@
 function EdgeCol({ edgeMap, handleEdgeClick, currentEdge }) {
     return (
         <>
-            <div className="bg-slate-600 flex flex-col space-y-4 w-24">
+            <div className="flex flex-col space-y-4 w-24">
                 {
                     edgeMap.map(
                         (row) => (
                             <div key={row[0]} className="flex space-x-1 h-10">
                                 {row.map(
                                     (edge) => (
-                                        <button key={edge} onClick={() => handleEdgeClick(edge)} className={`bg-slate-400 h-10 w-1/2 rounded-md ${currentEdge == edge ? 'bg-green-400 text-slate-800' : ''}`}>{edge}</button>
+                                        <button key={edge} onClick={() => handleEdgeClick(edge)} className={`bg-slate-400 h-8 md:12 w-1/2 rounded-md ${currentEdge == edge ? 'bg-green-400 text-slate-800' : ''}`}>{edge}</button>
                                     ))}
                             </div>
                         ))
@@ -24,8 +24,8 @@ export default function EdgeSelector({ edgeMap, leftHand, setLeftHand, rightHand
 
     return (
         <section name="edge-selector">
-            <div className="bg-slate-700 rounded-md pt-1 pb-2 px-2 mt-4">
-                <div className=' flex space-x-1 mb-4'>
+            <div className="bg-slate-700 rounded-md pt-1 pb-2 px-2 mt-4 text-slate-50">
+                <div className='flex space-x-1 mb-4'>
                     <button onClick={()=> setLeftHand('Jug')} className={`bg-slate-400 h-8 w-1/2 px-2 rounded-md ${leftHand === 'Jug' ? 'bg-green-400 text-slate-800' : '' }`}>Jug</button>
                     <button onClick={()=> setRightHand('Jug')} className={`bg-slate-400 h-8 w-1/2 px-2 rounded-md ${rightHand === 'Jug' ? 'bg-green-400 text-slate-800' : ''}`}>Jug</button>
                 </div>
