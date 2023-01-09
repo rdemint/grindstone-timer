@@ -4,16 +4,6 @@ export default function WorkoutSummary({ workoutSummary }) {
             {workoutSummary.length > 0 ?
                 <>
                     <h4 className="text-center py-4">Workout Summary</h4>
-                    {/* <div className="flex flex-col p-4 bg-slate-700">
-                        {workoutSummary.map((workout, i) => (
-                            <div key={i} className="flex space-x-4 justify-between">
-                                <div>L: {workout.leftHand}</div>
-                                <div>R: {workout.rightHand}</div>
-                                <div>Work: {workout.workTime}s</div>
-                                <div>Rest: {workout.restTime}s</div>
-                            </div>
-                        ))}
-                    </div> */}
                     <table className="w-72">
                         <thead>
                             <tr className="w-full">
