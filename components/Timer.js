@@ -5,18 +5,26 @@ import WorkoutOption from "./WorkoutOption"
 import WorkoutSummary from "./WorkoutSummary"
 import defaultWorkout from "../lib/defaultWorkout"
 import quickWorkouts from "../lib/quickWorkouts"
-import EdgeSelector from "./EdgeSelector"
+import GrindStoneSelector from "./GrindstoneSelector"
 
 export default function Timer() {
 
 
-    const workoutStatusOptions = { unconfigured: 'Please select an edge', ready: 'Ready', rest: 'REST', work: 'WORK', prep: 'PREP', completed: 'DONE!' }
+    const grindstone = {
+        name: 'grindstone',
+        edgeMap: [
+            [10, 8],
+            [30, 25],
+            [20, 15],
+        ]
+    }
 
-    const edgeMap = [
-        [10, 8],
-        [30, 25],
-        [20, 15],
-    ]
+    const simpleBoard = {
+        name: 'simple-board',
+        edgeMap: [10,8,6]
+    }
+
+    const workoutStatusOptions = { unconfigured: 'Please select an edge', ready: 'Ready', rest: 'REST', work: 'WORK', prep: 'PREP', completed: 'DONE!' }
 
     
     const [playPopFx] = useSound('/sounds/pop.mp3')
@@ -29,8 +37,8 @@ export default function Timer() {
     const [currentInterval, setCurrentInterval] = useState(1)
     const [workoutSummary, setWorkoutSummary] = useState([])
 
-    const [leftHand, setLeftHand] = useState(30)
-    const [rightHand, setRightHand] = useState(30)
+    const [leftHand, setLeftHand] = useState({hangboard: grindstone, edge: 30})
+    const [rightHand, setRightHand] = useState({hangboard: grindstone, edge: 30})
 
 
     useEffect(() => {
@@ -118,24 +126,24 @@ export default function Timer() {
         restTimer.reset()
     }
 
-    const handleRightHandClick = (newEdge) => {
-        setRightHand((oldEdge)=> {
-            if(newEdge === oldEdge) {
-                return 'None'
+    const handleRightHandClick = ({newHangboard, newEdge}) => {
+        setRightHand(({hangboard, edge})=> {
+            if(newEdge === edge && newHangboard === hangboard) {
+                return ({hangboard: hangboard, edge: 'None'})
             }
             else {
-                return newEdge
+                return ({hangboard: newHangboard, edge: newEdge})
             }
         })
     }
 
-    const handleLeftHandClick = (newEdge) => {
-        setLeftHand((oldEdge)=> {
-            if(newEdge === oldEdge) {
-                return 'None'
+    const handleLeftHandClick = ({newHangboard, newEdge}) => {
+        setLeftHand(({hangboard, edge})=> {
+            if(newEdge === edge && newHangboard === hangboard) {
+                return ({hangboard: hangboard, edge: 'None'})
             }
             else {
-                return newEdge
+                return ({hangboard: hangboard, edge: newEdge})
             }
         })
     }
@@ -177,7 +185,7 @@ export default function Timer() {
                     <button onClick={() => handleResetTimer()} id="resetTimer" className="bg-pink-600 rounded p-2 w-16 md:w-36 hover:scale-105">RESET</button>
                 </div>
             </section>
-            <EdgeSelector edgeMap={edgeMap} leftHand={leftHand} setLeftHand={handleLeftHandClick} rightHand={rightHand} setRightHand={handleRightHandClick} />
+            <GrindStoneSelector hangboard={grindstone} leftHand={leftHand} setLeftHand={handleLeftHandClick} rightHand={rightHand} setRightHand={handleRightHandClick} />
             <WorkoutSummary workoutSummary={workoutSummary} />
             <section name="workoutconfig">
                 <h2 className="text-center">Customize Workout</h2>
