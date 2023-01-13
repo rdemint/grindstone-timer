@@ -183,7 +183,7 @@ export default function Timer() {
 
     return (
         <div className="flex flex-col space-y-6 justify-center items-center w-full py-8">
-            <section id="timerdisplay" className={`flex flex-col ${getTimerTheme()} justify-between rounded-sm max-w-5xl p-8 h-96 md:w-2/3`}>
+            <section id="timerdisplay" className={`flex flex-col ${getTimerTheme()} justify-between rounded-sm max-w-3xl p-8 h-96 md:w-2/3`}>
                 <div className="flex justify-center text-center space-x-4">
                     <div>INTERVAL</div>
                     <div>{currentInterval} / {workoutConfig.numIntervals}</div>
@@ -201,7 +201,7 @@ export default function Timer() {
                     <button onClick={() => handleResetTimer()} id="resetTimer" className="bg-pink-600 rounded p-2 w-16 md:w-36 hover:scale-105">RESET</button>
                 </div>
             </section>
-            <section id="hold-selection" className="flex flex-col items-center w-5/6">
+            <section id="hold-selection" className="max-w-3xl flex flex-col items-center w-5/6">
                 <div className="flex w-full rounded justify-center">
                     <SimpleboardSelector
                         hangboard={simpleboard}
