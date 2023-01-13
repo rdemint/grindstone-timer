@@ -30,6 +30,7 @@ interface IWorkoutConfig {
 
 export interface IWorkout {
     name?: String;
+    date?: Date;
     intervals: Array<IInterval>;
 }
 
@@ -53,7 +54,7 @@ export default function Timer() {
     const [workoutConfig, setWorkoutConfig] = useState<IWorkoutConfig>(defaultWorkout)
     const [workoutStatus, setWorkoutStatus] = useState<String>(workoutStatusOptions.unconfigured)
     const [currentInterval, setCurrentInterval] = useState<number>(1)
-    const [workoutSummary, setWorkoutSummary] = useState<IWorkout>({ name: "New workout", intervals: [] })
+    const [workoutSummary, setWorkoutSummary] = useState<IWorkout>({ name: "New workout", date: new Date(), intervals: [] })
 
 
     const [leftHand, setLeftHand] = useState<IHold>({ hangboard: grindstone, edge: '30' })
