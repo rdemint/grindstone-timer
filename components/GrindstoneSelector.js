@@ -41,11 +41,11 @@ export default function GrindstoneSelector({ hangboard, leftHand, setLeftHand, r
             <div className="flex justify-between space-x-4 p-4 text-slate-300">
                 <div className="flex space-x-4">
                     <h3>Left:</h3>
-                    <p>{leftHand}</p>
+                    <p>{leftHand.edge}</p>
                 </div>
                 <div className="flex space-x-4">
                     <h3>Right:</h3>
-                    <p>{rightHand}</p>
+                    <p>{rightHand.edge}</p>
                 </div>
             </div>
         </section>

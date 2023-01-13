@@ -126,24 +126,24 @@ export default function Timer() {
         restTimer.reset()
     }
 
-    const handleRightHandClick = ({newHangboard, newEdge}) => {
-        setRightHand(({hangboard, edge})=> {
-            if(newEdge === edge && newHangboard === hangboard) {
-                return ({hangboard: hangboard, edge: 'None'})
+    const handleRightHandClick = (newHold) => {
+        setRightHand((oldHold)=> {
+            if(newHold.edge === oldHold.edge && newHold.hangboard === oldHold.hangboard) {
+                return ({...newHold, edge: 'None'})
             }
             else {
-                return ({hangboard: newHangboard, edge: newEdge})
+                return ({hangboard: newHold.hangboard, edge: newHold.edge})
             }
         })
     }
 
-    const handleLeftHandClick = ({newHangboard, newEdge}) => {
-        setLeftHand(({hangboard, edge})=> {
-            if(newEdge === edge && newHangboard === hangboard) {
-                return ({hangboard: hangboard, edge: 'None'})
+    const handleLeftHandClick = (newHold) => {
+        setLeftHand((oldHold) => {
+            if(newHold.edge === oldHold.edge && newHold.hangboard === oldHold.hangboard) {
+                return ({...newHold , edge: 'None'})
             }
             else {
-                return ({hangboard: hangboard, edge: newEdge})
+                return ({hangboard: newHold.hangboard, edge: newHold.edge})
             }
         })
     }
