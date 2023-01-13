@@ -1,10 +1,12 @@
 import React, { useState, useEffect } from "react"
 import useSound from "use-sound"
+import { ICountdownTimerParams } from 'use-countdown-timer'
 import { useCountdownTimer } from "use-countdown-timer"
 import WorkoutOption from "./WorkoutOption"
 import WorkoutSummary from "./WorkoutSummary"
 import defaultWorkout from "../lib/defaultWorkout"
 import quickWorkouts from "../lib/quickWorkouts"
+import { grindstone, simpleboard } from "../lib/hangboards"
 import GrindStoneSelector from "./GrindstoneSelector"
 import SimpleboardSelector from "./SimpleboardSelector"
 
@@ -22,62 +24,38 @@ export default function Timer() {
 
     interface IWorkoutConfig {
         name?: String;
-        prepInterval: Number;
-        workInterval: Number;
-        restInterval: Number;
-        numIntervals: Number;
+        prepInterval: number;
+        workInterval: number;
+        restInterval: number;
+        numIntervals: number;
     }
 
     interface IWorkout {
         name?: String;
+        prepInterval: number;
         intervals: Array<IInterval>;
     }
 
     interface IInterval {
-        workInterval: Number;
-        restInterval: Number;
-        exercise: IBoardExercise;
-    }
-
-    interface IBoardExercise {
-        hold: IHold;
+        workInterval: number;
+        restInterval: number;
+        leftHold: IHold;
+        rightHold: IHold;
         action: "hang" | "pullup"
     }
 
-
-    const grindstone = {
-        name: 'grindstone',
-        edgeMap: [
-            ['10', '8'],
-            ['30', '25'],
-            ['20', '15'],
-        ]
-    }
-
-    const simpleboard = {
-        name: 'simple-board',
-        edgeMap: [
-            ['10'],
-            ['8'],
-            ['6']
-        ]
-    }
-
     const workoutStatusOptions = { unconfigured: 'Please select an edge', ready: 'Ready', rest: 'REST', work: 'WORK', prep: 'PREP', completed: 'DONE!' }
-
 
     const [playPopFx] = useSound('/sounds/pop.mp3')
     const [playIntroFx] = useSound('/sounds/intro.wav')
     const [playSwitchFx] = useSound('/sounds/switch.wav')
     const [playEndFx] = useSound('/sounds/end.wav')
 
-    const [workoutConfig, setWorkoutConfig] = useState(defaultWorkout)
-    const [workoutStatus, setWorkoutStatus] = useState(workoutStatusOptions.unconfigured)
-    const [currentInterval, setCurrentInterval] = useState(1)
-    const [workoutSummary, setWorkoutSummary] = useState([])
+    const [workoutConfig, setWorkoutConfig] = useState<IWorkoutConfig>(defaultWorkout)
+    const [workoutStatus, setWorkoutStatus] = useState<String>(workoutStatusOptions.unconfigured)
+    const [currentInterval, setCurrentInterval] = useState<number>(1)
+    const [workoutSummary, setWorkoutSummary] = useState<IWorkout>({ name: "New workout", prepInterval: 0, intervals: [] })
 
-
-    
 
     const [leftHand, setLeftHand] = useState<IHold>({ hangboard: grindstone, edge: '30' })
     const [rightHand, setRightHand] = useState<IHold>({ hangboard: grindstone, edge: '30' })
@@ -96,10 +74,18 @@ export default function Timer() {
         }
 
         if (workoutStatus == workoutStatusOptions.work) {
-            setWorkoutSummary([
+            const newInterval: IInterval = {
+                workInterval: workoutConfig.workInterval,
+                restInterval: workoutConfig.restInterval,
+                leftHold: leftHand,
+                rightHold: rightHand,
+                action: "hang"
+            }
+
+            setWorkoutSummary({
                 ...workoutSummary,
-                { leftHand: leftHand, rightHand: rightHand, workTime: workoutConfig.workInterval, restTime: workoutConfig.restInterval }
-            ]
+                intervals: [...workoutSummary.intervals, newInterval]
+            }
             )
             playSwitchFx()
             setWorkoutStatus(workoutStatusOptions.rest)
@@ -122,6 +108,12 @@ export default function Timer() {
                 //
             }
         }
+    }
+
+    const prepTimerConfig: ICountdownTimerParams = {
+        timer: (workoutConfig.prepInterval * 1000),
+        expireImmediate: true,
+        onExpire: completeInterval
     }
 
     const prepTimer = useCountdownTimer({
