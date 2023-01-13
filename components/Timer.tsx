@@ -1,57 +1,61 @@
 import React, { useState, useEffect } from "react"
 import useSound from "use-sound"
+import { ICountdownTimerParams } from 'use-countdown-timer'
 import { useCountdownTimer } from "use-countdown-timer"
 import WorkoutOption from "./WorkoutOption"
 import WorkoutSummary from "./WorkoutSummary"
 import defaultWorkout from "../lib/defaultWorkout"
 import quickWorkouts from "../lib/quickWorkouts"
+import { grindstone, simpleboard } from "../lib/hangboards"
 import GrindStoneSelector from "./GrindstoneSelector"
 import SimpleboardSelector from "./SimpleboardSelector"
 
+interface IHangboard {
+    name: String;
+    edgeMap: Array<any>
+}
+
+interface IHold {
+    hangboard: IHangboard;
+    edge: String;
+}
+
+interface IWorkoutConfig {
+    name?: String;
+    prepInterval: number;
+    workInterval: number;
+    restInterval: number;
+    numIntervals: number;
+}
+
+export interface IWorkout {
+    name?: String;
+    date?: Date;
+    intervals: Array<IInterval>;
+}
+
+export interface IInterval {
+    workInterval: number;
+    restInterval: number;
+    leftHold: IHold;
+    rightHold: IHold;
+    action: "hang" | "pullup"
+}
+
 export default function Timer() {
 
-    interface IHangboard {
-        name: String;
-        edgeMap: Array<any>
-    }
-
-
-    const grindstone = {
-        name: 'grindstone',
-        edgeMap: [
-            ['10', '8'],
-            ['30', '25'],
-            ['20', '15'],
-        ]
-    }
-
-    const simpleboard = {
-        name: 'simple-board',
-        edgeMap: [
-            ['10'],
-            ['8'],
-            ['6']
-        ]
-    }
-
     const workoutStatusOptions = { unconfigured: 'Please select an edge', ready: 'Ready', rest: 'REST', work: 'WORK', prep: 'PREP', completed: 'DONE!' }
-
 
     const [playPopFx] = useSound('/sounds/pop.mp3')
     const [playIntroFx] = useSound('/sounds/intro.wav')
     const [playSwitchFx] = useSound('/sounds/switch.wav')
     const [playEndFx] = useSound('/sounds/end.wav')
 
-    const [workoutConfig, setWorkoutConfig] = useState(defaultWorkout)
-    const [workoutStatus, setWorkoutStatus] = useState(workoutStatusOptions.unconfigured)
-    const [currentInterval, setCurrentInterval] = useState(1)
-    const [workoutSummary, setWorkoutSummary] = useState([])
+    const [workoutConfig, setWorkoutConfig] = useState<IWorkoutConfig>(defaultWorkout)
+    const [workoutStatus, setWorkoutStatus] = useState<String>(workoutStatusOptions.unconfigured)
+    const [currentInterval, setCurrentInterval] = useState<number>(1)
+    const [workoutSummary, setWorkoutSummary] = useState<IWorkout>({ name: "New workout", date: new Date(), intervals: [] })
 
-
-    interface IHold {
-        hangboard: IHangboard;
-        edge: String;
-    }
 
     const [leftHand, setLeftHand] = useState<IHold>({ hangboard: grindstone, edge: '30' })
     const [rightHand, setRightHand] = useState<IHold>({ hangboard: grindstone, edge: '30' })
@@ -70,10 +74,17 @@ export default function Timer() {
         }
 
         if (workoutStatus == workoutStatusOptions.work) {
-            setWorkoutSummary([
+            const newInterval: IInterval = {
+                workInterval: workoutConfig.workInterval,
+                restInterval: workoutConfig.restInterval,
+                leftHold: leftHand,
+                rightHold: rightHand,
+                action: "hang"
+            }
+            setWorkoutSummary({
                 ...workoutSummary,
-                { leftHand: leftHand, rightHand: rightHand, workTime: workoutConfig.workInterval, restTime: workoutConfig.restInterval }
-            ]
+                intervals: [...workoutSummary.intervals, newInterval]
+            }
             )
             playSwitchFx()
             setWorkoutStatus(workoutStatusOptions.rest)
@@ -96,6 +107,12 @@ export default function Timer() {
                 //
             }
         }
+    }
+
+    const prepTimerConfig: ICountdownTimerParams = {
+        timer: (workoutConfig.prepInterval * 1000),
+        expireImmediate: true,
+        onExpire: completeInterval
     }
 
     const prepTimer = useCountdownTimer({
@@ -229,7 +246,7 @@ export default function Timer() {
                     </div>
                 </div>
             </section>
-            <WorkoutSummary workoutSummary={workoutSummary} />
+            <WorkoutSummary name={workoutSummary.name} intervals={workoutSummary.intervals} />
             <section id="workoutconfig">
                 <h2 className="text-center">Customize Workout</h2>
                 <div className="bg-slate-700 rounded-sm p-8 mt-4">
@@ -240,7 +257,7 @@ export default function Timer() {
                         </div>
                         <div className="flex justify-between p-2 items-center">
                             <label className="px-4 text-lg">Work</label>
-                            <input className="w-12 bg-slate-500 rounded p-1 text-xl text-center  hover:scale-105" type="number" value={workoutConfig.workInterval} onChange={(e) => { console.log(e); setWorkoutConfig({ ...workoutConfig, workInterval: e.target.valueAsNumber }) }} />
+                            <input className="w-12 bg-slate-500 rounded p-1 text-xl text-center  hover:scale-105" type="number" value={workoutConfig.workInterval} onChange={(e) => { setWorkoutConfig({ ...workoutConfig, workInterval: e.target.valueAsNumber }) }} />
                         </div>
                         <div className="flex justify-between p-2 items-center">
                             <label className="px-4 text-lg">Rest</label>
