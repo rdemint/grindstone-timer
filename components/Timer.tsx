@@ -15,6 +15,35 @@ export default function Timer() {
         edgeMap: Array<any>
     }
 
+    interface IHold {
+        hangboard: IHangboard;
+        edge: String;
+    }
+
+    interface IWorkoutConfig {
+        name?: String;
+        prepInterval: Number;
+        workInterval: Number;
+        restInterval: Number;
+        numIntervals: Number;
+    }
+
+    interface IWorkout {
+        name?: String;
+        intervals: Array<IInterval>;
+    }
+
+    interface IInterval {
+        workInterval: Number;
+        restInterval: Number;
+        exercise: IBoardExercise;
+    }
+
+    interface IBoardExercise {
+        hold: IHold;
+        action: "hang" | "pullup"
+    }
+
 
     const grindstone = {
         name: 'grindstone',
@@ -48,10 +77,7 @@ export default function Timer() {
     const [workoutSummary, setWorkoutSummary] = useState([])
 
 
-    interface IHold {
-        hangboard: IHangboard;
-        edge: String;
-    }
+    
 
     const [leftHand, setLeftHand] = useState<IHold>({ hangboard: grindstone, edge: '30' })
     const [rightHand, setRightHand] = useState<IHold>({ hangboard: grindstone, edge: '30' })
