@@ -128,8 +128,8 @@ export default function Timer() {
 
     const handleRightHandClick = (newHold) => {
         setRightHand((oldHold)=> {
-            if(newHold.edge === oldHold.edge && newHold.hangboard === oldHold.hangboard) {
-                return ({...newHold, edge: 'None'})
+            if(newHold.edge == oldHold.edge && newHold.hangboard === oldHold.hangboard) {
+                return ({...oldHold, edge: 'None'})
             }
             else {
                 return ({hangboard: newHold.hangboard, edge: newHold.edge})
