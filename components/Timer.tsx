@@ -236,19 +236,19 @@ export default function Timer() {
                     <form className="flex flex-col justify-between md:flex-row md:items-center">
                         <div className="flex justify-between p-2 items-center">
                             <label className="px-4 text-lg">Prep</label>
-                            <input className="w-12 bg-slate-500 rounded p-1 text-xl text-center  hover:scale-105" type="text" value={workoutConfig.prepInterval} onChange={(e) => { setWorkoutConfig({ ...workoutConfig, prepInterval: e.target.value }) }} />
+                            <input className="w-12 bg-slate-500 rounded p-1 text-xl text-center  hover:scale-105" type="number" value={workoutConfig.prepInterval} onChange={(e) => { setWorkoutConfig({ ...workoutConfig, prepInterval: e.target.valueAsNumber }) }} />
                         </div>
                         <div className="flex justify-between p-2 items-center">
                             <label className="px-4 text-lg">Work</label>
-                            <input className="w-12 bg-slate-500 rounded p-1 text-xl text-center  hover:scale-105" type="text" value={workoutConfig.workInterval} onChange={(e) => { setWorkoutConfig({ ...workoutConfig, workInterval: e.target.value }) }} />
+                            <input className="w-12 bg-slate-500 rounded p-1 text-xl text-center  hover:scale-105" type="number" value={workoutConfig.workInterval} onChange={(e) => { console.log(e); setWorkoutConfig({ ...workoutConfig, workInterval: e.target.valueAsNumber }) }} />
                         </div>
                         <div className="flex justify-between p-2 items-center">
                             <label className="px-4 text-lg">Rest</label>
-                            <input className="w-12 bg-slate-500 rounded p-1 text-xl text-center hover:scale-105" type="text" value={workoutConfig.restInterval} onChange={(e) => { setWorkoutConfig({ ...workoutConfig, restInterval: e.target.value }) }} />
+                            <input className="w-12 bg-slate-500 rounded p-1 text-xl text-center hover:scale-105" type="number" value={workoutConfig.restInterval} onChange={(e) => { setWorkoutConfig({ ...workoutConfig, restInterval: e.target.valueAsNumber }) }} />
                         </div>
                         <div className="flex justify-between p-2 items-center">
                             <label className="px-4 text-lg">Intervals</label>
-                            <input className="w-12 bg-slate-500 rounded p-1 text-xl text-center hover:scale-105" type="text" value={workoutConfig.numIntervals} onChange={(e) => setWorkoutConfig({ ...workoutConfig, numIntervals: e.target.value })} />
+                            <input className="w-12 bg-slate-500 rounded p-1 text-xl text-center hover:scale-105" type="number" value={workoutConfig.numIntervals} onChange={(e) => setWorkoutConfig({ ...workoutConfig, numIntervals: e.target.valueAsNumber })} />
                         </div>
                     </form>
                 </div>
