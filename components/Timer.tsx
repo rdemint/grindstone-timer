@@ -144,7 +144,7 @@ export default function Timer() {
 
     const handleRightHandClick = (newHold: IHold) => {
         setRightHand((oldHold: IHold) => {
-            if (newHold.edge == oldHold.edge && newHold.hangboard === oldHold.hangboard) {
+            if (newHold.edge == oldHold.edge && newHold.hangboard.name === oldHold.hangboard.name) {
                 return ({ ...oldHold, edge: 'None' })
             }
             else {
@@ -155,7 +155,7 @@ export default function Timer() {
 
     const handleLeftHandClick = (newHold: IHold) => {
         setLeftHand((oldHold: IHold) => {
-            if (newHold.edge === oldHold.edge && newHold.hangboard === oldHold.hangboard) {
+            if (newHold.edge == oldHold.edge && newHold.hangboard.name === oldHold.hangboard.name) {
                 return ({ ...newHold, edge: 'None' })
             }
             else {
@@ -202,10 +202,10 @@ export default function Timer() {
                 </div>
             </section>
             <section id="hold-selection" className="flex flex-col items-center w-5/6">
-                <div className="flex w-full border justify-center">
+                <div className="flex w-full rounded justify-center">
                     <SimpleboardSelector
                         hangboard={simpleboard}
-                        handleEdgeClick={setLeftHand}
+                        handleEdgeClick={handleLeftHandClick}
                         handHold={leftHand} />
                     <GrindStoneSelector
                         hangboard={grindstone}
@@ -215,7 +215,7 @@ export default function Timer() {
                         setRightHand={handleRightHandClick} />
                     <SimpleboardSelector
                         hangboard={simpleboard}
-                        handleEdgeClick={setRightHand}
+                        handleEdgeClick={handleRightHandClick}
                         handHold={rightHand} />
                 </div>
                 <div className="flex justify-between space-x-4 p-4 text-slate-300">
