@@ -16,8 +16,8 @@ export default function WorkoutSummary({ workoutSummary }) {
                         <tbody>
                                 {workoutSummary.map((workout, i) => (
                                     <tr key={i} className="text-center">
-                                        <td>{workout.leftHand}</td>
-                                        <td>{workout.rightHand}</td>
+                                        <td>{workout.leftHand.edge}</td>
+                                        <td>{workout.rightHand.edge}</td>
                                         <td>{workout.workTime}</td>
                                         <td>{workout.restTime}</td>
                                     </tr>

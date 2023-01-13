@@ -1,6 +1,7 @@
 import Head from 'next/head'
 import Hero from '../components/Hero'
 import Timer from '../components/Timer'
+import Link from 'next/link'
 
 export default function Home() {
   return (
