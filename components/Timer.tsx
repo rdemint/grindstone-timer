@@ -19,18 +19,18 @@ export default function Timer() {
     const grindstone = {
         name: 'grindstone',
         edgeMap: [
-            [10, 8],
-            [30, 25],
-            [20, 15],
+            ['10', '8'],
+            ['30', '25'],
+            ['20', '15'],
         ]
     }
 
     const simpleboard = {
         name: 'simple-board',
         edgeMap: [
-            [10],
-            [8],
-            [6]
+            ['10'],
+            ['8'],
+            ['6']
         ]
     }
 
@@ -50,11 +50,11 @@ export default function Timer() {
 
     interface IHold {
         hangboard: IHangboard;
-        edge: String | Number;
+        edge: String;
     }
 
-    const [leftHand, setLeftHand] = useState<IHold>({ hangboard: grindstone, edge: 30 })
-    const [rightHand, setRightHand] = useState<IHold>({ hangboard: grindstone, edge: 30 })
+    const [leftHand, setLeftHand] = useState<IHold>({ hangboard: grindstone, edge: '30' })
+    const [rightHand, setRightHand] = useState<IHold>({ hangboard: grindstone, edge: '30' })
 
 
     useEffect(() => {
