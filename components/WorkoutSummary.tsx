@@ -1,7 +1,12 @@
-export default function WorkoutSummary({ workoutSummary }) {
+import React from 'react'
+import {IWorkout} from './Timer'
+
+const WorkoutSummary: React.FC<IWorkout> = (props) => {
+    const intervals = props.intervals
+
     return (
         <div>
-            {workoutSummary.length > 0 ?
+            {intervals.length > 0 ?
                 <>
                     <h4 className="text-center py-4">Workout Summary</h4>
                     <table className="w-72">
@@ -14,12 +19,12 @@ export default function WorkoutSummary({ workoutSummary }) {
                             </tr>
                         </thead>
                         <tbody>
-                                {workoutSummary.map((workout, i) => (
+                                {intervals.map((interval, i) => (
                                     <tr key={i} className="text-center">
-                                        <td>{workout.leftHand.edge}</td>
-                                        <td>{workout.rightHand.edge}</td>
-                                        <td>{workout.workTime}</td>
-                                        <td>{workout.restTime}</td>
+                                        <td>{interval.leftHold.edge}</td>
+                                        <td>{interval.rightHold.edge}</td>
+                                        <td>{interval.workInterval}</td>
+                                        <td>{interval.restInterval}</td>
                                     </tr>
                                 ))}
 
@@ -33,3 +38,5 @@ export default function WorkoutSummary({ workoutSummary }) {
 
     )
 }
+
+export default WorkoutSummary

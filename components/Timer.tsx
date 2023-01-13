@@ -10,39 +10,38 @@ import { grindstone, simpleboard } from "../lib/hangboards"
 import GrindStoneSelector from "./GrindstoneSelector"
 import SimpleboardSelector from "./SimpleboardSelector"
 
+interface IHangboard {
+    name: String;
+    edgeMap: Array<any>
+}
+
+interface IHold {
+    hangboard: IHangboard;
+    edge: String;
+}
+
+interface IWorkoutConfig {
+    name?: String;
+    prepInterval: number;
+    workInterval: number;
+    restInterval: number;
+    numIntervals: number;
+}
+
+export interface IWorkout {
+    name?: String;
+    intervals: Array<IInterval>;
+}
+
+export interface IInterval {
+    workInterval: number;
+    restInterval: number;
+    leftHold: IHold;
+    rightHold: IHold;
+    action: "hang" | "pullup"
+}
+
 export default function Timer() {
-
-    interface IHangboard {
-        name: String;
-        edgeMap: Array<any>
-    }
-
-    interface IHold {
-        hangboard: IHangboard;
-        edge: String;
-    }
-
-    interface IWorkoutConfig {
-        name?: String;
-        prepInterval: number;
-        workInterval: number;
-        restInterval: number;
-        numIntervals: number;
-    }
-
-    interface IWorkout {
-        name?: String;
-        prepInterval: number;
-        intervals: Array<IInterval>;
-    }
-
-    interface IInterval {
-        workInterval: number;
-        restInterval: number;
-        leftHold: IHold;
-        rightHold: IHold;
-        action: "hang" | "pullup"
-    }
 
     const workoutStatusOptions = { unconfigured: 'Please select an edge', ready: 'Ready', rest: 'REST', work: 'WORK', prep: 'PREP', completed: 'DONE!' }
 
@@ -54,7 +53,7 @@ export default function Timer() {
     const [workoutConfig, setWorkoutConfig] = useState<IWorkoutConfig>(defaultWorkout)
     const [workoutStatus, setWorkoutStatus] = useState<String>(workoutStatusOptions.unconfigured)
     const [currentInterval, setCurrentInterval] = useState<number>(1)
-    const [workoutSummary, setWorkoutSummary] = useState<IWorkout>({ name: "New workout", prepInterval: 0, intervals: [] })
+    const [workoutSummary, setWorkoutSummary] = useState<IWorkout>({ name: "New workout", intervals: [] })
 
 
     const [leftHand, setLeftHand] = useState<IHold>({ hangboard: grindstone, edge: '30' })
@@ -81,7 +80,6 @@ export default function Timer() {
                 rightHold: rightHand,
                 action: "hang"
             }
-
             setWorkoutSummary({
                 ...workoutSummary,
                 intervals: [...workoutSummary.intervals, newInterval]
@@ -247,7 +245,7 @@ export default function Timer() {
                     </div>
                 </div>
             </section>
-            <WorkoutSummary workoutSummary={workoutSummary} />
+            <WorkoutSummary name={workoutSummary.name} intervals={workoutSummary.intervals} />
             <section id="workoutconfig">
                 <h2 className="text-center">Customize Workout</h2>
                 <div className="bg-slate-700 rounded-sm p-8 mt-4">
@@ -258,7 +256,7 @@ export default function Timer() {
                         </div>
                         <div className="flex justify-between p-2 items-center">
                             <label className="px-4 text-lg">Work</label>
-                            <input className="w-12 bg-slate-500 rounded p-1 text-xl text-center  hover:scale-105" type="number" value={workoutConfig.workInterval} onChange={(e) => { console.log(e); setWorkoutConfig({ ...workoutConfig, workInterval: e.target.valueAsNumber }) }} />
+                            <input className="w-12 bg-slate-500 rounded p-1 text-xl text-center  hover:scale-105" type="number" value={workoutConfig.workInterval} onChange={(e) => { setWorkoutConfig({ ...workoutConfig, workInterval: e.target.valueAsNumber }) }} />
                         </div>
                         <div className="flex justify-between p-2 items-center">
                             <label className="px-4 text-lg">Rest</label>
