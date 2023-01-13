@@ -6,8 +6,14 @@ import WorkoutSummary from "./WorkoutSummary"
 import defaultWorkout from "../lib/defaultWorkout"
 import quickWorkouts from "../lib/quickWorkouts"
 import GrindStoneSelector from "./GrindstoneSelector"
+import SimpleboardSelector from "./SimpleboardSelector"
 
 export default function Timer() {
+
+    interface IHangboard {
+        name: String;
+        edgeMap: Array<any>
+    }
 
 
     const grindstone = {
@@ -19,26 +25,36 @@ export default function Timer() {
         ]
     }
 
-    const simpleBoard = {
+    const simpleboard = {
         name: 'simple-board',
-        edgeMap: [10,8,6]
+        edgeMap: [
+            [10],
+            [8],
+            [6]
+        ]
     }
 
     const workoutStatusOptions = { unconfigured: 'Please select an edge', ready: 'Ready', rest: 'REST', work: 'WORK', prep: 'PREP', completed: 'DONE!' }
 
-    
+
     const [playPopFx] = useSound('/sounds/pop.mp3')
     const [playIntroFx] = useSound('/sounds/intro.wav')
     const [playSwitchFx] = useSound('/sounds/switch.wav')
     const [playEndFx] = useSound('/sounds/end.wav')
-    
+
     const [workoutConfig, setWorkoutConfig] = useState(defaultWorkout)
     const [workoutStatus, setWorkoutStatus] = useState(workoutStatusOptions.unconfigured)
     const [currentInterval, setCurrentInterval] = useState(1)
     const [workoutSummary, setWorkoutSummary] = useState([])
 
-    const [leftHand, setLeftHand] = useState({hangboard: grindstone, edge: 30})
-    const [rightHand, setRightHand] = useState({hangboard: grindstone, edge: 30})
+
+    interface IHold {
+        hangboard: IHangboard;
+        edge: String | Number;
+    }
+
+    const [leftHand, setLeftHand] = useState<IHold>({ hangboard: grindstone, edge: 30 })
+    const [rightHand, setRightHand] = useState<IHold>({ hangboard: grindstone, edge: 30 })
 
 
     useEffect(() => {
@@ -56,7 +72,7 @@ export default function Timer() {
         if (workoutStatus == workoutStatusOptions.work) {
             setWorkoutSummary([
                 ...workoutSummary,
-                {leftHand: leftHand, rightHand: rightHand, workTime: workoutConfig.workInterval, restTime: workoutConfig.restInterval}
+                { leftHand: leftHand, rightHand: rightHand, workTime: workoutConfig.workInterval, restTime: workoutConfig.restInterval }
             ]
             )
             playSwitchFx()
@@ -64,7 +80,7 @@ export default function Timer() {
             restTimer.start()
         }
         else if (workoutStatus == workoutStatusOptions.rest) {
-            
+
             if (currentInterval < workoutConfig.numIntervals) {
                 setWorkoutStatus(workoutStatusOptions.work)
                 setCurrentInterval(currentInterval + 1)
@@ -126,24 +142,24 @@ export default function Timer() {
         restTimer.reset()
     }
 
-    const handleRightHandClick = (newHold) => {
-        setRightHand((oldHold)=> {
-            if(newHold.edge == oldHold.edge && newHold.hangboard === oldHold.hangboard) {
-                return ({...oldHold, edge: 'None'})
+    const handleRightHandClick = (newHold: IHold) => {
+        setRightHand((oldHold: IHold) => {
+            if (newHold.edge == oldHold.edge && newHold.hangboard === oldHold.hangboard) {
+                return ({ ...oldHold, edge: 'None' })
             }
             else {
-                return ({hangboard: newHold.hangboard, edge: newHold.edge})
+                return ({ hangboard: newHold.hangboard, edge: newHold.edge })
             }
         })
     }
 
-    const handleLeftHandClick = (newHold) => {
-        setLeftHand((oldHold) => {
-            if(newHold.edge === oldHold.edge && newHold.hangboard === oldHold.hangboard) {
-                return ({...newHold , edge: 'None'})
+    const handleLeftHandClick = (newHold: IHold) => {
+        setLeftHand((oldHold: IHold) => {
+            if (newHold.edge === oldHold.edge && newHold.hangboard === oldHold.hangboard) {
+                return ({ ...newHold, edge: 'None' })
             }
             else {
-                return ({hangboard: newHold.hangboard, edge: newHold.edge})
+                return ({ hangboard: newHold.hangboard, edge: newHold.edge })
             }
         })
     }
@@ -167,7 +183,7 @@ export default function Timer() {
 
     return (
         <div className="flex flex-col space-y-6 justify-center items-center w-full py-8">
-            <section name="timerdisplay" className={`flex flex-col ${getTimerTheme()} justify-between rounded-sm max-w-5xl p-8 h-96 md:w-2/3`}>
+            <section id="timerdisplay" className={`flex flex-col ${getTimerTheme()} justify-between rounded-sm max-w-5xl p-8 h-96 md:w-2/3`}>
                 <div className="flex justify-center text-center space-x-4">
                     <div>INTERVAL</div>
                     <div>{currentInterval} / {workoutConfig.numIntervals}</div>
@@ -185,9 +201,36 @@ export default function Timer() {
                     <button onClick={() => handleResetTimer()} id="resetTimer" className="bg-pink-600 rounded p-2 w-16 md:w-36 hover:scale-105">RESET</button>
                 </div>
             </section>
-            <GrindStoneSelector hangboard={grindstone} leftHand={leftHand} setLeftHand={handleLeftHandClick} rightHand={rightHand} setRightHand={handleRightHandClick} />
+            <section id="hold-selection" className="flex flex-col items-center w-5/6">
+                <div className="flex w-full border justify-center">
+                    <SimpleboardSelector
+                        hangboard={simpleboard}
+                        handleEdgeClick={setLeftHand}
+                        handHold={leftHand} />
+                    <GrindStoneSelector
+                        hangboard={grindstone}
+                        leftHand={leftHand}
+                        setLeftHand={handleLeftHandClick}
+                        rightHand={rightHand}
+                        setRightHand={handleRightHandClick} />
+                    <SimpleboardSelector
+                        hangboard={simpleboard}
+                        handleEdgeClick={setRightHand}
+                        handHold={rightHand} />
+                </div>
+                <div className="flex justify-between space-x-4 p-4 text-slate-300">
+                    <div className="flex space-x-4">
+                        <h3>Left:</h3>
+                        <p>{leftHand.edge}</p>
+                    </div>
+                    <div className="flex space-x-4">
+                        <h3>Right:</h3>
+                        <p>{rightHand.edge}</p>
+                    </div>
+                </div>
+            </section>
             <WorkoutSummary workoutSummary={workoutSummary} />
-            <section name="workoutconfig">
+            <section id="workoutconfig">
                 <h2 className="text-center">Customize Workout</h2>
                 <div className="bg-slate-700 rounded-sm p-8 mt-4">
                     <form className="flex flex-col justify-between md:flex-row md:items-center">
