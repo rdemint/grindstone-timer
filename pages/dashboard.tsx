@@ -1,8 +1,7 @@
-import { PrismaClient } from '@prisma/client'
+import prisma from '../lib/prisma'
 
 export async function getServerSideProps(context) {
 
-    const prisma = new PrismaClient()
 
     let pIntervals = await prisma.interval.findMany()
 
