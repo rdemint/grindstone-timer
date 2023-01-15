@@ -38,10 +38,10 @@ export default function DashBoard({ pIntervals }) {
             <div>
             {pIntervals.length > 0 ?
                 <>
-                    <h4 className="text-center py-4 text-3xl">Workout Summary</h4>
+                    <h4 className="text-left py-4 text-3xl">Workout Summary</h4>
                     <table className="w-72">
                         <thead>
-                            <tr className="w-full">
+                            <tr className="w-full text-left">
                                 <th>Left</th>
                                 <th>Right</th>
                                 <th>Work</th>
@@ -50,7 +50,7 @@ export default function DashBoard({ pIntervals }) {
                         </thead>
                         <tbody>
                                 {pIntervals.map((interval, i) => (
-                                    <tr key={i} className="text-center">
+                                    <tr key={i} className="text-left">
                                         <td>{interval.leftHold}</td>
                                         <td>{interval.rightHold}</td>
                                         <td>{interval.workInterval}</td>
