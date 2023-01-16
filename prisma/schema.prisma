@@ -21,9 +21,20 @@ model Interval {
   id                   Int       @id @default(autoincrement())
   workInterval         Int
   restInterval         Int
-  leftHold             String
-  leftHoldHangboard    String  
-  rightHold            String
-  rightHoldHangboard   String
-  action               String
+  exercise Exercise @relation(fields: [exerciseId], references: [id])
+  exerciseId Int
+  date DateTime @default(now())
 }
+
+model Exercise {
+  id Int @id @default(autoincrement())
+  leftHold String
+  leftFingers String
+  leftHoldHangboard String
+  rightHold String
+  rightFingers String
+  rightHoldHangboard String
+  action String
+  intervals Interval[]
+}
+
