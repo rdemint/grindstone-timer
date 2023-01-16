@@ -250,12 +250,12 @@ export default function Timer() {
                 </div>
             </section>
             <section className="max-w-3xl flex items-center w-5/6">
-                <div className="w-1/2 flex flex-col items-center">
+                <div className="w-1/2 flex flex-col items-center space-y-2">
                     <h3>Left Hand</h3>
                     <p>{leftHand.edge}</p>
                     <FingerPositionSelector fingerPosition={leftFingerPosition} setFingerPosition={setLeftFingerPosition} fingerPositions={fingerPositions}/>
                 </div>
-                <div className="w-1/2 flex flex-col items-center">
+                <div className="w-1/2 flex flex-col items-center space-y-2">
                     <h3>Right Hand</h3>
                     <p>{rightHand.edge}</p>
                     <FingerPositionSelector fingerPosition={rightFingerPosition} setFingerPosition={setRightFingerPosition} fingerPositions={fingerPositions}/>
