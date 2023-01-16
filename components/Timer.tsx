@@ -6,22 +6,24 @@ import WorkoutOption from "./WorkoutOption"
 import WorkoutSummary from "./WorkoutSummary"
 import defaultWorkout from "../lib/defaultWorkout"
 import quickWorkouts from "../lib/quickWorkouts"
+import { fingerPositions } from "../lib/fingerpositions"
 import { grindstone, simpleboard } from "../lib/hangboards"
 import GrindStoneSelector from "./GrindstoneSelector"
 import SimpleboardSelector from "./SimpleboardSelector"
+import FingerPositionSelector from "./FingerPositionSelector"
 
 interface IHangboard {
-    name: String;
+    name: string;
     edgeMap: Array<any>
 }
 
 interface IHold {
     hangboard: IHangboard;
-    edge: String;
+    edge: string;
 }
 
 interface IWorkoutConfig {
-    name?: String;
+    name?: string;
     prepInterval: number;
     workInterval: number;
     restInterval: number;
@@ -29,7 +31,7 @@ interface IWorkoutConfig {
 }
 
 export interface IWorkout {
-    name?: String;
+    name?: string;
     date?: Date;
     intervals: Array<IInterval>;
 }
@@ -38,8 +40,15 @@ export interface IInterval {
     workInterval: number;
     restInterval: number;
     leftHold: IHold;
+    leftFingerPosition: FingerPosition;
     rightHold: IHold;
+    rightFingerPosition: FingerPosition
     action: "hang" | "pullup"
+}
+
+export interface FingerPosition {
+    name: string;
+    title: string;
 }
 
 export default function Timer() {
@@ -58,7 +67,9 @@ export default function Timer() {
 
 
     const [leftHand, setLeftHand] = useState<IHold>({ hangboard: grindstone, edge: '30' })
+    const [leftFingerPosition, setLeftFingerPosition] = useState<FingerPosition>(fingerPositions[0])
     const [rightHand, setRightHand] = useState<IHold>({ hangboard: grindstone, edge: '30' })
+    const [rightFingerPosition, setRightFingerPosition] = useState<FingerPosition>(fingerPositions[0])
 
 
     useEffect(() => {
@@ -78,7 +89,9 @@ export default function Timer() {
                 workInterval: workoutConfig.workInterval,
                 restInterval: workoutConfig.restInterval,
                 leftHold: leftHand,
+                leftFingerPosition: leftFingerPosition,
                 rightHold: rightHand,
+                rightFingerPosition: rightFingerPosition,
                 action: "hang"
             }
             setWorkoutSummary({
@@ -235,15 +248,17 @@ export default function Timer() {
                         handleEdgeClick={handleRightHandClick}
                         handHold={rightHand} />
                 </div>
-                <div className="flex justify-between space-x-4 p-4 text-slate-300">
-                    <div className="flex space-x-4">
-                        <h3>Left:</h3>
-                        <p>{leftHand.edge}</p>
-                    </div>
-                    <div className="flex space-x-4">
-                        <h3>Right:</h3>
-                        <p>{rightHand.edge}</p>
-                    </div>
+            </section>
+            <section className="max-w-3xl flex items-center w-5/6">
+                <div className="w-1/2 flex flex-col items-center">
+                    <h3>Left Hand</h3>
+                    <p>{leftHand.edge}</p>
+                    <FingerPositionSelector fingerPosition={leftFingerPosition} setFingerPosition={setLeftFingerPosition} fingerPositions={fingerPositions}/>
+                </div>
+                <div className="w-1/2 flex flex-col items-center">
+                    <h3>Right Hand</h3>
+                    <p>{rightHand.edge}</p>
+                    <FingerPositionSelector fingerPosition={rightFingerPosition} setFingerPosition={setRightFingerPosition} fingerPositions={fingerPositions}/>
                 </div>
             </section>
             <WorkoutSummary name={workoutSummary.name} intervals={workoutSummary.intervals} />
