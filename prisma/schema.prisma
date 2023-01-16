@@ -29,12 +29,36 @@ model Interval {
 model Exercise {
   id Int @id @default(autoincrement())
   leftHold String
-  leftFingers String
+  leftFingerPosition LeftFingerPosition[]
   leftHoldHangboard String
   rightHold String
-  rightFingers String
+  rightFingerPosition RightFingerPosition[]
   rightHoldHangboard String
   action String
   intervals Interval[]
 }
 
+
+model LeftFingerPosition {
+  leftFingerPosition FingerPosition @relation(fields:[leftFingerPositionId], references: [id])
+  leftFingerPositionId Int 
+  exercise Exercise @relation(fields:[exerciseId], references: [id])
+  exerciseId Int
+  @@id([exerciseId, leftFingerPositionId])
+}
+
+model RightFingerPosition {
+  rightFingerPosition FingerPosition @relation(fields:[rightFingerPositionId], references: [id])
+  rightFingerPositionId Int
+  exercise Exercise @relation(fields:[exerciseId], references: [id])
+  exerciseId Int
+  @@id([exerciseId, rightFingerPositionId])
+}
+
+model FingerPosition {
+  id Int @id @default(autoincrement())
+  name String
+  title String
+  leftFingerPosition LeftFingerPosition[]
+  rightFingerPosition RightFingerPosition[]
+}
