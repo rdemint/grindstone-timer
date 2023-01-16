@@ -12,14 +12,20 @@ import GrindStoneSelector from "./GrindstoneSelector"
 import SimpleboardSelector from "./SimpleboardSelector"
 import FingerPositionSelector from "./FingerPositionSelector"
 
-interface IHangboard {
+export interface IHangboard {
     name: string;
-    edgeMap: Array<any>
+    title: string;
+    edgeMap: Array<any>;
+    handHolds: Array<IHandHold>;
 }
 
-interface IHold {
-    hangboard: IHangboard;
-    edge: string;
+export interface IHandHold {
+    name: string;
+    title: string;
+}
+
+interface IHangboardHandHold extends IHandHold {
+    hangboardName: string;
 }
 
 interface IWorkoutConfig {
@@ -39,9 +45,9 @@ export interface IWorkout {
 export interface IInterval {
     workInterval: number;
     restInterval: number;
-    leftHold: IHold;
+    leftHold: IHandHold;
     leftFingerPosition: FingerPosition;
-    rightHold: IHold;
+    rightHold: IHandHold;
     rightFingerPosition: FingerPosition
     action: "hang" | "pullup"
 }
@@ -66,9 +72,9 @@ export default function Timer() {
     const [workoutSummary, setWorkoutSummary] = useState<IWorkout>({ name: "New workout", date: new Date(), intervals: [] })
 
 
-    const [leftHand, setLeftHand] = useState<IHold>({ hangboard: grindstone, edge: '30' })
+    const [leftHand, setLeftHand] = useState<IHangboardHandHold>({...grindstone.handHolds[0], hangboardName: grindstone.name})
     const [leftFingerPosition, setLeftFingerPosition] = useState<FingerPosition>(fingerPositions[0])
-    const [rightHand, setRightHand] = useState<IHold>({ hangboard: grindstone, edge: '30' })
+    const [rightHand, setRightHand] = useState<IHangboardHandHold>({...grindstone.handHolds[0], hangboardName: grindstone.name})
     const [rightFingerPosition, setRightFingerPosition] = useState<FingerPosition>(fingerPositions[0])
 
 
@@ -172,24 +178,24 @@ export default function Timer() {
         restTimer.reset()
     }
 
-    const handleRightHandClick = (newHold: IHold) => {
-        setRightHand((oldHold: IHold) => {
-            if (newHold.edge == oldHold.edge && newHold.hangboard.name === oldHold.hangboard.name) {
-                return ({ ...oldHold, edge: 'None' })
+    const handleRightHandClick = (newHold: IHangboardHandHold) => {
+        setRightHand((oldHold: IHangboardHandHold) => {
+            if (newHold.name === oldHold.name && newHold.hangboardName === oldHold.hangboardName) {
+                return ({ name: 'none', title: 'None', hangboardName: 'none' })
             }
             else {
-                return ({ hangboard: newHold.hangboard, edge: newHold.edge })
+                return (newHold)
             }
         })
     }
 
-    const handleLeftHandClick = (newHold: IHold) => {
-        setLeftHand((oldHold: IHold) => {
-            if (newHold.edge == oldHold.edge && newHold.hangboard.name === oldHold.hangboard.name) {
-                return ({ ...newHold, edge: 'None' })
+    const handleLeftHandClick = (newHold: IHangboardHandHold) => {
+        setLeftHand((oldHold: IHangboardHandHold) => {
+            if (newHold.name == oldHold.name && newHold.hangboardName === oldHold.hangboardName) {
+                return ({ name: 'none', title: 'None', hangboardName: 'none' })
             }
             else {
-                return ({ hangboard: newHold.hangboard, edge: newHold.edge })
+                return (newHold)
             }
         })
     }
@@ -236,28 +242,30 @@ export default function Timer() {
                     <SimpleboardSelector
                         hangboard={simpleboard}
                         handleEdgeClick={handleLeftHandClick}
-                        handHold={leftHand} />
+                        currentHandHold={leftHand} />
                     <GrindStoneSelector
                         hangboard={grindstone}
-                        leftHand={leftHand}
-                        setLeftHand={handleLeftHandClick}
-                        rightHand={rightHand}
-                        setRightHand={handleRightHandClick} />
+                        leftHandHold={leftHand}
+                        setLeftHandHold={handleLeftHandClick}
+                        rightHandHold={rightHand}
+                        setRightHandHold={handleRightHandClick} />
                     <SimpleboardSelector
                         hangboard={simpleboard}
                         handleEdgeClick={handleRightHandClick}
-                        handHold={rightHand} />
+                        currentHandHold={rightHand} />
                 </div>
             </section>
             <section className="max-w-3xl flex items-center w-5/6">
                 <div className="w-1/2 flex flex-col items-center space-y-2">
                     <h3>Left Hand</h3>
-                    <p>{leftHand.edge}</p>
+                    <p>{leftHand.title}</p>
+                    <p>{leftHand.hangboardName}</p>
                     <FingerPositionSelector fingerPosition={leftFingerPosition} setFingerPosition={setLeftFingerPosition} fingerPositions={fingerPositions}/>
                 </div>
                 <div className="w-1/2 flex flex-col items-center space-y-2">
                     <h3>Right Hand</h3>
-                    <p>{rightHand.edge}</p>
+                    <p>{rightHand.title}</p>
+                    <p>{rightHand.hangboardName}</p>
                     <FingerPositionSelector fingerPosition={rightFingerPosition} setFingerPosition={setRightFingerPosition} fingerPositions={fingerPositions}/>
                 </div>
             </section>
