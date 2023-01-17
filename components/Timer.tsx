@@ -12,14 +12,20 @@ import GrindStoneSelector from "./GrindstoneSelector"
 import SimpleboardSelector from "./SimpleboardSelector"
 import FingerPositionSelector from "./FingerPositionSelector"
 
-interface IHangboard {
+export interface IHangboard {
     name: string;
-    edgeMap: Array<any>
+    title: string;
+    handHolds: Array<IHandHold>;
 }
 
-interface IHold {
-    hangboard: IHangboard;
-    edge: string;
+export interface IHandHold {
+    name: string;
+    title: string;
+}
+
+interface IHangboardHandHold extends IHandHold {
+    hangboardName: string;
+    hangboardTitle: string;
 }
 
 interface IWorkoutConfig {
@@ -39,12 +45,13 @@ export interface IWorkout {
 export interface IInterval {
     workInterval: number;
     restInterval: number;
-    leftHold: IHold;
+    leftHold: IHangboardHandHold;
     leftFingerPosition: FingerPosition;
-    rightHold: IHold;
-    rightFingerPosition: FingerPosition
-    action: "hang" | "pullup"
+    rightHold: IHangboardHandHold;
+    rightFingerPosition: FingerPosition;
+    action: string;
 }
+
 
 export interface FingerPosition {
     name: string;
@@ -66,10 +73,12 @@ export default function Timer() {
     const [workoutSummary, setWorkoutSummary] = useState<IWorkout>({ name: "New workout", date: new Date(), intervals: [] })
 
 
-    const [leftHand, setLeftHand] = useState<IHold>({ hangboard: grindstone, edge: '30' })
+    const [leftHand, setLeftHand] = useState<IHangboardHandHold>({ ...grindstone.handHolds[0], hangboardName: grindstone.name, hangboardTitle: grindstone.title })
     const [leftFingerPosition, setLeftFingerPosition] = useState<FingerPosition>(fingerPositions[0])
-    const [rightHand, setRightHand] = useState<IHold>({ hangboard: grindstone, edge: '30' })
+    const [rightHand, setRightHand] = useState<IHangboardHandHold>({ ...grindstone.handHolds[0], hangboardName: grindstone.name, hangboardTitle: grindstone.title })
     const [rightFingerPosition, setRightFingerPosition] = useState<FingerPosition>(fingerPositions[0])
+
+    const [action, setAction] = useState("hang")
 
 
     useEffect(() => {
@@ -92,7 +101,7 @@ export default function Timer() {
                 leftFingerPosition: leftFingerPosition,
                 rightHold: rightHand,
                 rightFingerPosition: rightFingerPosition,
-                action: "hang"
+                action: action
             }
             setWorkoutSummary({
                 ...workoutSummary,
@@ -172,24 +181,24 @@ export default function Timer() {
         restTimer.reset()
     }
 
-    const handleRightHandClick = (newHold: IHold) => {
-        setRightHand((oldHold: IHold) => {
-            if (newHold.edge == oldHold.edge && newHold.hangboard.name === oldHold.hangboard.name) {
-                return ({ ...oldHold, edge: 'None' })
+    const handleRightHandClick = (newHold: IHangboardHandHold) => {
+        setRightHand((oldHold: IHangboardHandHold) => {
+            if (newHold.name === oldHold.name && newHold.hangboardName === oldHold.hangboardName) {
+                return ({ name: 'none', title: 'None', hangboardName: 'none', hangboardTitle: 'None' })
             }
             else {
-                return ({ hangboard: newHold.hangboard, edge: newHold.edge })
+                return (newHold)
             }
         })
     }
 
-    const handleLeftHandClick = (newHold: IHold) => {
-        setLeftHand((oldHold: IHold) => {
-            if (newHold.edge == oldHold.edge && newHold.hangboard.name === oldHold.hangboard.name) {
-                return ({ ...newHold, edge: 'None' })
+    const handleLeftHandClick = (newHold: IHangboardHandHold) => {
+        setLeftHand((oldHold: IHangboardHandHold) => {
+            if (newHold.name == oldHold.name && newHold.hangboardName === oldHold.hangboardName) {
+                return ({ name: 'none', title: 'None', hangboardName: 'none', hangboardTitle: 'None' })
             }
             else {
-                return ({ hangboard: newHold.hangboard, edge: newHold.edge })
+                return (newHold)
             }
         })
     }
@@ -236,32 +245,43 @@ export default function Timer() {
                     <SimpleboardSelector
                         hangboard={simpleboard}
                         handleEdgeClick={handleLeftHandClick}
-                        handHold={leftHand} />
+                        currentHandHold={leftHand} />
                     <GrindStoneSelector
                         hangboard={grindstone}
-                        leftHand={leftHand}
-                        setLeftHand={handleLeftHandClick}
-                        rightHand={rightHand}
-                        setRightHand={handleRightHandClick} />
+                        leftHandHold={leftHand}
+                        setLeftHandHold={handleLeftHandClick}
+                        rightHandHold={rightHand}
+                        setRightHandHold={handleRightHandClick} />
                     <SimpleboardSelector
                         hangboard={simpleboard}
                         handleEdgeClick={handleRightHandClick}
-                        handHold={rightHand} />
+                        currentHandHold={rightHand} />
+                </div>
+            </section>
+            <section className="flex max-w-3xl items-center">
+                <div className="flex space-x-6 justify-center w-full">
+                    <button className={`${action === "hang" ? 'bg-emerald-500': 'bg-slate-600'} p-2 text-slate-100 rounded-md`} onClick={() => setAction("hang")}>Hang</button>
+                    <button className={`${action === "pullup" ? 'bg-emerald-500': 'bg-slate-600'} p-2 text-slate-100 rounded-md`} onClick={() => setAction("pullup")}>Pullup</button>
                 </div>
             </section>
             <section className="max-w-3xl flex items-center w-5/6">
+
                 <div className="w-1/2 flex flex-col items-center space-y-2">
                     <h3>Left Hand</h3>
-                    <p>{leftHand.edge}</p>
-                    <FingerPositionSelector fingerPosition={leftFingerPosition} setFingerPosition={setLeftFingerPosition} fingerPositions={fingerPositions}/>
+                    <p>{leftHand.title}</p>
+                    <p>{leftHand.hangboardTitle}</p>
+                    <FingerPositionSelector fingerPosition={leftFingerPosition} setFingerPosition={setLeftFingerPosition} fingerPositions={fingerPositions} />
                 </div>
                 <div className="w-1/2 flex flex-col items-center space-y-2">
                     <h3>Right Hand</h3>
-                    <p>{rightHand.edge}</p>
-                    <FingerPositionSelector fingerPosition={rightFingerPosition} setFingerPosition={setRightFingerPosition} fingerPositions={fingerPositions}/>
+                    <p>{rightHand.title}</p>
+                    <p>{rightHand.hangboardTitle}</p>
+                    <FingerPositionSelector fingerPosition={rightFingerPosition} setFingerPosition={setRightFingerPosition} fingerPositions={fingerPositions} />
                 </div>
             </section>
-            <WorkoutSummary name={workoutSummary.name} intervals={workoutSummary.intervals} />
+            <section className="max-w-6xl flex flex-col items-center">
+                <WorkoutSummary name={workoutSummary.name} intervals={workoutSummary.intervals} />
+            </section>
             <section id="workoutconfig">
                 <h2 className="text-center">Customize Workout</h2>
                 <div className="bg-slate-700 rounded-sm p-8 mt-4">
