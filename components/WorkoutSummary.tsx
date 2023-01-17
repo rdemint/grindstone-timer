@@ -6,7 +6,7 @@ const WorkoutSummary: React.FC<IWorkout> = ({date, intervals}) => {
     return (
         <div className='w-72 sm:w-96 lg:w-full'>
             {intervals.length > 0 ?
-                <div className='border border-slate-300 rounded  py-4'>
+                <div className='bg-gray-800 rounded  py-4'>
                     <h4 className="text-center">Workout Summary</h4>
                     <div className="overflow-auto whitespace-nowrap">
                         <table>
