@@ -15,7 +15,6 @@ import FingerPositionSelector from "./FingerPositionSelector"
 export interface IHangboard {
     name: string;
     title: string;
-    edgeMap: Array<any>;
     handHolds: Array<IHandHold>;
 }
 
@@ -26,6 +25,7 @@ export interface IHandHold {
 
 interface IHangboardHandHold extends IHandHold {
     hangboardName: string;
+    hangboardTitle: string;
 }
 
 interface IWorkoutConfig {
@@ -45,9 +45,9 @@ export interface IWorkout {
 export interface IInterval {
     workInterval: number;
     restInterval: number;
-    leftHold: IHandHold;
+    leftHold: IHangboardHandHold;
     leftFingerPosition: FingerPosition;
-    rightHold: IHandHold;
+    rightHold: IHangboardHandHold;
     rightFingerPosition: FingerPosition
     action: "hang" | "pullup"
 }
@@ -72,9 +72,9 @@ export default function Timer() {
     const [workoutSummary, setWorkoutSummary] = useState<IWorkout>({ name: "New workout", date: new Date(), intervals: [] })
 
 
-    const [leftHand, setLeftHand] = useState<IHangboardHandHold>({...grindstone.handHolds[0], hangboardName: grindstone.name})
+    const [leftHand, setLeftHand] = useState<IHangboardHandHold>({ ...grindstone.handHolds[0], hangboardName: grindstone.name, hangboardTitle: grindstone.title })
     const [leftFingerPosition, setLeftFingerPosition] = useState<FingerPosition>(fingerPositions[0])
-    const [rightHand, setRightHand] = useState<IHangboardHandHold>({...grindstone.handHolds[0], hangboardName: grindstone.name})
+    const [rightHand, setRightHand] = useState<IHangboardHandHold>({ ...grindstone.handHolds[0], hangboardName: grindstone.name, hangboardTitle: grindstone.title })
     const [rightFingerPosition, setRightFingerPosition] = useState<FingerPosition>(fingerPositions[0])
 
 
@@ -181,7 +181,7 @@ export default function Timer() {
     const handleRightHandClick = (newHold: IHangboardHandHold) => {
         setRightHand((oldHold: IHangboardHandHold) => {
             if (newHold.name === oldHold.name && newHold.hangboardName === oldHold.hangboardName) {
-                return ({ name: 'none', title: 'None', hangboardName: 'none' })
+                return ({ name: 'none', title: 'None', hangboardName: 'none', hangboardTitle: 'None' })
             }
             else {
                 return (newHold)
@@ -192,7 +192,7 @@ export default function Timer() {
     const handleLeftHandClick = (newHold: IHangboardHandHold) => {
         setLeftHand((oldHold: IHangboardHandHold) => {
             if (newHold.name == oldHold.name && newHold.hangboardName === oldHold.hangboardName) {
-                return ({ name: 'none', title: 'None', hangboardName: 'none' })
+                return ({ name: 'none', title: 'None', hangboardName: 'none', hangboardTitle: 'None' })
             }
             else {
                 return (newHold)
@@ -259,17 +259,19 @@ export default function Timer() {
                 <div className="w-1/2 flex flex-col items-center space-y-2">
                     <h3>Left Hand</h3>
                     <p>{leftHand.title}</p>
-                    <p>{leftHand.hangboardName}</p>
-                    <FingerPositionSelector fingerPosition={leftFingerPosition} setFingerPosition={setLeftFingerPosition} fingerPositions={fingerPositions}/>
+                    <p>{leftHand.hangboardTitle}</p>
+                    <FingerPositionSelector fingerPosition={leftFingerPosition} setFingerPosition={setLeftFingerPosition} fingerPositions={fingerPositions} />
                 </div>
                 <div className="w-1/2 flex flex-col items-center space-y-2">
                     <h3>Right Hand</h3>
                     <p>{rightHand.title}</p>
-                    <p>{rightHand.hangboardName}</p>
-                    <FingerPositionSelector fingerPosition={rightFingerPosition} setFingerPosition={setRightFingerPosition} fingerPositions={fingerPositions}/>
+                    <p>{rightHand.hangboardTitle}</p>
+                    <FingerPositionSelector fingerPosition={rightFingerPosition} setFingerPosition={setRightFingerPosition} fingerPositions={fingerPositions} />
                 </div>
             </section>
-            <WorkoutSummary name={workoutSummary.name} intervals={workoutSummary.intervals} />
+            <section className="max-w-6xl flex flex-col items-center">
+                <WorkoutSummary name={workoutSummary.name} intervals={workoutSummary.intervals} />
+            </section>
             <section id="workoutconfig">
                 <h2 className="text-center">Customize Workout</h2>
                 <div className="bg-slate-700 rounded-sm p-8 mt-4">
