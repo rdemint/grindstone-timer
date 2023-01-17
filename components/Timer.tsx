@@ -48,9 +48,10 @@ export interface IInterval {
     leftHold: IHangboardHandHold;
     leftFingerPosition: FingerPosition;
     rightHold: IHangboardHandHold;
-    rightFingerPosition: FingerPosition
-    action: "hang" | "pullup"
+    rightFingerPosition: FingerPosition;
+    action: string;
 }
+
 
 export interface FingerPosition {
     name: string;
@@ -77,6 +78,8 @@ export default function Timer() {
     const [rightHand, setRightHand] = useState<IHangboardHandHold>({ ...grindstone.handHolds[0], hangboardName: grindstone.name, hangboardTitle: grindstone.title })
     const [rightFingerPosition, setRightFingerPosition] = useState<FingerPosition>(fingerPositions[0])
 
+    const [action, setAction] = useState("hang")
+
 
     useEffect(() => {
         handleResetTimer()
@@ -98,7 +101,7 @@ export default function Timer() {
                 leftFingerPosition: leftFingerPosition,
                 rightHold: rightHand,
                 rightFingerPosition: rightFingerPosition,
-                action: "hang"
+                action: action
             }
             setWorkoutSummary({
                 ...workoutSummary,
@@ -255,7 +258,14 @@ export default function Timer() {
                         currentHandHold={rightHand} />
                 </div>
             </section>
+            <section className="flex max-w-3xl items-center">
+                <div className="flex space-x-6 justify-center w-full">
+                    <button className={`${action === "hang" ? 'bg-emerald-500': 'bg-slate-600'} p-2 text-slate-100 rounded-md`} onClick={() => setAction("hang")}>Hang</button>
+                    <button className={`${action === "pullup" ? 'bg-emerald-500': 'bg-slate-600'} p-2 text-slate-100 rounded-md`} onClick={() => setAction("pullup")}>Pullup</button>
+                </div>
+            </section>
             <section className="max-w-3xl flex items-center w-5/6">
+
                 <div className="w-1/2 flex flex-col items-center space-y-2">
                     <h3>Left Hand</h3>
                     <p>{leftHand.title}</p>
