@@ -6,10 +6,10 @@ const WorkoutSummary: React.FC<IWorkout> = ({date, intervals}) => {
     return (
         <div className='w-72 sm:w-96 lg:w-full'>
             {intervals.length > 0 ?
-                <div className='border border-slate-300 rounded'>
-                    <h4 className="text-center py-4">Workout Summary</h4>
+                <div className='border border-slate-300 rounded  py-4'>
+                    <h4 className="text-center">Workout Summary</h4>
                     <div className="overflow-auto whitespace-nowrap">
-                        <table >
+                        <table>
                             <thead>
                                 <tr className="w-full text-left">
                                     <th className='p-4'>Board</th>
@@ -25,7 +25,7 @@ const WorkoutSummary: React.FC<IWorkout> = ({date, intervals}) => {
                             </thead>
                             <tbody>
                                 {intervals.map((interval, i) => (
-                                    <tr key={i} className="text-left">
+                                    <tr key={i} className="text-left text-slate-300">
                                         <td className='px-4 py-1'>{interval.leftHold.hangboardTitle}</td>
                                         <td className='px-4 py-1'>{interval.leftHold.title}</td>
                                         <td className='px-4 py-1'>{interval.leftFingerPosition.title}</td>

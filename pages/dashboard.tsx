@@ -202,10 +202,12 @@ export default function Dashboard() {
         }
     ]
 
+    const sortedWorkouts: Array<IWorkout> = [...workouts].sort((a,b) => b.date.getTime()-a.date.getTime())
+
     return (
         <div className="flex flex-col items-center mt-12">
                 <div className="flex flex-col space-y-4">
-                    {workouts?.map((workout, i) => (
+                    {sortedWorkouts?.map((workout, i) => (
                         <div key={i}>
                             <h2 className="text-xl">{workout.date.toDateString()}</h2>
                             <WorkoutSummary date={workout.date} intervals={workout.intervals} />
