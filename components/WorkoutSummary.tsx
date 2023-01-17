@@ -1,8 +1,7 @@
 import React from 'react'
 import { IWorkout } from './Timer'
 
-const WorkoutSummary: React.FC<IWorkout> = (props) => {
-    const intervals = props.intervals
+const WorkoutSummary: React.FC<IWorkout> = ({date, intervals}) => {
 
     return (
         <div className='w-72 sm:w-96 lg:w-full'>
