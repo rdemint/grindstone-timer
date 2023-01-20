@@ -1,5 +1,6 @@
 import { IWorkout } from "../components/Timer";
 import WorkoutSummary from "../components/WorkoutSummary";
+import NewWorkout from "../components/NewWorkout";
 
 
 
@@ -15,7 +16,7 @@ export default function Dashboard() {
                     leftFingerPosition: {name: '1234', title: '4 finger'},
                     rightHold: {name: '30', title: '30mm edge', hangboardName:"grindstone", hangboardTitle:"Grindstone"},
                     rightFingerPosition: {name: '1234', title: '4 finger'},
-                    action: 'hang'
+                    action: {kind: 'hang', title: 'Hang'}
                 },
                 {
                     workInterval: 10,
@@ -24,7 +25,7 @@ export default function Dashboard() {
                     leftFingerPosition: {name: '1234', title: '4 finger'},
                     rightHold: {name: '30', title: '30mm edge', hangboardName:"grindstone", hangboardTitle:"Grindstone"},
                     rightFingerPosition: {name: '1234', title: '4 finger'},
-                    action: 'hang'
+                    action: {kind: 'hang', title: 'Hang'}
                 },
                 {
                     workInterval: 10,
@@ -33,7 +34,7 @@ export default function Dashboard() {
                     leftFingerPosition: {name: '1234', title: '4 finger'},
                     rightHold: {name: '25', title: '25mm edge', hangboardName:"grindstone", hangboardTitle:"Grindstone"},
                     rightFingerPosition: {name: '1234', title: '4 finger'},
-                    action: 'hang'
+                    action: {kind: 'hang', title: 'Hang'}
                 },
                 {
                     workInterval: 10,
@@ -42,7 +43,7 @@ export default function Dashboard() {
                     leftFingerPosition: {name: '1234', title: '4 finger'},
                     rightHold: {name: '20', title: '20mm edge', hangboardName:"grindstone", hangboardTitle:"Grindstone"},
                     rightFingerPosition: {name: '1234', title: '4 finger'},
-                    action: 'hang'
+                    action: {kind: 'hang', title: 'Hang'}
                 },
                 {
                     workInterval: 10,
@@ -51,7 +52,7 @@ export default function Dashboard() {
                     leftFingerPosition: {name: '1234', title: '4 finger'},
                     rightHold: {name: '15', title: '15mm edge', hangboardName:"grindstone", hangboardTitle:"Grindstone"},
                     rightFingerPosition: {name: '1234', title: '4 finger'},
-                    action: 'hang'
+                    action: {kind: 'hang', title: 'Hang'}
                 },
                 {
                     workInterval: 10,
@@ -60,7 +61,7 @@ export default function Dashboard() {
                     leftFingerPosition: {name: '1234', title: '4 finger'},
                     rightHold: {name: '30', title: '30mm edge', hangboardName:"grindstone", hangboardTitle:"Grindstone"},
                     rightFingerPosition: {name: '1234', title: '4 finger'},
-                    action: 'hang'
+                    action: {kind: 'hang', title: 'Hang'}
                 },
                 {
                     workInterval: 10,
@@ -69,7 +70,7 @@ export default function Dashboard() {
                     leftFingerPosition: {name: '1234', title: '4 finger'},
                     rightHold: {name: '30', title: '30mm edge', hangboardName:"grindstone", hangboardTitle:"Grindstone"},
                     rightFingerPosition: {name: '1234', title: '4 finger'},
-                    action: 'hang'
+                    action: {kind: 'hang', title: 'Hang'}
                 },
                 {
                     workInterval: 10,
@@ -78,7 +79,7 @@ export default function Dashboard() {
                     leftFingerPosition: {name: '1234', title: '4 finger'},
                     rightHold: {name: '25', title: '25mm edge', hangboardName:"grindstone", hangboardTitle:"Grindstone"},
                     rightFingerPosition: {name: '1234', title: '4 finger'},
-                    action: 'hang'
+                    action: {kind: 'hang', title: 'Hang'}
                 },
                 {
                     workInterval: 10,
@@ -87,7 +88,7 @@ export default function Dashboard() {
                     leftFingerPosition: {name: '1234', title: '4 finger'},
                     rightHold: {name: '20', title: '20mm edge', hangboardName:"grindstone", hangboardTitle:"Grindstone"},
                     rightFingerPosition: {name: '1234', title: '4 finger'},
-                    action: 'hang'
+                    action: {kind: 'hang', title: 'Hang'}
                 },
                 {
                     workInterval: 10,
@@ -96,7 +97,7 @@ export default function Dashboard() {
                     leftFingerPosition: {name: '1234', title: '4 finger'},
                     rightHold: {name: '15', title: '15mm edge', hangboardName:"grindstone", hangboardTitle:"Grindstone"},
                     rightFingerPosition: {name: '1234', title: '4 finger'},
-                    action: 'hang'
+                    action: {kind: 'hang', title: 'Hang'}
                 },
             ]
         },
@@ -110,7 +111,7 @@ export default function Dashboard() {
                     leftFingerPosition: {name: '1234', title: '4 finger'},
                     rightHold: {name: '30', title: '30mm edge', hangboardName:"grindstone", hangboardTitle:"Grindstone"},
                     rightFingerPosition: {name: '1234', title: '4 finger'},
-                    action: 'hang'
+                    action: {kind: 'hang', title: 'Hang'}
                 },
                 {
                     workInterval: 10,
@@ -119,7 +120,7 @@ export default function Dashboard() {
                     leftFingerPosition: {name: '1234', title: '4 finger'},
                     rightHold: {name: '30', title: '30mm edge', hangboardName:"grindstone", hangboardTitle:"Grindstone"},
                     rightFingerPosition: {name: '1234', title: '4 finger'},
-                    action: 'hang'
+                    action: {kind: 'hang', title: 'Hang'}
                 },
                 {
                     workInterval: 10,
@@ -128,7 +129,7 @@ export default function Dashboard() {
                     leftFingerPosition: {name: '1234', title: '4 finger'},
                     rightHold: {name: '25', title: '25mm edge', hangboardName:"grindstone", hangboardTitle:"Grindstone"},
                     rightFingerPosition: {name: '1234', title: '4 finger'},
-                    action: 'hang'
+                    action: {kind: 'hang', title: 'Hang'}
                 },
                 {
                     workInterval: 10,
@@ -137,7 +138,7 @@ export default function Dashboard() {
                     leftFingerPosition: {name: '1234', title: '4 finger'},
                     rightHold: {name: '20', title: '20mm edge', hangboardName:"grindstone", hangboardTitle:"Grindstone"},
                     rightFingerPosition: {name: '1234', title: '4 finger'},
-                    action: 'hang'
+                    action: {kind: 'hang', title: 'Hang'}
                 },
                 {
                     workInterval: 10,
@@ -146,7 +147,7 @@ export default function Dashboard() {
                     leftFingerPosition: {name: '1234', title: '4 finger'},
                     rightHold: {name: '15', title: '15mm edge', hangboardName:"grindstone", hangboardTitle:"Grindstone"},
                     rightFingerPosition: {name: '1234', title: '4 finger'},
-                    action: 'hang'
+                    action: {kind: 'hang', title: 'Hang'}
                 },
             ]
         },
@@ -160,7 +161,7 @@ export default function Dashboard() {
                     leftFingerPosition: {name: '1234', title: '4 finger'},
                     rightHold: {name: '30', title: '30mm edge', hangboardName:"grindstone", hangboardTitle:"Grindstone"},
                     rightFingerPosition: {name: '1234', title: '4 finger'},
-                    action: 'hang'
+                    action: {kind: 'pullup', title: 'Pullup', reps: 3}
                 },
                 {
                     workInterval: 10,
@@ -169,7 +170,7 @@ export default function Dashboard() {
                     leftFingerPosition: {name: '1234', title: '4 finger'},
                     rightHold: {name: '30', title: '30mm edge', hangboardName:"grindstone", hangboardTitle:"Grindstone"},
                     rightFingerPosition: {name: '1234', title: '4 finger'},
-                    action: 'hang'
+                    action: {kind: 'pullup', title: 'Pullup', reps: 10}
                 },
                 {
                     workInterval: 10,
@@ -178,7 +179,7 @@ export default function Dashboard() {
                     leftFingerPosition: {name: '1234', title: '4 finger'},
                     rightHold: {name: '25', title: '25mm edge', hangboardName:"grindstone", hangboardTitle:"Grindstone"},
                     rightFingerPosition: {name: '1234', title: '4 finger'},
-                    action: 'hang'
+                    action: {kind: 'hang', title: 'Hang'}
                 },
                 {
                     workInterval: 10,
@@ -187,7 +188,7 @@ export default function Dashboard() {
                     leftFingerPosition: {name: '1234', title: '4 finger'},
                     rightHold: {name: '20', title: '20mm edge', hangboardName:"grindstone", hangboardTitle:"Grindstone"},
                     rightFingerPosition: {name: '1234', title: '4 finger'},
-                    action: 'hang'
+                    action: {kind: 'hang', title: 'Hang'}
                 },
                 {
                     workInterval: 10,
@@ -196,7 +197,7 @@ export default function Dashboard() {
                     leftFingerPosition: {name: '1234', title: '4 finger'},
                     rightHold: {name: '15', title: '15mm edge', hangboardName:"grindstone", hangboardTitle:"Grindstone"},
                     rightFingerPosition: {name: '1234', title: '4 finger'},
-                    action: 'hang'
+                    action: {kind: 'hang', title: 'Hang'}
                 },
             ]
         }

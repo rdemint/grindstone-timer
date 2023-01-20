@@ -23,7 +23,7 @@ export interface IHandHold {
     title: string;
 }
 
-interface IHangboardHandHold extends IHandHold {
+export interface IHangboardHandHold extends IHandHold {
     hangboardName: string;
     hangboardTitle: string;
 }
@@ -42,6 +42,25 @@ export interface IWorkout {
     intervals: Array<IInterval>;
 }
 
+export interface IHang {
+    kind: 'hang';
+    title: 'Hang';
+}
+
+export interface IPullup {
+    kind: 'pullup';
+    reps: number;
+    title: 'Pullup'
+}
+
+export interface ILegLift {
+    kind: 'leglift';
+    reps: number;
+    title: 'Leg lift';
+}
+
+export type Action  = IHang | IPullup | ILegLift
+
 export interface IInterval {
     workInterval: number;
     restInterval: number;
@@ -49,7 +68,7 @@ export interface IInterval {
     leftFingerPosition: FingerPosition;
     rightHold: IHangboardHandHold;
     rightFingerPosition: FingerPosition;
-    action: string;
+    action: Action;
 }
 
 
@@ -68,7 +87,7 @@ export default function Timer() {
     const [playEndFx] = useSound('/sounds/end.wav')
 
     const [workoutConfig, setWorkoutConfig] = useState<IWorkoutConfig>(defaultWorkout)
-    const [workoutStatus, setWorkoutStatus] = useState<String>(workoutStatusOptions.unconfigured)
+    const [workoutStatus, setWorkoutStatus] = useState<string>(workoutStatusOptions.unconfigured)
     const [currentInterval, setCurrentInterval] = useState<number>(1)
     const [workoutSummary, setWorkoutSummary] = useState<IWorkout>({ name: "New workout", date: new Date(), intervals: [] })
 
@@ -78,7 +97,9 @@ export default function Timer() {
     const [rightHand, setRightHand] = useState<IHangboardHandHold>({ ...grindstone.handHolds[0], hangboardName: grindstone.name, hangboardTitle: grindstone.title })
     const [rightFingerPosition, setRightFingerPosition] = useState<FingerPosition>(fingerPositions[0])
 
-    const [action, setAction] = useState("hang")
+    const [action, setAction] = useState<Action>({kind: 'hang', title: 'Hang'})
+    const [pullupReps, setPullupReps] = useState<number>(1)
+
 
 
     useEffect(() => {
@@ -260,8 +281,8 @@ export default function Timer() {
             </section>
             <section className="flex max-w-3xl items-center">
                 <div className="flex space-x-6 justify-center w-full">
-                    <button className={`${action === "hang" ? 'bg-emerald-500': 'bg-slate-600'} p-2 text-slate-100 rounded-md`} onClick={() => setAction("hang")}>Hang</button>
-                    <button className={`${action === "pullup" ? 'bg-emerald-500': 'bg-slate-600'} p-2 text-slate-100 rounded-md`} onClick={() => setAction("pullup")}>Pullup</button>
+                    <button className={`${action.kind === "hang" ? 'bg-emerald-500': 'bg-slate-600'} p-2 text-slate-100 rounded-md`} onClick={() => setAction({kind:"hang", title: 'Hang'})}>Hang</button>
+                    <button className={`${action.kind === "pullup" ? 'bg-emerald-500': 'bg-slate-600'} p-2 text-slate-100 rounded-md`} onClick={() => setAction({kind:"pullup", reps: pullupReps, title: 'Pullup'})}>Pullup</button>
                 </div>
             </section>
             <section className="max-w-3xl flex items-center w-5/6">
