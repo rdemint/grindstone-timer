@@ -75,10 +75,10 @@ function NewWorkout({ workouts, setWorkouts }) {
     function handleAction(name) {
         switch (name) {
             case "pullup":
-                setAction({ kind: "pullup", title: "Pullup", reps: 0 });
+                setAction({ kind: "pullup", title: "Pullup", reps: 1 });
                 break;
             case "leglift":
-                setAction({ kind: "leglift", reps: 0, title: "Leg lift" });
+                setAction({ kind: "leglift", reps: 1, title: "Leg lift" });
                 break;
             case "hang":
                 setAction({ kind: "hang", title: "Hang" });
@@ -87,7 +87,7 @@ function NewWorkout({ workouts, setWorkouts }) {
     }
 
     function handleNewInterval() {
-        setIntervals([
+        const newIntervals = [
             ...intervals,
             {
                 restInterval,
@@ -98,8 +98,9 @@ function NewWorkout({ workouts, setWorkouts }) {
                 leftHold: leftHand,
                 action
             }
-        ]);
-
+        ];
+        setIntervals(newIntervals);
+        console.log(intervals);
     }
 
     function handleDeleteInterval() {
@@ -178,7 +179,10 @@ function NewWorkout({ workouts, setWorkouts }) {
                         }}
                     >
                         {fingerPositions.map((fingerposition) => (
-                            <option className="text-slate-600" value={fingerposition.name}>
+                            <option
+                                className="text-slate-600"
+                                key={fingerposition.name}
+                                value={fingerposition.name}>
                                 {fingerposition.title}
                             </option>
                         ))}
