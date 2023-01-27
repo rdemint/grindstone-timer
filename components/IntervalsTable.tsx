@@ -1,13 +1,12 @@
 import React from 'react'
 import { IWorkout } from './Timer'
 
-const WorkoutSummary: React.FC<IWorkout> = ({ date, intervals }) => {
+const IntervalsTable: React.FC<IWorkout> = ({ intervals }) => {
 
     return (
             <div className='w-72 sm:w-96 lg:w-full'>
                 {intervals.length > 0 ?
                     <div className='bg-gray-800 rounded  py-4'>
-                        <h4 className="text-center">Workout Summary</h4>
                         <div className="overflow-auto whitespace-nowrap">
                             <table>
                                 <thead>
@@ -48,10 +47,10 @@ const WorkoutSummary: React.FC<IWorkout> = ({ date, intervals }) => {
 
                     </div>
                     :
-                    <div className="grow text-slate-400 py-4">No intervals completed yet.</div>
+                    <div className="grow text-slate-400 py-4">No intervals yet.</div>
                 }
             </div>
     )
 }
 
-export default WorkoutSummary
+export default IntervalsTable

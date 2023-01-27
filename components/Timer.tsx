@@ -3,7 +3,7 @@ import useSound from "use-sound"
 import { ICountdownTimerParams } from 'use-countdown-timer'
 import { useCountdownTimer } from "use-countdown-timer"
 import WorkoutOption from "./WorkoutOption"
-import WorkoutSummary from "./WorkoutSummary"
+import IntervalsTable from "./IntervalsTable"
 import defaultWorkout from "../lib/defaultWorkout"
 import quickWorkouts from "../lib/quickWorkouts"
 import { fingerPositions } from "../lib/fingerpositions"
@@ -301,7 +301,7 @@ export default function Timer() {
                 </div>
             </section>
             <section className="max-w-6xl flex flex-col items-center">
-                <WorkoutSummary name={workoutSummary.name} intervals={workoutSummary.intervals} />
+                <IntervalsTable name={workoutSummary.name} intervals={workoutSummary.intervals} />
             </section>
             <section id="workoutconfig">
                 <h2 className="text-center">Customize Workout</h2>

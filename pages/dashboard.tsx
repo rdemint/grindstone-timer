@@ -1,5 +1,5 @@
 import { IWorkout } from "../components/Timer";
-import WorkoutSummary from "../components/WorkoutSummary";
+import IntervalsTable from "../components/IntervalsTable";
 import NewWorkout from "../components/NewWorkout";
 import {useState} from "react";
 
@@ -214,7 +214,7 @@ export default function Dashboard() {
                     {sortedWorkouts?.map((workout, i) => (
                         <div key={i}>
                             <h2 className="text-xl">{workout.date.toDateString()}</h2>
-                            <WorkoutSummary date={workout.date} intervals={workout.intervals} />
+                            <IntervalsTable date={workout.date} intervals={workout.intervals} />
                         </div>
                     ))}
 
