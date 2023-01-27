@@ -9,11 +9,11 @@ import {
 } from "./Timer";
 import { fingerPositions } from "../lib/fingerpositions";
 import { grindstone, simpleboard, hangboards } from "../lib/hangboards";
-import { Combobox } from "@headlessui/react";
 import IntervalsTable from "./IntervalsTable";
 
 function NewWorkout({ workouts, setWorkouts }) {
     const [intervals, setIntervals] = useState<IInterval[]>([]);
+    const [reps, setReps] = useState<number>(1);
     const [restInterval, setRestInterval] = useState<number>(90);
     const [workInterval, setWorkInterval] = useState<number>(10);
     const [leftHand, setLeftHand] = useState<IHangboardHandHold>({
@@ -33,8 +33,6 @@ function NewWorkout({ workouts, setWorkouts }) {
         useState<FingerPosition>(fingerPositions[0]);
 
     const [action, setAction] = useState<Action>({ kind: "hang", title: "Hang" });
-    const [reps, setReps] = useState<number>(1);
-    const [pullupReps, setPullupReps] = useState<number>(1);
 
     const handleLeftFingerPosition = (name) => {
         handleFingerPosition(name, setLeftFingerPosition);
@@ -75,10 +73,10 @@ function NewWorkout({ workouts, setWorkouts }) {
     function handleAction(name) {
         switch (name) {
             case "pullup":
-                setAction({ kind: "pullup", title: "Pullup", reps: 1 });
+                setAction({ kind: "pullup", title: "Pullup", reps: reps });
                 break;
             case "leglift":
-                setAction({ kind: "leglift", reps: 1, title: "Leg lift" });
+                setAction({ kind: "leglift", reps: reps, title: "Leg lift" });
                 break;
             case "hang":
                 setAction({ kind: "hang", title: "Hang" });
@@ -105,6 +103,15 @@ function NewWorkout({ workouts, setWorkouts }) {
 
     function handleDeleteInterval() {
         setIntervals([]);
+    }
+
+    function handleReps(numReps) {
+        if(action.kind != 'hang') {
+            setAction({
+                ...action,
+                reps: numReps
+            })
+        }
     }
 
     return (
@@ -222,8 +229,8 @@ function NewWorkout({ workouts, setWorkouts }) {
                         <input
                             className="text-slate-600"
                             type="number"
-                            onChange={(e) => setReps(e.target.valueAsNumber)}
-                            placeholder={reps.toString()}
+                            onChange={(e) => handleReps(e.target.valueAsNumber)}
+                            placeholder={Number(1).toString()}
                         />
                     </div>
                 ) : (

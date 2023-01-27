@@ -35,7 +35,7 @@ const IntervalsTable: React.FC<IWorkout> = ({ intervals }) => {
                                             <td className='px-4 py-1'>{interval.restInterval}</td>
                                             {interval.action.kind === "pullup" && <td className='px-4 py-1 text-justify'>{interval.action.reps} {interval.action.kind}</td>}
                                             {interval.action.kind === 'hang' && <td className='px-4 py-1 text-justify'> {interval.action.kind}</td>}
-                                            {interval.action.kind === 'leglift' && <td className='px-4 py-1 text-justify'>{interval.action.kind}</td>}
+                                            {interval.action.kind === 'leglift' && <td className='px-4 py-1 text-justify'>{interval.action.reps} {interval.action.kind}</td>}
                                         </tr>
                                     )
 
