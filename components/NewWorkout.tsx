@@ -1,73 +1,80 @@
 import React from "react";
+import { deepEqual } from "deep-equal";
 import { useState } from "react";
 import {
     IInterval,
-    IHangboardHandHold,
-    FingerPosition,
-    IWorkout,
+    IHangboard,
+    IHold,
     Action,
+    IHand,
 } from "./Timer";
 import { fingerPositions } from "../lib/fingerpositions";
-import { grindstone, simpleboard, hangboards } from "../lib/hangboards";
+import { hangboards } from "../lib/hangboards";
 import IntervalsTable from "./IntervalsTable";
 
-function NewWorkout() {
+export default function NewWorkout() {
     const [intervals, setIntervals] = useState<IInterval[]>([]);
     const [reps, setReps] = useState<number>(1);
     const [restInterval, setRestInterval] = useState<number>(90);
     const [workInterval, setWorkInterval] = useState<number>(10);
-    const [leftHand, setLeftHand] = useState<IHangboardHandHold>({
-        ...grindstone.handHolds[0],
-        hangboardName: grindstone.name,
-        hangboardTitle: grindstone.title,
-    });
-    const [leftFingerPosition, setLeftFingerPosition] = useState<FingerPosition>(
-        fingerPositions[0]
-    );
-    const [rightHand, setRightHand] = useState<IHangboardHandHold>({
-        ...grindstone.handHolds[0],
-        hangboardName: grindstone.name,
-        hangboardTitle: grindstone.title,
-    });
-    const [rightFingerPosition, setRightFingerPosition] =
-        useState<FingerPosition>(fingerPositions[0]);
+    const [leftHand, setLeftHand] = useState<IHand>({ hangboard: hangboards[0], fingerPosition: fingerPositions[0], hold: hangboards[0].holds[0] })
+    const [rightHand, setRightHand] = useState<IHand>({ hangboard: hangboards[0], fingerPosition: fingerPositions[0], hold: hangboards[0].holds[0] })
+
 
     const [action, setAction] = useState<Action>({ kind: "hang", title: "Hang" });
 
+    function handleReps(numReps:number) {
+        setReps(numReps);
+        if (action.kind != 'hang') {
+            setAction({
+                ...action,
+                reps: numReps
+            })
+        }
+    }
+
     const handleLeftFingerPosition = (name) => {
-        handleFingerPosition(name, setLeftFingerPosition);
+        let position = fingerPositions.find((el) => el.name === name);
+        let newLeft = {
+            ...leftHand,
+            fingerPosition: position
+        };
+        setLeftHand(newLeft);
     };
 
     const handleRightFingerPosition = (name) => {
-        handleFingerPosition(name, setRightFingerPosition);
+        let position = fingerPositions.find((el) => el.name === name);
+        let newRight = {
+            ...rightHand,
+            fingerPosition: position
+        };
+        setRightHand(newRight);
     };
 
-    const handleFingerPosition = (name, setFingerPosition) => {
-        const position = fingerPositions.find((pos) => pos.name === name);
-        setFingerPosition(position);
+
+    function handleHandString(holdString: string): [IHangboard, IHold] {
+        const result: Array<String> = holdString.split("-");
+        const hangboard: IHangboard = hangboards.find(
+            (hangboard) => hangboard.name === result[0]
+        );
+        const hold: IHold = hangboard.holds.find((hold) => hold.name === result[1]);
+        return [hangboard, hold];
     }
 
-
     function handleLeftHand(name) {
-        handleHand(setLeftHand, name);
+        const [hangboard, hold] = handleHandString(name);
+        let newLeft = {
+            ...leftHand,
+            hangboard,
+            hold
+        };
+        setLeftHand(newLeft);
     }
 
     function handleRightHand(name) {
-        handleHand(setRightHand, name);
-    }
-
-    function handleHand(setHand, holdName) {
-        const result: Array<String> = holdName.split("-");
-        const hangboard = hangboards.find(
-            (hangboard) => hangboard.name === result[0]
-        );
-        const hold = hangboard.handHolds.find((hold) => hold.name === result[1]);
-        setHand({
-            name: hold.name,
-            title: hold.title,
-            hangboardName: hangboard.name,
-            hangboardTitle: hangboard.title,
-        });
+        const [hangboard, hold] = handleHandString(name);
+        let newRight = {...rightHand, hangboard, hold};
+        setRightHand(newRight);
     }
 
     function handleAction(name) {
@@ -84,38 +91,18 @@ function NewWorkout() {
         }
     }
 
-    function handleNewInterval() {
-        const newIntervals = [
-            ...intervals,
-            {
-                restInterval,
-                workInterval,
-                leftFingerPosition,
-                rightFingerPosition,
-                rightHold: rightHand,
-                leftHold: leftHand,
-                action
-            }
-        ];
-        setIntervals(newIntervals);
-    }
-
-    function handleEditInterval(index, interval) {
-        intervals[index] = interval;
-        setIntervals(intervals);
-    }
 
     function handleDeleteInterval() {
         setIntervals([]);
     }
 
-    function handleReps(numReps) {
-        if(action.kind != 'hang') {
-            setAction({
-                ...action,
-                reps: numReps
-            })
-        }
+    function handleEditInterval(index: number, interval:IInterval) {
+        intervals[index] = interval;
+        setIntervals(intervals);
+    }
+    
+    function handleCreateInterval() {
+        setIntervals([...intervals, {workInterval,restInterval, leftHand,rightHand, action}]);
     }
 
     return (
@@ -129,7 +116,7 @@ function NewWorkout() {
                         onChange={(e) => handleLeftHand(e.target.value)}
                     >
                         {hangboards.map((hangboard) =>
-                            hangboard.handHolds.map((hold) => (
+                            hangboard.holds.map((hold) => (
                                 <option
                                     className="text-slate-600"
                                     key={`${hangboard.name}-${hold.name}`}
@@ -145,7 +132,7 @@ function NewWorkout() {
                     <div>Left hand</div>
                     <select
                         className="text-slate-600 w-48"
-                        value={leftFingerPosition.name}
+                        value={leftHand.fingerPosition.name}
                         onChange={(e) => {
                             handleLeftFingerPosition(e.target.value);
                         }}
@@ -168,7 +155,7 @@ function NewWorkout() {
                         onChange={(e) => handleRightHand(e.target.value)}
                     >
                         {hangboards.map((hangboard) =>
-                            hangboard.handHolds.map((hold) => (
+                            hangboard.holds.map((hold) => (
                                 <option
                                     className="text-slate-600"
                                     key={`${hangboard.name}-${hold.name}`}
@@ -184,7 +171,7 @@ function NewWorkout() {
                     <div>Right hand</div>
                     <select
                         className="text-slate-600 w-48"
-                        value={rightFingerPosition.name}
+                        value={rightHand.hold.name}
                         onChange={(e) => {
                             handleRightFingerPosition(e.target.value);
                         }}
@@ -242,14 +229,14 @@ function NewWorkout() {
                 )}
                 <div className="flex w-full justify-center">
                     <button
-                        onClick={(e) => handleNewInterval()}
+                        onClick={(e) => handleCreateInterval()}
                         className="w-1/2 bg-emerald-600 rounded"
                     >
                         Create interval
                     </button>
                 </div>
             </section>
-            <IntervalsTable intervals={intervals} />
+            <IntervalsTable intervals={intervals} handleEditInterval={handleEditInterval} />
             <div className="flex w-full justify-center">
                 <button
                     onClick={(e) => handleDeleteInterval()}
@@ -261,5 +248,3 @@ function NewWorkout() {
         </div>
     );
 };
-
-export default NewWorkout;

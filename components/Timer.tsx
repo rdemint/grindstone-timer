@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react"
+import {deepEqual} from 'deep-equal';
 import useSound from "use-sound"
 import { ICountdownTimerParams } from 'use-countdown-timer'
 import { useCountdownTimer } from "use-countdown-timer"
@@ -7,7 +8,7 @@ import IntervalsTable from "./IntervalsTable"
 import defaultWorkout from "../lib/defaultWorkout"
 import quickWorkouts from "../lib/quickWorkouts"
 import { fingerPositions } from "../lib/fingerpositions"
-import { grindstone, simpleboard } from "../lib/hangboards"
+import { grindstone, simpleboard, hangboards } from "../lib/hangboards"
 import GrindStoneSelector from "./GrindstoneSelector"
 import SimpleboardSelector from "./SimpleboardSelector"
 import FingerPositionSelector from "./FingerPositionSelector"
@@ -15,17 +16,23 @@ import FingerPositionSelector from "./FingerPositionSelector"
 export interface IHangboard {
     name: string;
     title: string;
-    handHolds: Array<IHandHold>;
+    holds: Array<IHold>;
 }
 
-export interface IHandHold {
+export interface IFingerPosition {
     name: string;
     title: string;
 }
 
-export interface IHangboardHandHold extends IHandHold {
-    hangboardName: string;
-    hangboardTitle: string;
+export interface IHold {
+    name: string;
+    title: string;
+}
+
+export interface IHand {
+    hangboard: IHangboard;
+    fingerPosition: IFingerPosition;
+    hold: IHold;
 }
 
 interface IWorkoutConfig {
@@ -64,18 +71,11 @@ export type Action  = IHang | IPullup | ILegLift
 export interface IInterval {
     workInterval: number;
     restInterval: number;
-    leftHold: IHangboardHandHold;
-    leftFingerPosition: FingerPosition;
-    rightHold: IHangboardHandHold;
-    rightFingerPosition: FingerPosition;
+    leftHand: IHand;
+    rightHand: IHand;
     action: Action;
 }
 
-
-export interface FingerPosition {
-    name: string;
-    title: string;
-}
 
 export default function Timer() {
 
@@ -91,11 +91,10 @@ export default function Timer() {
     const [currentInterval, setCurrentInterval] = useState<number>(1)
     const [workoutSummary, setWorkoutSummary] = useState<IWorkout>({ name: "New workout", date: new Date(), intervals: [] })
 
-
-    const [leftHand, setLeftHand] = useState<IHangboardHandHold>({ ...grindstone.handHolds[0], hangboardName: grindstone.name, hangboardTitle: grindstone.title })
-    const [leftFingerPosition, setLeftFingerPosition] = useState<FingerPosition>(fingerPositions[0])
-    const [rightHand, setRightHand] = useState<IHangboardHandHold>({ ...grindstone.handHolds[0], hangboardName: grindstone.name, hangboardTitle: grindstone.title })
-    const [rightFingerPosition, setRightFingerPosition] = useState<FingerPosition>(fingerPositions[0])
+    const [leftHand, setLeftHand] = useState<IHand>({hangboard: hangboards[0], fingerPosition: fingerPositions[0], hold: hangboards[0].holds[0]})
+    const [leftFingerPosition, setLeftFingerPosition] = useState<IFingerPosition>(fingerPositions[0])
+    const [rightHand, setRightHand] = useState<IHand>({hangboard: hangboards[0], fingerPosition: fingerPositions[0], hold: hangboards[0].holds[0]})
+    const [rightFingerPosition, setRightFingerPosition] = useState<IFingerPosition>(fingerPositions[0])
 
     const [action, setAction] = useState<Action>({kind: 'hang', title: 'Hang'})
     const [pullupReps, setPullupReps] = useState<number>(1)
@@ -118,11 +117,9 @@ export default function Timer() {
             const newInterval: IInterval = {
                 workInterval: workoutConfig.workInterval,
                 restInterval: workoutConfig.restInterval,
-                leftHold: leftHand,
-                leftFingerPosition: leftFingerPosition,
-                rightHold: rightHand,
-                rightFingerPosition: rightFingerPosition,
-                action: action
+                leftHand,
+                rightHand,
+                action,
             }
             setWorkoutSummary({
                 ...workoutSummary,
@@ -202,30 +199,32 @@ export default function Timer() {
         restTimer.reset()
     }
 
-    const handleRightHandClick = (newHold: IHangboardHandHold) => {
-        setRightHand((oldHold: IHangboardHandHold) => {
-            if (newHold.name === oldHold.name && newHold.hangboardName === oldHold.hangboardName) {
-                return ({ name: 'none', title: 'None', hangboardName: 'none', hangboardTitle: 'None' })
+    function handleEditInterval(index, interval) {
+        workoutSummary.intervals[index] = interval;
+        setWorkoutSummary(workoutSummary);
+    }
+
+    const handleRightHand = (newHand: IHand) => {
+        setRightHand((oldHand: IHand) => {
+            if (deepEqual(oldHand, newHand, {strict: true})) {
+                return ({ hangboard: null, fingerPosition: null, hold: null})
             }
             else {
-                return (newHold)
+                return (newHand)
             }
         })
     }
 
-    const handleLeftHandClick = (newHold: IHangboardHandHold) => {
-        setLeftHand((oldHold: IHangboardHandHold) => {
-            if (newHold.name == oldHold.name && newHold.hangboardName === oldHold.hangboardName) {
-                return ({ name: 'none', title: 'None', hangboardName: 'none', hangboardTitle: 'None' })
+    const handleLeftHand = (newHand: IHand) => {
+        setLeftHand((oldHand: IHand) => {
+            if (deepEqual(oldHand, newHand, {strict:true})) {
+                return ({ hangboard: null, hold: null, fingerPosition: null })
             }
             else {
-                return (newHold)
+                return (newHand)
             }
         })
     }
-
-
-
 
     const getTimerTheme = () => {
         if (workoutStatus === workoutStatusOptions.completed) {
@@ -264,19 +263,17 @@ export default function Timer() {
             <section id="hold-selection" className="max-w-3xl flex flex-col items-center w-5/6">
                 <div className="flex w-full rounded justify-center">
                     <SimpleboardSelector
-                        hangboard={simpleboard}
-                        handleEdgeClick={handleLeftHandClick}
-                        currentHandHold={leftHand} />
+                        setHand={setLeftHand}
+                        currentHand={leftHand} />
                     <GrindStoneSelector
-                        hangboard={grindstone}
-                        leftHandHold={leftHand}
-                        setLeftHandHold={handleLeftHandClick}
-                        rightHandHold={rightHand}
-                        setRightHandHold={handleRightHandClick} />
+                        currentLeftHand={leftHand}
+                        handleLeftHand={handleLeftHand}
+                        currentRightHand={rightHand}
+                        handleRightHand={handleRightHand} />
                     <SimpleboardSelector
-                        hangboard={simpleboard}
-                        handleEdgeClick={handleRightHandClick}
-                        currentHandHold={rightHand} />
+                        currentHand={rightHand} 
+                        setHand={setRightHand}
+                        />
                 </div>
             </section>
             <section className="flex max-w-3xl items-center">
@@ -289,19 +286,19 @@ export default function Timer() {
 
                 <div className="w-1/2 flex flex-col items-center space-y-2">
                     <h3>Left Hand</h3>
-                    <p>{leftHand.title}</p>
-                    <p>{leftHand.hangboardTitle}</p>
+                    <p>{leftHand.hold.title}</p>
+                    <p>{leftHand.hangboard.title}</p>
                     <FingerPositionSelector fingerPosition={leftFingerPosition} setFingerPosition={setLeftFingerPosition} fingerPositions={fingerPositions} />
                 </div>
                 <div className="w-1/2 flex flex-col items-center space-y-2">
                     <h3>Right Hand</h3>
-                    <p>{rightHand.title}</p>
-                    <p>{rightHand.hangboardTitle}</p>
+                    <p>{rightHand.hold.title}</p>
+                    <p>{rightHand.hangboard.title}</p>
                     <FingerPositionSelector fingerPosition={rightFingerPosition} setFingerPosition={setRightFingerPosition} fingerPositions={fingerPositions} />
                 </div>
             </section>
             <section className="max-w-6xl flex flex-col items-center">
-                <IntervalsTable name={workoutSummary.name} intervals={workoutSummary.intervals} />
+                <IntervalsTable intervals={workoutSummary.intervals} handleEditInterval={handleEditInterval}/>
             </section>
             <section id="workoutconfig">
                 <h2 className="text-center">Customize Workout</h2>
