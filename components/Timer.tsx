@@ -281,14 +281,14 @@ export default function Timer() {
 
                 <div className="w-1/2 flex flex-col items-center space-y-2">
                     <h3>Left Hand</h3>
-                    <p>{leftHand.title}</p>
-                    <p>{leftHand.hangboardTitle}</p>
+                    <p>{leftHand.hold.title}</p>
+                    <p>{leftHand.hangboard.title}</p>
                     <FingerPositionSelector fingerPosition={leftFingerPosition} setFingerPosition={setLeftFingerPosition} fingerPositions={fingerPositions} />
                 </div>
                 <div className="w-1/2 flex flex-col items-center space-y-2">
                     <h3>Right Hand</h3>
-                    <p>{rightHand.title}</p>
-                    <p>{rightHand.hangboardTitle}</p>
+                    <p>{rightHand.hold.title}</p>
+                    <p>{rightHand.hangboard.title}</p>
                     <FingerPositionSelector fingerPosition={rightFingerPosition} setFingerPosition={setRightFingerPosition} fingerPositions={fingerPositions} />
                 </div>
             </section>

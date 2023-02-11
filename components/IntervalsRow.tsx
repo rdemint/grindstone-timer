@@ -1,70 +1,59 @@
 import {useState} from 'react';
 import { fingerPositions } from '../lib/fingerpositions';
-import { IHangboardHandHold, IFingerPosition, Action } from "./Timer";
+import { IFingerPosition, IHold, Action, IInterval, IHand, IHangboard } from "./Timer";
 import { grindstone, hangboards } from "../lib/hangboards";
 
-export default function IntervalsRow({ interval, intervalIndex, handleEditInterval}) {
+export default function IntervalsRow({ interval, intervalIndex, handleEditInterval}: {interval:IInterval, intervalIndex:number, handleEditInterval:Function}) {
     const [workInterval, setWorkInterval] = useState(interval.workInterval);
     const [restInterval, setRestInterval] = useState(interval.restInterval);
-    const [leftHand, setLeftHand] = useState<IHangboardHandHold>(interval.leftHold);
-    const [leftFingerPosition, setLeftFingerPosition] = useState<IFingerPosition>(interval.leftFingerPosition);
-    const [rightHand, setRightHand] = useState<IHangboardHandHold>(interval.rightHold);
-    const [rightFingerPosition, setRightFingerPosition] = useState<IFingerPosition>(interval.rightFingerPosition);
+    const [leftHand, setLeftHand] = useState<IHand>(interval.leftHand);
+    const [rightHand, setRightHand] = useState<IHand>(interval.rightHand);
     const [action, setAction] = useState<Action>({kind: 'hang', title: 'Hang'})
     const [reps, setReps] = useState<number>(1);
 
-    //how to populate the state back up to the 
-    //create handle function if any state changes, update the interval
     const handleLeftFingerPosition = (name) => {
-        handleFingerPosition(name, setLeftFingerPosition);
-        interval = {
-            ...interval,
-            leftFingerPosition
-        };
+       let position = fingerPositions.find((el)=> el.name === name);
+       interval = {
+        ...interval,
+        leftHand: {
+            ...leftHand,
+            fingerPosition: position
+        }
+       }
         handleEditInterval(intervalIndex, interval);
     };
 
     const handleRightFingerPosition = (name) => {
-        handleFingerPosition(name, setRightFingerPosition);
-        interval = {
-            ...interval,
-            rightFingerPosition
-        };
+        let position = fingerPositions.find((el)=> el.name === name);
+       interval = {
+        ...interval,
+        rightHand: {
+            ...rightHand,
+            fingerPosition: position
+        }
+       }
         handleEditInterval(intervalIndex, interval);
     };
 
-    const handleFingerPosition = (name, setFingerPosition) => {
-        const position = fingerPositions.find((pos) => pos.name === name);
-        setFingerPosition(position);
+
+    function handleHand(holdString:string): [IHangboard, IHold] {
+        const result: Array<String> = holdString.split("-");
+        const hangboard: IHangboard = hangboards.find(
+            (hangboard) => hangboard.name === result[0]
+        );
+        const hold: IHold = hangboard.holds.find((hold) => hold.name === result[1]);
+        return [hangboard, hold];
     }
 
     function handleLeftHand(name) {
-        handleHand(setLeftHand, name);
+        const [hangboard, hold] = handleHand(name);
+        //TODO
     }
 
     function handleRightHand(name) {
-        handleHand(setRightHand, name);
+        handleHand(setname);
     }
 
-
-    function handleHand(setHand, holdName) {
-        const result: Array<String> = holdName.split("-");
-        const hangboard = hangboards.find(
-            (hangboard) => hangboard.name === result[0]
-        );
-        const hold = hangboard.handHolds.find((hold) => hold.name === result[1]);
-        setHand({
-            name: hold.name,
-            title: hold.title,
-            hangboardName: hangboard.name,
-            hangboardTitle: hangboard.title,
-        });
-        interval = {
-            ...interval,
-            leftHand,
-            rightHand,
-        }
-    }
     function handleAction(name) {
         switch (name) {
             case "pullup":

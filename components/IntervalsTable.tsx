@@ -1,8 +1,8 @@
 import React from 'react'
 import IntervalsRow from './IntervalsRow'
-import { IWorkout } from './Timer'
+import { IInterval, IWorkout } from './Timer'
 
-const IntervalsTable: React.FC<IWorkout> = ({ intervals }) => {
+export default function IntervalsTable ({ intervals }: {intervals: Array<IInterval>}) {
 
     return (
         <div className='w-72 sm:w-96 lg:w-4/5'>
@@ -44,5 +44,3 @@ const IntervalsTable: React.FC<IWorkout> = ({ intervals }) => {
         </div>
     )
 }
-
-export default IntervalsTable
