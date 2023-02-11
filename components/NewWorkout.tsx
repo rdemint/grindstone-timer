@@ -98,7 +98,11 @@ function NewWorkout() {
             }
         ];
         setIntervals(newIntervals);
-        console.log(intervals);
+    }
+
+    function handleEditInterval(index, interval) {
+        intervals[index] = interval;
+        setIntervals(intervals);
     }
 
     function handleDeleteInterval() {
