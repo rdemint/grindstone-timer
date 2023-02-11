@@ -1,5 +1,7 @@
-export default function HangBoardHandHold({hangboardName, hangboardTitle, currentHangboardHandHold, handHold, handleEdgeClick}) {
+import { IHangboard, IHold, IHand } from "./Timer";
+
+export default function HangBoardHandHold({currentHand, hangboard, hold, handleSetHand}: {currentHand: IHand, hangboard:IHangboard, hold: IHold, handleSetHand: Function}) {
     return (
-        <button onClick={() => handleEdgeClick({...handHold, hangboardName, hangboardTitle})} className={`bg-slate-400 h-8 w-full rounded-md ${ currentHangboardHandHold.name === handHold.name && currentHangboardHandHold.hangboardName === hangboardName ? 'bg-green-400 text-slate-800' : ''}`}>{handHold.name}</button>
+        <button onClick={() => handleSetHand({...currentHand, hangboard, hold})} className={`bg-slate-400 h-8 w-full rounded-md ${ hangboard.name === currentHand.hangboard.name && hold.name === currentHand.hold.name ? 'bg-green-400 text-slate-800' : ''}`}>{hold.name}</button>
     )
 }

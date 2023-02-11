@@ -3,7 +3,7 @@ import { useState } from "react";
 import {
     IInterval,
     IHangboardHandHold,
-    FingerPosition,
+    IFingerPosition,
     IWorkout,
     Action,
 } from "./Timer";
@@ -17,20 +17,20 @@ function NewWorkout() {
     const [restInterval, setRestInterval] = useState<number>(90);
     const [workInterval, setWorkInterval] = useState<number>(10);
     const [leftHand, setLeftHand] = useState<IHangboardHandHold>({
-        ...grindstone.handHolds[0],
+        ...grindstone.holds[0],
         hangboardName: grindstone.name,
         hangboardTitle: grindstone.title,
     });
-    const [leftFingerPosition, setLeftFingerPosition] = useState<FingerPosition>(
+    const [leftFingerPosition, setLeftFingerPosition] = useState<IFingerPosition>(
         fingerPositions[0]
     );
     const [rightHand, setRightHand] = useState<IHangboardHandHold>({
-        ...grindstone.handHolds[0],
+        ...grindstone.holds[0],
         hangboardName: grindstone.name,
         hangboardTitle: grindstone.title,
     });
     const [rightFingerPosition, setRightFingerPosition] =
-        useState<FingerPosition>(fingerPositions[0]);
+        useState<IFingerPosition>(fingerPositions[0]);
 
     const [action, setAction] = useState<Action>({ kind: "hang", title: "Hang" });
 

@@ -1,6 +1,6 @@
-import { FingerPosition } from '../components/Timer'
+import { IFingerPosition } from '../components/Timer'
 
-export const fingerPositions: Array<FingerPosition> = [
+export const fingerPositions: Array<IFingerPosition> = [
     {
         name: '1234',
         title: '4 finger'

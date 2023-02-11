@@ -1,15 +1,15 @@
 import {useState} from 'react';
 import { fingerPositions } from '../lib/fingerpositions';
-import { IHangboardHandHold, FingerPosition, Action } from "./Timer";
+import { IHangboardHandHold, IFingerPosition, Action } from "./Timer";
 import { grindstone, hangboards } from "../lib/hangboards";
 
 export default function IntervalsRow({ interval, intervalIndex, handleEditInterval}) {
     const [workInterval, setWorkInterval] = useState(interval.workInterval);
     const [restInterval, setRestInterval] = useState(interval.restInterval);
     const [leftHand, setLeftHand] = useState<IHangboardHandHold>(interval.leftHold);
-    const [leftFingerPosition, setLeftFingerPosition] = useState<FingerPosition>(interval.leftFingerPosition);
+    const [leftFingerPosition, setLeftFingerPosition] = useState<IFingerPosition>(interval.leftFingerPosition);
     const [rightHand, setRightHand] = useState<IHangboardHandHold>(interval.rightHold);
-    const [rightFingerPosition, setRightFingerPosition] = useState<FingerPosition>(interval.rightFingerPosition);
+    const [rightFingerPosition, setRightFingerPosition] = useState<IFingerPosition>(interval.rightFingerPosition);
     const [action, setAction] = useState<Action>({kind: 'hang', title: 'Hang'})
     const [reps, setReps] = useState<number>(1);
 

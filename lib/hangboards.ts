@@ -3,7 +3,7 @@ import { IHangboard } from '../components/Timer'
 export const grindstone: IHangboard = {
     name: 'grindstone',
     title: 'Grindstone mk2',
-    handHolds: [
+    holds: [
         {
             name: 'jug',
             title: 'Jug'
@@ -43,7 +43,7 @@ export const grindstone: IHangboard = {
 export const simpleboard = {
     name: 'simpleboard',
     title: 'Simple Board',
-    handHolds: [
+    holds: [
         { name: 'jug', title: 'jug'},
         { name: '10', title: '10mm edge' },
         { name: '8', title: '8mm edge' },
@@ -51,4 +51,4 @@ export const simpleboard = {
     ]
 }
 
-export const hangboards = [grindstone, simpleboard]
+export const hangboards: Array<IHangboard> = [grindstone, simpleboard]
