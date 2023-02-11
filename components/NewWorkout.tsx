@@ -11,7 +11,7 @@ import { fingerPositions } from "../lib/fingerpositions";
 import { grindstone, simpleboard, hangboards } from "../lib/hangboards";
 import IntervalsTable from "./IntervalsTable";
 
-function NewWorkout({ workouts, setWorkouts }) {
+function NewWorkout() {
     const [intervals, setIntervals] = useState<IInterval[]>([]);
     const [reps, setReps] = useState<number>(1);
     const [restInterval, setRestInterval] = useState<number>(90);

@@ -209,7 +209,7 @@ export default function Dashboard() {
 
     return (
         <div className="flex flex-col items-center mt-12">
-            <NewWorkout workouts={workouts} setWorkouts={setWorkouts} />
+            <NewWorkout />
                 <div className="flex flex-col space-y-4">
                     {sortedWorkouts?.map((workout, i) => (
                         <div key={i}>
