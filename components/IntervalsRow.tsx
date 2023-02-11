@@ -36,7 +36,7 @@ export default function IntervalsRow({ interval, intervalIndex, handleEditInterv
     };
 
 
-    function handleHand(holdString:string): [IHangboard, IHold] {
+    function handleHandString(holdString:string): [IHangboard, IHold] {
         const result: Array<String> = holdString.split("-");
         const hangboard: IHangboard = hangboards.find(
             (hangboard) => hangboard.name === result[0]
@@ -45,13 +45,31 @@ export default function IntervalsRow({ interval, intervalIndex, handleEditInterv
         return [hangboard, hold];
     }
 
-    function handleLeftHand(name) {
-        const [hangboard, hold] = handleHand(name);
-        //TODO
+    function handleLeftHand(name, index) {
+        const [hangboard, hold] = handleHandString(name);
+        interval = {
+            ...interval,
+            leftHand: {
+                ...leftHand,
+                hangboard,
+                hold
+            }
+        };
+        handleEditInterval(index, interval);
     }
 
-    function handleRightHand(name) {
-        handleHand(setname);
+    function handleRightHand(name, index) {
+        const [hangboard, hold] = handleHandString(name);
+        interval = {
+            ...interval,
+            rightHand: {
+                ...rightHand,
+                hangboard,
+                hold
+            }
+        };
+        handleEditInterval(index, interval);
+
     }
 
     function handleAction(name) {
@@ -71,22 +89,22 @@ export default function IntervalsRow({ interval, intervalIndex, handleEditInterv
     return (
         <tr className="text-left text-slate-300">
             <td className='px-4 py-1'>
-                {interval.leftHold.hangboardTitle}  
+                {interval.leftHand.hangboard.title}  
             </td>
             <td className='px-4 py-1'>
-                {interval.leftHold.title}
+                {interval.leftHand.hold.title}
             </td>
             <td className='px-4 py-1'>
-                {interval.leftFingerPosition.title}
+                {interval.leftHand.fingerPosition.title}
                 </td>
             <td className='px-4 py-1'>
-                {interval.rightHold.hangboardTitle}
+                {interval.rightHand.hangboard.title}
                 </td>
             <td className='px-4 py-1'>
-                {interval.rightHold.title}
+                {interval.rightHand.hold.title}
                 </td>
             <td className='px-4 py-1'>
-                {interval.rightFingerPosition.title}
+                {interval.rightHand.fingerPosition.title}
                 </td>
             <td className='px-4 py-1'>
                 {interval.workInterval}

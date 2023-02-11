@@ -199,10 +199,15 @@ export default function Timer() {
         restTimer.reset()
     }
 
-    const handleRightHandClick = (newHand: IHand) => {
+    function handleEditInterval(index, interval) {
+        workoutSummary.intervals[index] = interval;
+        setWorkoutSummary(workoutSummary);
+    }
+
+    const handleRightHand = (newHand: IHand) => {
         setRightHand((oldHand: IHand) => {
             if (deepEqual(oldHand, newHand, {strict: true})) {
-                return ({ name: 'none', title: 'None', hangboard: 'none'})
+                return ({ hangboard: null, fingerPosition: null, hold: null})
             }
             else {
                 return (newHand)
@@ -210,10 +215,10 @@ export default function Timer() {
         })
     }
 
-    const handleLeftHandClick = (newHand: IHand) => {
+    const handleLeftHand = (newHand: IHand) => {
         setLeftHand((oldHand: IHand) => {
             if (deepEqual(oldHand, newHand, {strict:true})) {
-                return ({ name: 'none', title: 'None', hangboardName: 'none', hangboardTitle: 'None' })
+                return ({ hangboard: null, hold: null, fingerPosition: null })
             }
             else {
                 return (newHand)
@@ -262,9 +267,9 @@ export default function Timer() {
                         currentHand={leftHand} />
                     <GrindStoneSelector
                         currentLeftHand={leftHand}
-                        setLeftHand={handleLeftHandClick}
+                        handleLeftHand={handleLeftHand}
                         currentRightHand={rightHand}
-                        setRightHand={handleRightHandClick} />
+                        handleRightHand={handleRightHand} />
                     <SimpleboardSelector
                         currentHand={rightHand} 
                         setHand={setRightHand}
@@ -293,7 +298,7 @@ export default function Timer() {
                 </div>
             </section>
             <section className="max-w-6xl flex flex-col items-center">
-                <IntervalsTable name={workoutSummary.name} intervals={workoutSummary.intervals} />
+                <IntervalsTable intervals={workoutSummary.intervals} handleEditInterval={handleEditInterval}/>
             </section>
             <section id="workoutconfig">
                 <h2 className="text-center">Customize Workout</h2>
