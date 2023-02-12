@@ -193,7 +193,7 @@ export default function IntervalsRow({ interval, intervalIndex, handleEditInterv
                     {hangboards.map((hangboard) =>
                         hangboard.holds.map((hold) => (
                             <option
-                                className=""
+                                className="text-slate-100"
                                 key={`${hangboard.name}-${hold.name}`}
                                 value={`${hangboard.name}-${hold.name}`}
                             >
