@@ -86,18 +86,18 @@ export default function Timer() {
     const [playSwitchFx] = useSound('/sounds/switch.wav')
     const [playEndFx] = useSound('/sounds/end.wav')
 
-    const [workoutConfig, setWorkoutConfig] = useState<IWorkoutConfig>(defaultWorkout)
-    const [workoutStatus, setWorkoutStatus] = useState<string>(workoutStatusOptions.unconfigured)
-    const [currentInterval, setCurrentInterval] = useState<number>(1)
-    const [workoutSummary, setWorkoutSummary] = useState<IWorkout>({ name: "New workout", date: new Date(), intervals: [] })
+    let [prepTime, setPrepTime] = useState<number>(12);
+    const [workoutConfig, setWorkoutConfig] = useState<IWorkout>(defaultWorkout);
+    const [workoutStatus, setWorkoutStatus] = useState<string>(workoutStatusOptions.unconfigured);
+    const [currentInterval, setCurrentInterval] = useState<number>(0);
+    const [workoutSummary, setWorkoutSummary] = useState<IWorkout>({ name: "New workout", date: new Date(), intervals: [] });
 
     const [leftHand, setLeftHand] = useState<IHand>({hangboard: hangboards[0], fingerPosition: fingerPositions[0], hold: hangboards[0].holds[0]})
-    const [leftFingerPosition, setLeftFingerPosition] = useState<IFingerPosition>(fingerPositions[0])
+    //const [leftFingerPosition, setLeftFingerPosition] = useState<IFingerPosition>(fingerPositions[0])
     const [rightHand, setRightHand] = useState<IHand>({hangboard: hangboards[0], fingerPosition: fingerPositions[0], hold: hangboards[0].holds[0]})
-    const [rightFingerPosition, setRightFingerPosition] = useState<IFingerPosition>(fingerPositions[0])
-
+    //const [rightFingerPosition, setRightFingerPosition] = useState<IFingerPosition>(fingerPositions[0])
     const [action, setAction] = useState<Action>({kind: 'hang', title: 'Hang'})
-    const [pullupReps, setPullupReps] = useState<number>(1)
+    let [pullupReps, setPullupReps] = useState<number>(1)
 
 
 
@@ -115,8 +115,8 @@ export default function Timer() {
 
         if (workoutStatus == workoutStatusOptions.work) {
             const newInterval: IInterval = {
-                workInterval: workoutConfig.workInterval,
-                restInterval: workoutConfig.restInterval,
+                workInterval: workoutConfig.intervals[currentInterval].workInterval,
+                restInterval: workoutConfig.intervals[currentInterval].restInterval,
                 leftHand,
                 rightHand,
                 action,
@@ -132,31 +132,21 @@ export default function Timer() {
         }
         else if (workoutStatus == workoutStatusOptions.rest) {
 
-            if (currentInterval < workoutConfig.numIntervals) {
+            if (currentInterval < workoutConfig.intervals.length) {
                 setWorkoutStatus(workoutStatusOptions.work)
                 setCurrentInterval(currentInterval + 1)
                 workTimer.start()
                 playSwitchFx()
             }
-            else if (currentInterval == workoutConfig.numIntervals) {
+            else {
                 setWorkoutStatus(workoutStatusOptions.completed)
                 playEndFx()
-            }
-
-            else {
-                //
             }
         }
     }
 
-    const prepTimerConfig: ICountdownTimerParams = {
-        timer: (workoutConfig.prepInterval * 1000),
-        expireImmediate: true,
-        onExpire: completeInterval
-    }
-
     const prepTimer = useCountdownTimer({
-        timer: workoutConfig.prepInterval * 1000,
+        timer: prepTime * 1000,
         expireImmediate: true,
         onExpire: completeInterval
     })
@@ -245,7 +235,7 @@ export default function Timer() {
             <section id="timerdisplay" className={`flex flex-col ${getTimerTheme()} justify-between rounded-sm max-w-3xl p-8 h-96 md:w-2/3`}>
                 <div className="flex justify-center text-center space-x-4">
                     <div>INTERVAL</div>
-                    <div>{currentInterval} / {workoutConfig.numIntervals}</div>
+                    <div>{currentInterval} / {workoutConfig.intervals.length}</div>
                 </div>
                 <div className="flex flex-col justify-center items-center text-center space-y-4 text-6xl h-24 text-slate-50">
                     <div>{workoutStatus}</div>
@@ -288,13 +278,13 @@ export default function Timer() {
                     <h3>Left Hand</h3>
                     <p>{leftHand.hold.title}</p>
                     <p>{leftHand.hangboard.title}</p>
-                    <FingerPositionSelector fingerPosition={leftFingerPosition} setFingerPosition={setLeftFingerPosition} fingerPositions={fingerPositions} />
+                    <FingerPositionSelector fingerPosition={currentInterval.leftHand.fingerPosition} setFingerPosition={setLeftFingerPosition} fingerPositions={fingerPositions} />
                 </div>
                 <div className="w-1/2 flex flex-col items-center space-y-2">
                     <h3>Right Hand</h3>
                     <p>{rightHand.hold.title}</p>
                     <p>{rightHand.hangboard.title}</p>
-                    <FingerPositionSelector fingerPosition={rightFingerPosition} setFingerPosition={setRightFingerPosition} fingerPositions={fingerPositions} />
+                    <FingerPositionSelector fingerPosition={currentInterval.rightHand.fingerPosition} setFingerPosition={setRightFingerPosition} fingerPositions={fingerPositions} />
                 </div>
             </section>
             <section className="max-w-6xl flex flex-col items-center">
@@ -330,7 +320,6 @@ export default function Timer() {
                         <div key={workout.name} className="flex flex-col">
                             <WorkoutOption
                                 name={workout.name}
-                                prepInterval={workout.prepInterval}
                                 workInterval={workout.workInterval}
                                 restInterval={workout.restInterval}
                                 numIntervals={workout.numIntervals}
