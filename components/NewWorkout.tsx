@@ -1,5 +1,4 @@
 import React from "react";
-import { deepEqual } from "deep-equal";
 import { useState } from "react";
 import {
     IInterval,

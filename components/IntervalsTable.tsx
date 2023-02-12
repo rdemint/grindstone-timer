@@ -4,7 +4,7 @@ import { IInterval} from './Timer'
 
 export default function IntervalsTable ({ intervals, handleEditInterval }: {intervals: Array<IInterval>, handleEditInterval:Function}) {
     return (
-        <div className='w-72 sm:w-96 lg:w-4/5'>
+        <div className='w-72 sm:w-96 lg:w-full'>
             {intervals.length > 0 ?
                 <div className='bg-gray-800 rounded  py-4'>
                     <div className="overflow-auto whitespace-nowrap">

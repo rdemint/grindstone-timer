@@ -1,9 +1,10 @@
 import { Listbox } from "@headlessui/react"
+import { fingerPositions } from "../lib/fingerpositions"
 
-export default function FingerPositionSelector({ fingerPosition, setFingerPosition, fingerPositions }) {
+export default function FingerPositionSelector({ fingerPosition, handleFingerPosition}) {
     return (
         <div>
-            <Listbox value={fingerPosition} onChange={setFingerPosition}>
+            <Listbox value={fingerPosition} onChange={handleFingerPosition}>
                 <div className="relative w-36">
                     <Listbox.Button className="relative w-full cursor-default rounded-lg bg-slate-600 py-2 pl-2 pr-2 text-left sm:text-sm">
                         <span className="block truncate text-center">{fingerPosition.title}</span>

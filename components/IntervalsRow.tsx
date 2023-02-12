@@ -150,13 +150,13 @@ export default function IntervalsRow({ interval, intervalIndex, handleEditInterv
         <tr className="text-left text-slate-300">
             <td className='px-4 py-1 rounded'>
                 <select
-                    className="text-slate-600 w-48 rounded px-1"
+                    className="bg-slate-700 text-slate-50 w-48 rounded px-1"
                     onChange={(e) => handleLeftHand(e.target.value)}
                 >
                     {hangboards.map((hangboard) =>
                         hangboard.holds.map((hold) => (
                             <option
-                                className="text-slate-600 px-1"
+                                className="px-1"
                                 key={`${hangboard.name}-${hold.name}`}
                                 value={`${hangboard.name}-${hold.name}`}
                             >
@@ -168,7 +168,7 @@ export default function IntervalsRow({ interval, intervalIndex, handleEditInterv
             </td>
             <td className='px-4 py-1'>
                 <select
-                    className="text-slate-600 w-24 px-1 rounded"
+                    className="bg-slate-700 text-slate-50 w-24 px-1 rounded"
                     value={interval.leftHand.fingerPosition.name}
                     onChange={(e) => {
                         handleLeftFingerPosition(e.target.value);
@@ -177,7 +177,7 @@ export default function IntervalsRow({ interval, intervalIndex, handleEditInterv
                     {fingerPositions.map((fingerposition) => (
                         <option
                             key={fingerposition.name}
-                            className="text-slate-600"
+                            className=""
                             value={fingerposition.name}
                         >
                             {fingerposition.title}
@@ -187,13 +187,13 @@ export default function IntervalsRow({ interval, intervalIndex, handleEditInterv
             </td>
             <td className='px-4 py-1'>
                 <select
-                    className="text-slate-600 w-48 rounded"
+                    className="bg-slate-700 text-slate-100 w-48 rounded"
                     onChange={(e) => handleRightHand(e.target.value)}
                 >
                     {hangboards.map((hangboard) =>
                         hangboard.holds.map((hold) => (
                             <option
-                                className="text-slate-600"
+                                className=""
                                 key={`${hangboard.name}-${hold.name}`}
                                 value={`${hangboard.name}-${hold.name}`}
                             >
@@ -205,7 +205,7 @@ export default function IntervalsRow({ interval, intervalIndex, handleEditInterv
             </td>
             <td className='px-4 py-1'>
                 <select
-                    className="text-slate-600 w-24 px-1 rounded"
+                    className="bg-slate-700 text-slate-100 w-24 px-1 rounded"
                     value={interval.rightHand.fingerPosition.name}
                     onChange={(e) => {
                         handleRightFingerPosition(e.target.value);
@@ -223,7 +223,7 @@ export default function IntervalsRow({ interval, intervalIndex, handleEditInterv
             </td>
             <td className='px-1 py-1'>
                 <input
-                    className="rounded text-slate-600 w-12 text-center"
+                    className="rounded bg-slate-700 text-slate-100 w-12 text-center"
                     type="number"
                     placeholder={interval.workInterval.toString()}
                     onChange={(e) => handleWorkInterval(e.target.valueAsNumber)}
@@ -231,7 +231,7 @@ export default function IntervalsRow({ interval, intervalIndex, handleEditInterv
             </td>
             <td className='px-1 py-1'>
                 <input
-                    className="rounded px-1 text-slate-600 w-12 text-center"
+                    className="rounded px-1 bg-slate-700 text-slate-100 w-12 text-center"
                     type="number"
                     placeholder={interval.restInterval.toString()}
                     onChange={(e) => handleRestInterval(e.target.valueAsNumber)}
@@ -239,7 +239,7 @@ export default function IntervalsRow({ interval, intervalIndex, handleEditInterv
             </td>
             <td className='px-1 py-1'>
                 <select
-                    className="text-slate-600 rounded w-full text-center"
+                    className="bg-slate-700 text-slate-100 rounded w-full text-center"
                     onChange={(e) => handleAction(e.target.value)}
                 >
                     <option value="hang">Hang</option>
@@ -252,7 +252,7 @@ export default function IntervalsRow({ interval, intervalIndex, handleEditInterv
                 <td>
                     <div className="flex justify-between">
                         <input
-                            className="text-slate-600 w-12 rounded px-1 text-center"
+                            className="bg-slate-700 text-slate-100 w-12 rounded px-1 text-center"
                             type="number"
                             onChange={(e) => handleReps(e.target.valueAsNumber)}
                             placeholder={Number(1).toString()}
@@ -261,7 +261,7 @@ export default function IntervalsRow({ interval, intervalIndex, handleEditInterv
                 </td>
             ) : (
                 <td>
-                    <div className="w-full">{interval.rightHand.hold.name}</div>
+                    <div className="w-full"></div>
                 </td>
             )}
         </tr>
