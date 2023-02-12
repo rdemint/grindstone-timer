@@ -1,9 +1,8 @@
 import React from 'react'
 import IntervalsRow from './IntervalsRow'
-import { IInterval, IWorkout } from './Timer'
+import { IInterval} from './Timer'
 
 export default function IntervalsTable ({ intervals, handleEditInterval }: {intervals: Array<IInterval>, handleEditInterval:Function}) {
-
     return (
         <div className='w-72 sm:w-96 lg:w-4/5'>
             {intervals.length > 0 ?

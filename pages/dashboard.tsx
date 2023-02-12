@@ -1,7 +1,11 @@
 import { IWorkout } from "../components/Timer";
 import IntervalsTable from "../components/IntervalsTable";
 import NewWorkout from "../components/NewWorkout";
-import {useState} from "react";
+import Workouts from "../components/Workouts"
+import { useState } from "react";
+import { grindstone, simpleboard } from "../lib/hangboards";
+import { fingerPositions } from "../lib/fingerpositions";
+
 
 
 
@@ -13,92 +17,72 @@ export default function Dashboard() {
                 {
                     workInterval: 10,
                     restInterval: 90,
-                    leftHold: {name: '30', title: '30mm edge', hangboardName:"grindstone", hangboardTitle:"Grindstone"},
-                    leftFingerPosition: {name: '1234', title: '4 finger'},
-                    rightHold: {name: '30', title: '30mm edge', hangboardName:"grindstone", hangboardTitle:"Grindstone"},
-                    rightFingerPosition: {name: '1234', title: '4 finger'},
-                    action: {kind: 'hang', title: 'Hang'}
+                    leftHand: { hangboard: grindstone, hold: grindstone.holds[0], fingerPosition: fingerPositions[0] },
+                    rightHand: { hangboard: grindstone, hold: grindstone.holds[0], fingerPosition: fingerPositions[0] },
+                    action: { kind: 'hang', title: 'Hang' }
                 },
                 {
                     workInterval: 10,
                     restInterval: 90,
-                    leftHold: {name: '30', title: '30mm edge', hangboardName:"grindstone", hangboardTitle:"Grindstone"},
-                    leftFingerPosition: {name: '1234', title: '4 finger'},
-                    rightHold: {name: '30', title: '30mm edge', hangboardName:"grindstone", hangboardTitle:"Grindstone"},
-                    rightFingerPosition: {name: '1234', title: '4 finger'},
-                    action: {kind: 'hang', title: 'Hang'}
+                    leftHand: { hangboard: grindstone, hold: grindstone.holds[0], fingerPosition: fingerPositions[0] },
+                    rightHand: { hangboard: grindstone, hold: grindstone.holds[0], fingerPosition: fingerPositions[0] },
+                    action: { kind: 'hang', title: 'Hang' }
                 },
                 {
                     workInterval: 10,
                     restInterval: 90,
-                    leftHold: {name: '25', title: '25mm edge', hangboardName:"grindstone", hangboardTitle:"Grindstone"},
-                    leftFingerPosition: {name: '1234', title: '4 finger'},
-                    rightHold: {name: '25', title: '25mm edge', hangboardName:"grindstone", hangboardTitle:"Grindstone"},
-                    rightFingerPosition: {name: '1234', title: '4 finger'},
-                    action: {kind: 'hang', title: 'Hang'}
+                    leftHand: { hangboard: grindstone, hold: grindstone.holds[0], fingerPosition: fingerPositions[0] },
+                    rightHand: { hangboard: grindstone, hold: grindstone.holds[0], fingerPosition: fingerPositions[0] },
+                    action: { kind: 'hang', title: 'Hang' }
                 },
                 {
                     workInterval: 10,
                     restInterval: 90,
-                    leftHold: {name: '20', title: '20mm edge', hangboardName:"grindstone", hangboardTitle:"Grindstone"},
-                    leftFingerPosition: {name: '1234', title: '4 finger'},
-                    rightHold: {name: '20', title: '20mm edge', hangboardName:"grindstone", hangboardTitle:"Grindstone"},
-                    rightFingerPosition: {name: '1234', title: '4 finger'},
-                    action: {kind: 'hang', title: 'Hang'}
+                    leftHand: { hangboard: grindstone, hold: grindstone.holds[0], fingerPosition: fingerPositions[0] },
+                    rightHand: { hangboard: grindstone, hold: grindstone.holds[0], fingerPosition: fingerPositions[0] },
+                    action: { kind: 'hang', title: 'Hang' }
                 },
                 {
                     workInterval: 10,
                     restInterval: 180,
-                    leftHold: {name: '15', title: '15mm edge', hangboardName:"grindstone", hangboardTitle:"Grindstone"},
-                    leftFingerPosition: {name: '1234', title: '4 finger'},
-                    rightHold: {name: '15', title: '15mm edge', hangboardName:"grindstone", hangboardTitle:"Grindstone"},
-                    rightFingerPosition: {name: '1234', title: '4 finger'},
-                    action: {kind: 'hang', title: 'Hang'}
+                    leftHand: { hangboard: grindstone, hold: grindstone.holds[0], fingerPosition: fingerPositions[0] },
+                    rightHand: { hangboard: grindstone, hold: grindstone.holds[0], fingerPosition: fingerPositions[0] },
+                    action: { kind: 'hang', title: 'Hang' }
                 },
                 {
                     workInterval: 10,
                     restInterval: 90,
-                    leftHold: {name: '30', title: '30mm edge', hangboardName:"grindstone", hangboardTitle:"Grindstone"},
-                    leftFingerPosition: {name: '1234', title: '4 finger'},
-                    rightHold: {name: '30', title: '30mm edge', hangboardName:"grindstone", hangboardTitle:"Grindstone"},
-                    rightFingerPosition: {name: '1234', title: '4 finger'},
-                    action: {kind: 'hang', title: 'Hang'}
+                    leftHand: { hangboard: grindstone, hold: grindstone.holds[0], fingerPosition: fingerPositions[0] },
+                    rightHand: { hangboard: grindstone, hold: grindstone.holds[0], fingerPosition: fingerPositions[0] },
+                    action: { kind: 'hang', title: 'Hang' }
                 },
                 {
                     workInterval: 10,
                     restInterval: 90,
-                    leftHold: {name: '30', title: '30mm edge', hangboardName:"grindstone", hangboardTitle:"Grindstone"},
-                    leftFingerPosition: {name: '1234', title: '4 finger'},
-                    rightHold: {name: '30', title: '30mm edge', hangboardName:"grindstone", hangboardTitle:"Grindstone"},
-                    rightFingerPosition: {name: '1234', title: '4 finger'},
-                    action: {kind: 'hang', title: 'Hang'}
+                    leftHand: { hangboard: grindstone, hold: grindstone.holds[0], fingerPosition: fingerPositions[0] },
+                    rightHand: { hangboard: grindstone, hold: grindstone.holds[0], fingerPosition: fingerPositions[0] },
+                    action: { kind: 'hang', title: 'Hang' }
                 },
                 {
                     workInterval: 10,
                     restInterval: 90,
-                    leftHold: {name: '25', title: '25mm edge', hangboardName:"grindstone", hangboardTitle:"Grindstone"},
-                    leftFingerPosition: {name: '1234', title: '4 finger'},
-                    rightHold: {name: '25', title: '25mm edge', hangboardName:"grindstone", hangboardTitle:"Grindstone"},
-                    rightFingerPosition: {name: '1234', title: '4 finger'},
-                    action: {kind: 'hang', title: 'Hang'}
+                    leftHand: { hangboard: grindstone, hold: grindstone.holds[0], fingerPosition: fingerPositions[0] },
+                    rightHand: { hangboard: grindstone, hold: grindstone.holds[0], fingerPosition: fingerPositions[0] },
+                    action: { kind: 'hang', title: 'Hang' }
                 },
                 {
                     workInterval: 10,
                     restInterval: 90,
-                    leftHold: {name: '20', title: '20mm edge', hangboardName:"grindstone", hangboardTitle:"Grindstone"},
-                    leftFingerPosition: {name: '1234', title: '4 finger'},
-                    rightHold: {name: '20', title: '20mm edge', hangboardName:"grindstone", hangboardTitle:"Grindstone"},
-                    rightFingerPosition: {name: '1234', title: '4 finger'},
-                    action: {kind: 'hang', title: 'Hang'}
+                    leftHand: { hangboard: grindstone, hold: grindstone.holds[0], fingerPosition: fingerPositions[0] },
+                    rightHand: { hangboard: grindstone, hold: grindstone.holds[0], fingerPosition: fingerPositions[0] },
+                    action: { kind: 'hang', title: 'Hang' }
                 },
                 {
                     workInterval: 10,
                     restInterval: 180,
-                    leftHold: {name: '15', title: '15mm edge', hangboardName:"grindstone", hangboardTitle:"Grindstone"},
-                    leftFingerPosition: {name: '1234', title: '4 finger'},
-                    rightHold: {name: '15', title: '15mm edge', hangboardName:"grindstone", hangboardTitle:"Grindstone"},
-                    rightFingerPosition: {name: '1234', title: '4 finger'},
-                    action: {kind: 'hang', title: 'Hang'}
+                    leftHand: { hangboard: grindstone, hold: grindstone.holds[0], fingerPosition: fingerPositions[0] },
+                    rightHand: { hangboard: grindstone, hold: grindstone.holds[0], fingerPosition: fingerPositions[0] },
+                    action: { kind: 'hang', title: 'Hang' }
                 },
             ]
         },
@@ -108,47 +92,37 @@ export default function Dashboard() {
                 {
                     workInterval: 10,
                     restInterval: 90,
-                    leftHold: {name: '30', title: '30mm edge', hangboardName:"grindstone", hangboardTitle:"Grindstone"},
-                    leftFingerPosition: {name: '1234', title: '4 finger'},
-                    rightHold: {name: '30', title: '30mm edge', hangboardName:"grindstone", hangboardTitle:"Grindstone"},
-                    rightFingerPosition: {name: '1234', title: '4 finger'},
-                    action: {kind: 'hang', title: 'Hang'}
+                    leftHand: { hangboard: grindstone, hold: grindstone.holds[0], fingerPosition: fingerPositions[0] },
+                    rightHand: { hangboard: grindstone, hold: grindstone.holds[0], fingerPosition: fingerPositions[0] },
+                    action: { kind: 'hang', title: 'Hang' }
                 },
                 {
                     workInterval: 10,
                     restInterval: 90,
-                    leftHold: {name: '30', title: '30mm edge', hangboardName:"grindstone", hangboardTitle:"Grindstone"},
-                    leftFingerPosition: {name: '1234', title: '4 finger'},
-                    rightHold: {name: '30', title: '30mm edge', hangboardName:"grindstone", hangboardTitle:"Grindstone"},
-                    rightFingerPosition: {name: '1234', title: '4 finger'},
-                    action: {kind: 'hang', title: 'Hang'}
+                    leftHand: { hangboard: grindstone, hold: grindstone.holds[0], fingerPosition: fingerPositions[0] },
+                    rightHand: { hangboard: grindstone, hold: grindstone.holds[0], fingerPosition: fingerPositions[0] },
+                    action: { kind: 'hang', title: 'Hang' }
                 },
                 {
                     workInterval: 10,
                     restInterval: 90,
-                    leftHold: {name: '25', title: '25mm edge', hangboardName:"grindstone", hangboardTitle:"Grindstone"},
-                    leftFingerPosition: {name: '1234', title: '4 finger'},
-                    rightHold: {name: '25', title: '25mm edge', hangboardName:"grindstone", hangboardTitle:"Grindstone"},
-                    rightFingerPosition: {name: '1234', title: '4 finger'},
-                    action: {kind: 'hang', title: 'Hang'}
+                    leftHand: { hangboard: grindstone, hold: grindstone.holds[0], fingerPosition: fingerPositions[0] },
+                    rightHand: { hangboard: grindstone, hold: grindstone.holds[0], fingerPosition: fingerPositions[0] },
+                    action: { kind: 'hang', title: 'Hang' }
                 },
                 {
                     workInterval: 10,
                     restInterval: 90,
-                    leftHold: {name: '20', title: '20mm edge', hangboardName:"grindstone", hangboardTitle:"Grindstone"},
-                    leftFingerPosition: {name: '1234', title: '4 finger'},
-                    rightHold: {name: '20', title: '20mm edge', hangboardName:"grindstone", hangboardTitle:"Grindstone"},
-                    rightFingerPosition: {name: '1234', title: '4 finger'},
-                    action: {kind: 'hang', title: 'Hang'}
+                    leftHand: { hangboard: grindstone, hold: grindstone.holds[0], fingerPosition: fingerPositions[0] },
+                    rightHand: { hangboard: grindstone, hold: grindstone.holds[0], fingerPosition: fingerPositions[0] },
+                    action: { kind: 'hang', title: 'Hang' }
                 },
                 {
                     workInterval: 10,
                     restInterval: 180,
-                    leftHold: {name: '15', title: '15mm edge', hangboardName:"grindstone", hangboardTitle:"Grindstone"},
-                    leftFingerPosition: {name: '1234', title: '4 finger'},
-                    rightHold: {name: '15', title: '15mm edge', hangboardName:"grindstone", hangboardTitle:"Grindstone"},
-                    rightFingerPosition: {name: '1234', title: '4 finger'},
-                    action: {kind: 'hang', title: 'Hang'}
+                    leftHand: { hangboard: grindstone, hold: grindstone.holds[0], fingerPosition: fingerPositions[0] },
+                    rightHand: { hangboard: grindstone, hold: grindstone.holds[0], fingerPosition: fingerPositions[0] },
+                    action: { kind: 'hang', title: 'Hang' }
                 },
             ]
         },
@@ -158,67 +132,51 @@ export default function Dashboard() {
                 {
                     workInterval: 10,
                     restInterval: 90,
-                    leftHold: {name: '30', title: '30mm edge', hangboardName:"grindstone", hangboardTitle:"Grindstone"},
-                    leftFingerPosition: {name: '1234', title: '4 finger'},
-                    rightHold: {name: '30', title: '30mm edge', hangboardName:"grindstone", hangboardTitle:"Grindstone"},
-                    rightFingerPosition: {name: '1234', title: '4 finger'},
-                    action: {kind: 'pullup', title: 'Pullup', reps: 3}
+                    leftHand: { hangboard: grindstone, hold: grindstone.holds[0], fingerPosition: fingerPositions[0] },
+                    rightHand: { hangboard: grindstone, hold: grindstone.holds[0], fingerPosition: fingerPositions[0] },
+                    action: { kind: 'pullup', title: 'Pullup', reps: 3 }
                 },
                 {
                     workInterval: 10,
                     restInterval: 90,
-                    leftHold: {name: '30', title: '30mm edge', hangboardName:"grindstone", hangboardTitle:"Grindstone"},
-                    leftFingerPosition: {name: '1234', title: '4 finger'},
-                    rightHold: {name: '30', title: '30mm edge', hangboardName:"grindstone", hangboardTitle:"Grindstone"},
-                    rightFingerPosition: {name: '1234', title: '4 finger'},
-                    action: {kind: 'pullup', title: 'Pullup', reps: 10}
+                    leftHand: { hangboard: grindstone, hold: grindstone.holds[0], fingerPosition: fingerPositions[0] },
+                    rightHand: { hangboard: grindstone, hold: grindstone.holds[0], fingerPosition: fingerPositions[0] },
+                    action: { kind: 'pullup', title: 'Pullup', reps: 10 }
                 },
                 {
                     workInterval: 10,
                     restInterval: 90,
-                    leftHold: {name: '25', title: '25mm edge', hangboardName:"grindstone", hangboardTitle:"Grindstone"},
-                    leftFingerPosition: {name: '1234', title: '4 finger'},
-                    rightHold: {name: '25', title: '25mm edge', hangboardName:"grindstone", hangboardTitle:"Grindstone"},
-                    rightFingerPosition: {name: '1234', title: '4 finger'},
-                    action: {kind: 'hang', title: 'Hang'}
+                    leftHand: { hangboard: grindstone, hold: grindstone.holds[0], fingerPosition: fingerPositions[0] },
+                    rightHand: { hangboard: grindstone, hold: grindstone.holds[0], fingerPosition: fingerPositions[0] },
+                    action: { kind: 'hang', title: 'Hang' }
                 },
                 {
                     workInterval: 10,
                     restInterval: 90,
-                    leftHold: {name: '20', title: '20mm edge', hangboardName:"grindstone", hangboardTitle:"Grindstone"},
-                    leftFingerPosition: {name: '1234', title: '4 finger'},
-                    rightHold: {name: '20', title: '20mm edge', hangboardName:"grindstone", hangboardTitle:"Grindstone"},
-                    rightFingerPosition: {name: '1234', title: '4 finger'},
-                    action: {kind: 'hang', title: 'Hang'}
+                    leftHand: { hangboard: grindstone, hold: grindstone.holds[0], fingerPosition: fingerPositions[0] },
+                    rightHand: { hangboard: grindstone, hold: grindstone.holds[0], fingerPosition: fingerPositions[0] },
+                    action: { kind: 'hang', title: 'Hang' }
                 },
                 {
                     workInterval: 10,
                     restInterval: 180,
-                    leftHold: {name: '15', title: '15mm edge', hangboardName:"grindstone", hangboardTitle:"Grindstone"},
-                    leftFingerPosition: {name: '1234', title: '4 finger'},
-                    rightHold: {name: '15', title: '15mm edge', hangboardName:"grindstone", hangboardTitle:"Grindstone"},
-                    rightFingerPosition: {name: '1234', title: '4 finger'},
-                    action: {kind: 'hang', title: 'Hang'}
+                    leftHand: { hangboard: grindstone, hold: grindstone.holds[0], fingerPosition: fingerPositions[0] },
+                    rightHand: { hangboard: grindstone, hold: grindstone.holds[0], fingerPosition: fingerPositions[0] },
+                    action: { kind: 'hang', title: 'Hang' }
                 },
             ]
         }
     ];
-    const [workouts, setWorkouts] = useState<Array<IWorkout>>(initialWorkouts)
+    const [workouts, setWorkouts] = useState<Array<IWorkout>>([...initialWorkouts].sort((a, b) => b.date.getTime() - a.date.getTime()));
 
-    const sortedWorkouts: Array<IWorkout> = [...workouts].sort((a,b) => b.date.getTime()-a.date.getTime())
+    function handleEditInterval(intervalIndex, workoutIndex) {
+
+    }
 
     return (
         <div className="flex flex-col items-center mt-12">
             <NewWorkout />
-                <div className="flex flex-col space-y-4">
-                    {sortedWorkouts?.map((workout, i) => (
-                        <div key={i}>
-                            <h2 className="text-xl">{workout.date.toDateString()}</h2>
-                            <IntervalsTable date={workout.date} intervals={workout.intervals} />
-                        </div>
-                    ))}
-
-                </div>
+            <Workouts workouts={workouts} setWorkouts={(workouts)=>setWorkouts(workouts)} />
         </div>
     )
 }
