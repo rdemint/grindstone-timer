@@ -215,20 +215,18 @@ export default function Timer() {
         })
     }
 
-    function handleLeftFingerPosition(positionName) {
-        let position = fingerPositions.find((el) => el.name === positionName);
+    function handleLeftFingerPosition(fingerPosition: IFingerPosition) {
         let newLeft = {
             ...leftHand,
-            fingerPosition: position
+            fingerPosition
         }
         setLeftHand(newLeft);
     }
 
-    function handleRightFingerPosition(positionName) {
-        let position = fingerPositions.find((el) => el.name === positionName);
+    function handleRightFingerPosition(fingerPosition: IFingerPosition) {
         let newRight = {
             ...rightHand,
-            fingerPosition: position
+            fingerPosition
         }
         setRightHand(newRight);
     }
@@ -299,7 +297,7 @@ export default function Timer() {
                     </div> :
                         <p>None</p>
                     }
-                    <FingerPositionSelector fingerPosition={workout.intervals[currentIntervalIndex].leftHand.fingerPosition} handleFingerPosition={handleLeftFingerPosition} />
+                    <FingerPositionSelector fingerPosition={leftHand.fingerPosition} handleFingerPosition={handleLeftFingerPosition} />
                 </div>
                 <div className="w-1/2 flex flex-col items-center space-y-2">
                     <h3>Right Hand</h3>
@@ -308,7 +306,7 @@ export default function Timer() {
                         <p>{rightHand.hangboard.title}</p>
                     </div> :
                         <p>None</p>}
-                    <FingerPositionSelector fingerPosition={workout.intervals[currentIntervalIndex].rightHand.fingerPosition} handleFingerPosition={handleRightFingerPosition} />
+                    <FingerPositionSelector fingerPosition={rightHand.fingerPosition} handleFingerPosition={handleRightFingerPosition} />
                 </div>
             </section>
             <section id="todo-intervals" className="flex flex-col items-center">
