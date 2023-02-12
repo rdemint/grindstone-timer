@@ -1,42 +1,49 @@
-import {useState} from 'react';
+import { useState, useEffect } from 'react';
 import { fingerPositions } from '../lib/fingerpositions';
 import { IFingerPosition, IHold, Action, IInterval, IHand, IHangboard } from "./Timer";
 import { grindstone, hangboards } from "../lib/hangboards";
 
-export default function IntervalsRow({ interval, intervalIndex, handleEditInterval}: {interval:IInterval, intervalIndex:number, handleEditInterval:Function}) {
-    const [workInterval, setWorkInterval] = useState(interval.workInterval);
-    const [restInterval, setRestInterval] = useState(interval.restInterval);
-    const [leftHand, setLeftHand] = useState<IHand>(interval.leftHand);
-    const [rightHand, setRightHand] = useState<IHand>(interval.rightHand);
-    const [action, setAction] = useState<Action>({kind: 'hang', title: 'Hang'})
-    const [reps, setReps] = useState<number>(1);
+export default function IntervalsRow({ interval, intervalIndex, handleEditInterval }: { interval: IInterval, intervalIndex: number, handleEditInterval: Function }) {
+
+
+    const [reps, setReps] = useState<number>();
+
+    useEffect(() => {
+        if (interval.action.kind != "hang") {
+            setReps(interval.action.reps);
+        }
+        else {
+            setReps(1);
+        }
+    }, []);
 
     const handleLeftFingerPosition = (name) => {
-       let position = fingerPositions.find((el)=> el.name === name);
-       interval = {
-        ...interval,
-        leftHand: {
-            ...leftHand,
-            fingerPosition: position
+        let position = fingerPositions.find((el) => el.name === name);
+        interval = {
+            ...interval,
+            leftHand: {
+                ...interval.leftHand,
+                fingerPosition: position
+            }
         }
-       }
-        handleEditInterval(intervalIndex, interval);
+        handleEditInterval(interval, intervalIndex);
     };
 
     const handleRightFingerPosition = (name) => {
-        let position = fingerPositions.find((el)=> el.name === name);
-       interval = {
-        ...interval,
-        rightHand: {
-            ...rightHand,
-            fingerPosition: position
+        let position = fingerPositions.find((el) => el.name === name);
+        
+        let newInterval = {
+            ...interval,
+            rightHand: {
+                ...interval.rightHand,
+                fingerPosition: position
+            }
         }
-       }
-        handleEditInterval(intervalIndex, interval);
+        handleEditInterval(newInterval, intervalIndex);
     };
 
 
-    function handleHandString(holdString:string): [IHangboard, IHold] {
+    function handleHandString(holdString: string): [IHangboard, IHold] {
         const result: Array<String> = holdString.split("-");
         const hangboard: IHangboard = hangboards.find(
             (hangboard) => hangboard.name === result[0]
@@ -45,82 +52,218 @@ export default function IntervalsRow({ interval, intervalIndex, handleEditInterv
         return [hangboard, hold];
     }
 
-    function handleLeftHand(name, index) {
+    function handleLeftHand(name) {
         const [hangboard, hold] = handleHandString(name);
         interval = {
             ...interval,
             leftHand: {
-                ...leftHand,
+                ...interval.leftHand,
                 hangboard,
                 hold
             }
         };
-        handleEditInterval(index, interval);
+        handleEditInterval(interval, intervalIndex);
     }
 
-    function handleRightHand(name, index) {
+    function handleRightHand(name) {
         const [hangboard, hold] = handleHandString(name);
         interval = {
             ...interval,
             rightHand: {
-                ...rightHand,
+                ...interval.rightHand,
                 hangboard,
                 hold
             }
         };
-        handleEditInterval(index, interval);
+        handleEditInterval(interval, intervalIndex);
 
+    }
+
+    function handleRestInterval(restInterval) {
+        interval = {
+            ...interval,
+            restInterval
+        }
+        handleEditInterval(interval, intervalIndex);
+    }
+
+    function handleWorkInterval(workInterval) {
+        interval = {
+            ...interval,
+            workInterval,
+        }
+        handleEditInterval(interval, intervalIndex);
     }
 
     function handleAction(name) {
         switch (name) {
             case "pullup":
-                setAction({ kind: "pullup", title: "Pullup", reps: reps });
+                let newInterval = {
+                    ...interval,
+                    action: {
+                        kind: 'pullup',
+                        title: 'Pullup',
+                        reps: reps
+                    }
+                }
+                handleEditInterval(newInterval, intervalIndex);
                 break;
             case "leglift":
-                setAction({ kind: "leglift", reps: reps, title: "Leg lift" });
+                interval = {
+                    ...interval,
+                    action: {
+                        kind: 'leglift',
+                        title: 'Leg lift',
+                        reps: reps,
+                    }
+                }
+                handleEditInterval(interval, intervalIndex);
                 break;
             case "hang":
-                setAction({ kind: "hang", title: "Hang" });
+                interval = {
+                    ...interval,
+                    action: {
+                        kind: 'hang',
+                        title: 'Hang'
+                    }
+                };
+                handleEditInterval(interval, intervalIndex);
                 break;
+        }
+    }
+
+    function handleReps(numReps) {
+        if (interval.action.kind !== 'hang') {
+            setReps(numReps);
+            interval = {
+                ...interval,
+                action: {
+                    ...interval.action,
+                    reps: numReps
+                }
+            }
+            handleEditInterval(interval, intervalIndex);
         }
     }
 
     return (
         <tr className="text-left text-slate-300">
-            <td className='px-4 py-1'>
-                {interval.leftHand.hangboard.title}  
+            <td className='px-4 py-1 rounded'>
+                <select
+                    className="text-slate-600 w-48 rounded px-1"
+                    onChange={(e) => handleLeftHand(e.target.value)}
+                >
+                    {hangboards.map((hangboard) =>
+                        hangboard.holds.map((hold) => (
+                            <option
+                                className="text-slate-600 px-1"
+                                key={`${hangboard.name}-${hold.name}`}
+                                value={`${hangboard.name}-${hold.name}`}
+                            >
+                                {hangboard.title} {hold.title}
+                            </option>
+                        ))
+                    )}
+                </select>
             </td>
             <td className='px-4 py-1'>
-                {interval.leftHand.hold.title}
+                <select
+                    className="text-slate-600 w-24 px-1 rounded"
+                    value={interval.leftHand.fingerPosition.name}
+                    onChange={(e) => {
+                        handleLeftFingerPosition(e.target.value);
+                    }}
+                >
+                    {fingerPositions.map((fingerposition) => (
+                        <option
+                            key={fingerposition.name}
+                            className="text-slate-600"
+                            value={fingerposition.name}
+                        >
+                            {fingerposition.title}
+                        </option>
+                    ))}
+                </select>
             </td>
             <td className='px-4 py-1'>
-                {interval.leftHand.fingerPosition.title}
-                </td>
+                <select
+                    className="text-slate-600 w-48 rounded"
+                    onChange={(e) => handleRightHand(e.target.value)}
+                >
+                    {hangboards.map((hangboard) =>
+                        hangboard.holds.map((hold) => (
+                            <option
+                                className="text-slate-600"
+                                key={`${hangboard.name}-${hold.name}`}
+                                value={`${hangboard.name}-${hold.name}`}
+                            >
+                                {hangboard.title} {hold.title}
+                            </option>
+                        ))
+                    )}
+                </select>
+            </td>
             <td className='px-4 py-1'>
-                {interval.rightHand.hangboard.title}
-                </td>
-            <td className='px-4 py-1'>
-                {interval.rightHand.hold.title}
-                </td>
-            <td className='px-4 py-1'>
-                {interval.rightHand.fingerPosition.title}
-                </td>
-            <td className='px-4 py-1'>
-                {interval.workInterval}
-                </td>
-            <td className='px-4 py-1'>
-                {interval.restInterval}
-                </td>
-            {interval.action.kind === "pullup" && <td className='px-4 py-1 text-justify'>{interval.action.reps} {interval.action.kind}</td>}
-            {interval.action.kind === 'hang' && <td className='px-4 py-1 text-justify'> {interval.action.kind}</td>}
-            {interval.action.kind === 'leglift' && <td className='px-4 py-1 text-justify'>{interval.action.reps} {interval.action.kind}</td>}
-            <td className='px-4 py-1'>
-                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-6 h-6">
-                    <path strokeLinecap="round" strokeLinejoin="round" d="M16.862 4.487l1.687-1.688a1.875 1.875 0 112.652 2.652L6.832 19.82a4.5 4.5 0 01-1.897 1.13l-2.685.8.8-2.685a4.5 4.5 0 011.13-1.897L16.863 4.487zm0 0L19.5 7.125" />
-                </svg>
+                <select
+                    className="text-slate-600 w-24 px-1 rounded"
+                    value={interval.rightHand.fingerPosition.name}
+                    onChange={(e) => {
+                        handleRightFingerPosition(e.target.value);
+                    }}
+                >
+                    {fingerPositions.map((fingerposition) => (
+                        <option
+                            className="text-slate-600"
+                            key={fingerposition.name}
+                            value={fingerposition.name}>
+                            {fingerposition.title}
+                        </option>
+                    ))}
+                </select>
+            </td>
+            <td className='px-1 py-1'>
+                <input
+                    className="rounded text-slate-600 w-12 text-center"
+                    type="number"
+                    placeholder={interval.workInterval.toString()}
+                    onChange={(e) => handleWorkInterval(e.target.valueAsNumber)}
+                />
+            </td>
+            <td className='px-1 py-1'>
+                <input
+                    className="rounded px-1 text-slate-600 w-12 text-center"
+                    type="number"
+                    placeholder={interval.restInterval.toString()}
+                    onChange={(e) => handleRestInterval(e.target.valueAsNumber)}
+                />
+            </td>
+            <td className='px-1 py-1'>
+                <select
+                    className="text-slate-600 rounded w-full text-center"
+                    onChange={(e) => handleAction(e.target.value)}
+                >
+                    <option value="hang">Hang</option>
+                    <option value="pullup">Pullup</option>
+                    <option value="leglift">Lift</option>
+                </select>
+            </td>
 
-            </td>
+            {interval.action.kind === "pullup" || interval.action.kind === "leglift" ? (
+                <td>
+                    <div className="flex justify-between">
+                        <input
+                            className="text-slate-600 w-12 rounded px-1 text-center"
+                            type="number"
+                            onChange={(e) => handleReps(e.target.valueAsNumber)}
+                            placeholder={Number(1).toString()}
+                        />
+                    </div>
+                </td>
+            ) : (
+                <td>
+                    <div className="w-full">{interval.rightHand.hold.name}</div>
+                </td>
+            )}
         </tr>
     )
 }

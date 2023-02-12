@@ -23,7 +23,7 @@ export default function NewWorkout() {
 
     const [action, setAction] = useState<Action>({ kind: "hang", title: "Hang" });
 
-    function handleReps(numReps:number) {
+    function handleReps(numReps: number) {
         setReps(numReps);
         if (action.kind != 'hang') {
             setAction({
@@ -73,7 +73,7 @@ export default function NewWorkout() {
 
     function handleRightHand(name) {
         const [hangboard, hold] = handleHandString(name);
-        let newRight = {...rightHand, hangboard, hold};
+        let newRight = { ...rightHand, hangboard, hold };
         setRightHand(newRight);
     }
 
@@ -91,22 +91,28 @@ export default function NewWorkout() {
         }
     }
 
-
     function handleDeleteInterval() {
         setIntervals([]);
     }
 
-    function handleEditInterval(index: number, interval:IInterval) {
-        intervals[index] = interval;
-        setIntervals(intervals);
+    function handleEditInterval(interval: IInterval, index: number) {
+        //the correct way
+        let newIntervals = [...intervals];
+        newIntervals[index] = interval;
+        setIntervals(newIntervals);
+        
+        //the below will not work
+        // intervals[index] = interval;
+        // setIntervals(intervals);
     }
-    
+
     function handleCreateInterval() {
-        setIntervals([...intervals, {workInterval,restInterval, leftHand,rightHand, action}]);
+        setIntervals([...intervals, { workInterval, restInterval, leftHand, rightHand, action }]);
     }
 
     return (
         <div className="flex flex-col items-center">
+
             <section id="new-workout" className="flex flex-col space-y-4 pb-12 w-96">
                 <h2 className="text-2xl text-center py-4">Create interval</h2>
                 <div className="flex justify-between">
@@ -235,6 +241,14 @@ export default function NewWorkout() {
                         Create interval
                     </button>
                 </div>
+            </section>
+            <section id="text">
+                <p>interval 0</p>
+                <div>{intervals[0]?.leftHand?.hold?.name}</div>
+                <div>{intervals[0]?.leftHand?.fingerPosition?.name}</div>
+                <p>interval 1</p>
+                <div>{intervals[1]?.rightHand?.hold?.name}</div>
+                <div>{intervals[1]?.rightHand?.fingerPosition?.name}</div>
             </section>
             <IntervalsTable intervals={intervals} handleEditInterval={handleEditInterval} />
             <div className="flex w-full justify-center">

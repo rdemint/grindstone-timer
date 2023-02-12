@@ -10,17 +10,14 @@ export default function IntervalsTable ({ intervals, handleEditInterval }: {inte
                     <div className="overflow-auto whitespace-nowrap">
                         <table>
                             <thead>
-                                <tr className="w-full text-left">
-                                    <th className='p-4'>Board</th>
+                                <tr className="text-left">
                                     <th className='p-4'>Left Hold</th>
                                     <th className='p-4'>Finger Position</th>
-                                    <th className='p-4'>Board</th>
                                     <th className='p-4'>Right Hold</th>
                                     <th className='p-4'>Finger Position</th>
-                                    <th className='p-4'>Work</th>
-                                    <th className='p-4'>Rest</th>
+                                    <th className='p-2'>Work</th>
+                                    <th className='p-2'>Rest</th>
                                     <th className='p-4'>Action</th>
-                                    <th className='p-4'>Edit</th>
                                 </tr>
                             </thead>
                             <tbody>
