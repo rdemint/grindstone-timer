@@ -242,14 +242,6 @@ export default function NewWorkout() {
                     </button>
                 </div>
             </section>
-            <section id="text">
-                <p>interval 0</p>
-                <div>{intervals[0]?.leftHand?.hold?.name}</div>
-                <div>{intervals[0]?.leftHand?.fingerPosition?.name}</div>
-                <p>interval 1</p>
-                <div>{intervals[1]?.rightHand?.hold?.name}</div>
-                <div>{intervals[1]?.rightHand?.fingerPosition?.name}</div>
-            </section>
             <IntervalsTable intervals={intervals} handleEditInterval={handleEditInterval} />
             <div className="flex w-full justify-center">
                 <button
