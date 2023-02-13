@@ -87,7 +87,7 @@ export default function Timer() {
     const [playSwitchFx] = useSound('/sounds/switch.wav')
     const [playEndFx] = useSound('/sounds/end.wav')
 
-    let [prepTime, setPrepTime] = useState<number>(12);
+    let [prepTime, setPrepTime] = useState<number>(2);
     const [workout, setWorkout] = useState<IWorkout>(defaultWorkout);
     const [workoutStatus, setWorkoutStatus] = useState<string>(workoutStatusOptions.unconfigured);
     const [currentIntervalIndex, setCurrentIntervalIndex] = useState<number>(0);
@@ -130,7 +130,6 @@ export default function Timer() {
             restTimer.start()
         }
         else if (workoutStatus == workoutStatusOptions.rest) {
-
             if (currentIntervalIndex < workout.intervals.length) {
                 setWorkoutStatus(workoutStatusOptions.work)
                 setCurrentIntervalIndex(currentIntervalIndex + 1)
@@ -198,6 +197,12 @@ export default function Timer() {
             if (equal(oldHand, newHand, { strict: true })) {
                 return ({ hangboard: null, fingerPosition: null, hold: null })
             }
+            else if(oldHand.fingerPosition === null) {
+                return {
+                    ...newHand,
+                    fingerPosition: fingerPositions[0]
+                }
+            }
             else {
                 return (newHand)
             }
@@ -207,7 +212,13 @@ export default function Timer() {
     const handleLeftHand = (newHand: IHand) => {
         setLeftHand((oldHand: IHand) => {
             if (equal(oldHand, newHand, { strict: true })) {
-                return ({ hangboard: undefined, hold: undefined, fingerPosition: undefined })
+                return ({ hangboard: null, hold: null, fingerPosition: null })
+            }
+            else if(oldHand.fingerPosition === null) {
+                return {
+                    ...newHand,
+                    fingerPosition: fingerPositions[0]
+                }
             }
             else {
                 return (newHand)
@@ -294,19 +305,19 @@ export default function Timer() {
                     {leftHand.hold ? <div>
                         <p>{leftHand.hold.title}</p>
                         <p>{leftHand.hangboard.title}</p>
+                        <FingerPositionSelector fingerPosition={leftHand.fingerPosition} handleFingerPosition={handleLeftFingerPosition} />
                     </div> :
                         <p>None</p>
                     }
-                    <FingerPositionSelector fingerPosition={leftHand.fingerPosition} handleFingerPosition={handleLeftFingerPosition} />
                 </div>
                 <div className="w-1/2 flex flex-col items-center space-y-2">
                     <h3>Right Hand</h3>
                     {rightHand.hold ? <div>
                         <p>{rightHand?.hold.title}</p>
                         <p>{rightHand.hangboard.title}</p>
+                        <FingerPositionSelector fingerPosition={rightHand.fingerPosition} handleFingerPosition={handleRightFingerPosition} />
                     </div> :
                         <p>None</p>}
-                    <FingerPositionSelector fingerPosition={rightHand.fingerPosition} handleFingerPosition={handleRightFingerPosition} />
                 </div>
             </section>
             <section id="todo-intervals" className="flex flex-col items-center">

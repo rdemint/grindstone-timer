@@ -8,43 +8,43 @@ const quickWorkouts: Array<IWorkout> = [
         date: new Date(),
         intervals: [
             {
-                workInterval: 10,
-                restInterval: 90,
+                workInterval: 2,
+                restInterval: 3,
+                leftHand: { hangboard: grindstone, fingerPosition: fingerPositions[0], hold: grindstone.holds[0] },
+                rightHand: { hangboard: grindstone, fingerPosition: fingerPositions[1], hold: grindstone.holds[0] },
+                action: { kind: 'hang', title: 'Hang' }
+            },
+            {
+                workInterval: 2,
+                restInterval: 4,
+                leftHand: { hangboard: grindstone, fingerPosition: fingerPositions[1], hold: grindstone.holds[0] },
+                rightHand: { hangboard: grindstone, fingerPosition: fingerPositions[0], hold: grindstone.holds[0] },
+                action: { kind: 'hang', title: 'Hang' }
+            },
+            {
+                workInterval: 3,
+                restInterval: 4,
+                leftHand: { hangboard: grindstone, fingerPosition: fingerPositions[0], hold: grindstone.holds[1] },
+                rightHand: { hangboard: grindstone, fingerPosition: fingerPositions[0], hold: grindstone.holds[1] },
+                action: { kind: 'hang', title: 'Hang' }
+            },
+            {
+                workInterval: 3,
+                restInterval: 3,
+                leftHand: { hangboard: grindstone, fingerPosition: fingerPositions[2], hold: grindstone.holds[2] },
+                rightHand: { hangboard: grindstone, fingerPosition: fingerPositions[2], hold: grindstone.holds[2] },
+                action: { kind: 'hang', title: 'Hang' }
+            },
+            {
+                workInterval: 3,
+                restInterval: 2,
                 leftHand: { hangboard: grindstone, fingerPosition: fingerPositions[0], hold: grindstone.holds[0] },
                 rightHand: { hangboard: grindstone, fingerPosition: fingerPositions[0], hold: grindstone.holds[0] },
                 action: { kind: 'hang', title: 'Hang' }
             },
             {
-                workInterval: 10,
-                restInterval: 90,
-                leftHand: { hangboard: grindstone, fingerPosition: fingerPositions[0], hold: grindstone.holds[0] },
-                rightHand: { hangboard: grindstone, fingerPosition: fingerPositions[0], hold: grindstone.holds[0] },
-                action: { kind: 'hang', title: 'Hang' }
-            },
-            {
-                workInterval: 10,
-                restInterval: 90,
-                leftHand: { hangboard: grindstone, fingerPosition: fingerPositions[0], hold: grindstone.holds[0] },
-                rightHand: { hangboard: grindstone, fingerPosition: fingerPositions[0], hold: grindstone.holds[0] },
-                action: { kind: 'hang', title: 'Hang' }
-            },
-            {
-                workInterval: 10,
-                restInterval: 90,
-                leftHand: { hangboard: grindstone, fingerPosition: fingerPositions[0], hold: grindstone.holds[0] },
-                rightHand: { hangboard: grindstone, fingerPosition: fingerPositions[0], hold: grindstone.holds[0] },
-                action: { kind: 'hang', title: 'Hang' }
-            },
-            {
-                workInterval: 10,
-                restInterval: 90,
-                leftHand: { hangboard: grindstone, fingerPosition: fingerPositions[0], hold: grindstone.holds[0] },
-                rightHand: { hangboard: grindstone, fingerPosition: fingerPositions[0], hold: grindstone.holds[0] },
-                action: { kind: 'hang', title: 'Hang' }
-            },
-            {
-                workInterval: 10,
-                restInterval: 90,
+                workInterval: 2,
+                restInterval: 3,
                 leftHand: { hangboard: grindstone, fingerPosition: fingerPositions[0], hold: grindstone.holds[0] },
                 rightHand: { hangboard: grindstone, fingerPosition: fingerPositions[0], hold: grindstone.holds[0] },
                 action: { kind: 'hang', title: 'Hang' }

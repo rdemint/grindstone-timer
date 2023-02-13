@@ -7,7 +7,7 @@ export default function FingerPositionSelector({ fingerPosition, handleFingerPos
             <Listbox value={fingerPosition} onChange={handleFingerPosition}>
                 <div className="relative w-36">
                     <Listbox.Button className="relative w-full cursor-default rounded-lg bg-slate-600 py-2 pl-2 pr-2 text-left sm:text-sm">
-                        <span className="block truncate text-center">{fingerPosition.title}</span>
+                        <span className="block truncate text-center">{fingerPosition?.title}</span>
                         <span className="flex items-center absolute inset-y-0 right-0 pr-2 pointer-events-none">
                             <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor"
                                 className="w-5 h-5 text-slate-400">
