@@ -129,8 +129,8 @@ export default function Timer() {
             setWorkoutStatus(workoutStatusOptions.rest)
             restTimer.start()
         }
-        else if (workoutStatus == workoutStatusOptions.rest) {
-            if (currentIntervalIndex < workout.intervals.length) {
+        else if (workoutStatus === workoutStatusOptions.rest) {
+            if (currentIntervalIndex < workout.intervals.length-1) {
                 setWorkoutStatus(workoutStatusOptions.work)
                 setCurrentIntervalIndex(currentIntervalIndex + 1)
                 workTimer.start()
@@ -181,7 +181,7 @@ export default function Timer() {
     const handleResetTimer = () => {
         playPopFx()
         setWorkoutStatus(workoutStatusOptions.ready)
-        setCurrentIntervalIndex(1)
+        setCurrentIntervalIndex(0);
         prepTimer.reset()
         workTimer.reset()
         restTimer.reset()
@@ -261,7 +261,7 @@ export default function Timer() {
             <section id="timerdisplay" className={`flex flex-col ${getTimerTheme()} justify-between rounded-sm max-w-3xl p-8 h-96 md:w-2/3`}>
                 <div className="flex justify-center text-center space-x-4">
                     <div>INTERVAL</div>
-                    <div>{currentIntervalIndex} / {workout.intervals.length}</div>
+                    <div>{currentIntervalIndex+1} / {workout.intervals.length}</div>
                 </div>
                 <div className="flex flex-col justify-center items-center text-center space-y-4 text-6xl h-24 text-slate-50">
                     <div>{workoutStatus}</div>
