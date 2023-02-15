@@ -202,26 +202,36 @@ export default function Timer() {
     }
 
     function handleRightHand(newHand: IHand, index: number) {
-        handleHand('leftHand', newHand);
+        handleHand('rightHand', newHand, index);
     };
 
-    function handleLeftHandClick(newHand: IHand, index: number) {
-        handleHand('rightHand', newHand);
+    function handleLeftHand(newHand: IHand, index: number) {
+        handleHand('leftHand', newHand, index);
     };
-    function handleHand(whichHand:string, newHand:IHand) {
+    function handleHand(whichHand:string, newHand:IHand, index:number) {
         const newWorkout = produce(
             workout,
             draftWorkout => {
-                let currentHand = draftWorkout.intervals[currentIntervalIndex][whichHand];
+                let currentHand = draftWorkout.intervals[index][whichHand];
                 if(equal(currentHand, newHand, {strict: true})){
-                    draftWorkout.intervals[currentIntervalIndex][whichHand] = {fingerPosition: null, hangboard: null, hold: null}
+                    draftWorkout.intervals[index][whichHand] = {fingerPosition: null, hangboard: null, hold: null}
                 }
-                else if(draftWorkout.intervals[currentIntervalIndex][whichHand].fingerPosition === null) {
-                    draftWorkout.intervals[currentIntervalIndex][whichHand] = { ...newHand, fingerPosition: fingerPositions[0]};
+                else if(draftWorkout.intervals[index][whichHand].fingerPosition === null) {
+                    draftWorkout.intervals[index][whichHand] = { ...newHand, fingerPosition: fingerPositions[0]};
                 }
                 else {
-                    draftWorkout.intervals[currentIntervalIndex].leftHand = currentHand;
+                    draftWorkout.intervals[index][whichHand] = currentHand;
                 }
+            }
+        );
+        setWorkout(newWorkout);
+    }
+
+    function handleAction(action: Action, index) {
+        let newWorkout = produce(
+            workout,
+            draftWorkout => {
+                draftWorkout.intervals[index].action = action;
             }
         );
         setWorkout(newWorkout);
@@ -282,43 +292,46 @@ export default function Timer() {
             <section id="hold-selection" className="max-w-3xl flex flex-col items-center w-5/6">
                 <div className="flex w-full rounded justify-center">
                     <SimpleboardSelector
-                        setHand={handleLeftHandClick}
-                        currentHand={leftHand} />
+                        setHand={handleLeftHand}
+                        currentHand={workout.intervals[currentIntervalIndex].leftHand}
+                        index={currentIntervalIndex} />
                     <GrindStoneSelector
-                        currentLeftHand={leftHand}
-                        handleLeftHand={handleLeftHandClick}
-                        currentRightHand={rightHand}
-                        handleRightHand={handleRightHandClick} />
+                        currentLeftHand={workout.intervals[currentIntervalIndex].leftHand}
+                        handleLeftHand={handleLeftHand}
+                        currentRightHand={workout.intervals[currentIntervalIndex].rightHand}
+                        handleRightHand={handleRightHand} 
+                        index={currentIntervalIndex}/>
                     <SimpleboardSelector
-                        currentHand={rightHand}
-                        setHand={handleRightHandClick}
+                        currentHand={workout.intervals[currentIntervalIndex].rightHand}
+                        setHand={handleRightHand}
+                        index={currentIntervalIndex}
                     />
                 </div>
             </section>
             <section className="flex max-w-3xl items-center">
                 <div className="flex space-x-6 justify-center w-full">
-                    <button className={`${action.kind === "hang" ? 'bg-emerald-500' : 'bg-slate-600'} p-2 text-slate-100 rounded-md`} onClick={() => setAction({ kind: "hang", title: 'Hang' })}>Hang</button>
-                    <button className={`${action.kind === "pullup" ? 'bg-emerald-500' : 'bg-slate-600'} p-2 text-slate-100 rounded-md`} onClick={() => setAction({ kind: "pullup", reps: reps, title: 'Pullup' })}>Pullup</button>
+                    <button className={`${workout.intervals[currentIntervalIndex].action.kind === "hang" ? 'bg-emerald-500' : 'bg-slate-600'} p-2 text-slate-100 rounded-md`} onClick={() => handleAction({ kind: "hang", title: 'Hang' }, currentIntervalIndex)}>Hang</button>
+                    <button className={`${workout.intervals[currentIntervalIndex].action.kind === "pullup" ? 'bg-emerald-500' : 'bg-slate-600'} p-2 text-slate-100 rounded-md`} onClick={() => handleAction({ kind: "pullup", reps: reps, title: 'Pullup' }, currentIntervalIndex)}>Pullup</button>
                 </div>
             </section>
             <section className="max-w-3xl flex items-center w-5/6">
 
                 <div className="w-1/2 flex flex-col items-center space-y-2">
                     <h3>Left Hand</h3>
-                    {leftHand.hold ? <div>
-                        <p>{leftHand.hold.title}</p>
-                        <p>{leftHand.hangboard.title}</p>
-                        <FingerPositionSelector fingerPosition={leftHand.fingerPosition} handleFingerPosition={handleLeftFingerPosition} />
+                    {workout.intervals[currentIntervalIndex].leftHand.hold ? <div>
+                        <p>{workout.intervals[currentIntervalIndex].leftHand.hold.title}</p>
+                        <p>{workout.intervals[currentIntervalIndex].leftHand.hangboard.title}</p>
+                        <FingerPositionSelector fingerPosition={workout.intervals[currentIntervalIndex].leftHand.fingerPosition} handleFingerPosition={handleLeftFingerPosition} index={currentIntervalIndex} />
                     </div> :
                         <p>None</p>
                     }
                 </div>
                 <div className="w-1/2 flex flex-col items-center space-y-2">
                     <h3>Right Hand</h3>
-                    {rightHand.hold ? <div>
-                        <p>{rightHand?.hold.title}</p>
-                        <p>{rightHand.hangboard.title}</p>
-                        <FingerPositionSelector fingerPosition={rightHand.fingerPosition} handleFingerPosition={handleRightFingerPosition} />
+                    {workout.intervals[currentIntervalIndex].rightHand.hold ? <div>
+                        <p>{workout.intervals[currentIntervalIndex].rightHand?.hold.title}</p>
+                        <p>{workout.intervals[currentIntervalIndex].rightHand.hangboard.title}</p>
+                        <FingerPositionSelector fingerPosition={workout.intervals[currentIntervalIndex].rightHand.fingerPosition} handleFingerPosition={handleRightFingerPosition} index={currentIntervalIndex}/>
                     </div> :
                         <p>None</p>}
                 </div>
