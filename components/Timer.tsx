@@ -198,7 +198,7 @@ export default function Timer() {
                 draftWorkout.intervals[index] = interval;
             }
         )
-        setWorkout(workout);
+        setWorkout(newWorkout);
     }
 
     function handleRightHand(newHand: IHand, index: number) {
@@ -206,7 +206,12 @@ export default function Timer() {
     };
 
     function handleLeftHand(newHand: IHand, index: number) {
-        handleHand('leftHand', newHand, index);
+        // handleHand('leftHand', newHand, index);
+        setWorkout(
+            produce((draft) => {
+            draft.intervals[index].leftHand = newHand;
+        }
+        ));
     };
     function handleHand(whichHand:string, newHand:IHand, index:number) {
         const newWorkout = produce(
@@ -224,6 +229,7 @@ export default function Timer() {
                 }
             }
         );
+        console.log(newWorkout);
         setWorkout(newWorkout);
     }
 
@@ -242,7 +248,7 @@ export default function Timer() {
     }
 
     function handleRightFingerPosition(fingerPosition: IFingerPosition, index:number) {
-        handleFingerPosition('righHand', fingerPosition, index);
+        handleFingerPosition('rightHand', fingerPosition, index);
     }
 
     function handleFingerPosition(whichHand:string, fingerPosition:IFingerPosition, index: number) {
@@ -252,6 +258,7 @@ export default function Timer() {
                 draftWorkout.intervals[index][whichHand].fingerPosition = fingerPosition;
             }
         )
+        
         setWorkout(newWorkout);
     }
 
