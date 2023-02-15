@@ -11,6 +11,7 @@ import { grindstone, simpleboard, hangboards } from "../lib/hangboards"
 import GrindStoneSelector from "./GrindstoneSelector"
 import SimpleboardSelector from "./SimpleboardSelector"
 import FingerPositionSelector from "./FingerPositionSelector"
+import produce from "immer"
 
 const equal = require('deep-equal');
 
@@ -89,13 +90,13 @@ export default function Timer() {
 
     let [prepTime, setPrepTime] = useState<number>(2);
     const [workout, setWorkout] = useState<IWorkout>(defaultWorkout);
+    // const [workoutSummary, setWorkoutSummary] = useState<IWorkout>({ name: "New workout", date: new Date(), intervals: [] });
     const [workoutStatus, setWorkoutStatus] = useState<string>(workoutStatusOptions.unconfigured);
     const [currentIntervalIndex, setCurrentIntervalIndex] = useState<number>(0);
-    const [workoutSummary, setWorkoutSummary] = useState<IWorkout>({ name: "New workout", date: new Date(), intervals: [] });
 
-    const [leftHand, setLeftHand] = useState<IHand>({ hangboard: hangboards[0], fingerPosition: fingerPositions[0], hold: hangboards[0].holds[0] })
-    const [rightHand, setRightHand] = useState<IHand>({ hangboard: hangboards[0], fingerPosition: fingerPositions[0], hold: hangboards[0].holds[0] })
-    const [action, setAction] = useState<Action>({ kind: 'hang', title: 'Hang' })
+    // const [leftHand, setLeftHand] = useState<IHand>({ hangboard: hangboards[0], fingerPosition: fingerPositions[0], hold: hangboards[0].holds[0] })
+    // const [rightHand, setRightHand] = useState<IHand>({ hangboard: hangboards[0], fingerPosition: fingerPositions[0], hold: hangboards[0].holds[0] })
+    // const [action, setAction] = useState<Action>({ kind: 'hang', title: 'Hang' })
     let [reps, setReps] = useState<number>(1)
 
 
@@ -103,7 +104,6 @@ export default function Timer() {
     useEffect(() => {
         handleResetTimer()
     }, [workout])
-
 
     const completeInterval = () => {
         if (workoutStatus == workoutStatusOptions.prep) {
@@ -113,18 +113,21 @@ export default function Timer() {
         }
 
         if (workoutStatus == workoutStatusOptions.work) {
-            const newInterval: IInterval = {
-                workInterval: workout.intervals[currentIntervalIndex].workInterval,
-                restInterval: workout.intervals[currentIntervalIndex].restInterval,
-                leftHand,
-                rightHand,
-                action,
-            }
-            setWorkoutSummary({
-                ...workoutSummary,
-                intervals: [...workoutSummary.intervals, newInterval]
-            }
-            )
+            // const newInterval = produce(
+            //     workout.intervals[currentIntervalIndex],
+            //     draftInterval => {
+            //         draftInterval.rightHand = rightHand;
+            //         draftInterval.leftHand = leftHand;
+            //         draftInterval.action = action;
+            //     }
+            // )
+            // const newSummary: IWorkout = produce(
+            //     workout,
+            //     draftWorkout => {
+            //         draftWorkout.intervals.push(newInterval);
+            //     }
+            // );
+            // setWorkoutSummary(newSummary);
             playSwitchFx()
             setWorkoutStatus(workoutStatusOptions.rest)
             restTimer.start()
@@ -187,59 +190,59 @@ export default function Timer() {
         restTimer.reset()
     }
 
-    function handleEditInterval(index, interval) {
-        workoutSummary.intervals[index] = interval;
-        setWorkoutSummary(workoutSummary);
+    function handleEditInterval(interval:IInterval, index:number) {
+        // workoutSummary.intervals[index] = interval;
+        const newWorkout = produce(
+            workout,
+            draftWorkout => {
+                draftWorkout.intervals[index] = interval;
+            }
+        )
+        setWorkout(workout);
     }
 
-    const handleRightHand = (newHand: IHand) => {
-        setRightHand((oldHand: IHand) => {
-            if (equal(oldHand, newHand, { strict: true })) {
-                return ({ hangboard: null, fingerPosition: null, hold: null })
-            }
-            else if(oldHand.fingerPosition === null) {
-                return {
-                    ...newHand,
-                    fingerPosition: fingerPositions[0]
+    function handleRightHand(newHand: IHand, index: number) {
+        handleHand('leftHand', newHand);
+    };
+
+    function handleLeftHandClick(newHand: IHand, index: number) {
+        handleHand('rightHand', newHand);
+    };
+    function handleHand(whichHand:string, newHand:IHand) {
+        const newWorkout = produce(
+            workout,
+            draftWorkout => {
+                let currentHand = draftWorkout.intervals[currentIntervalIndex][whichHand];
+                if(equal(currentHand, newHand, {strict: true})){
+                    draftWorkout.intervals[currentIntervalIndex][whichHand] = {fingerPosition: null, hangboard: null, hold: null}
+                }
+                else if(draftWorkout.intervals[currentIntervalIndex][whichHand].fingerPosition === null) {
+                    draftWorkout.intervals[currentIntervalIndex][whichHand] = { ...newHand, fingerPosition: fingerPositions[0]};
+                }
+                else {
+                    draftWorkout.intervals[currentIntervalIndex].leftHand = currentHand;
                 }
             }
-            else {
-                return (newHand)
-            }
-        })
+        );
+        setWorkout(newWorkout);
     }
 
-    const handleLeftHand = (newHand: IHand) => {
-        setLeftHand((oldHand: IHand) => {
-            if (equal(oldHand, newHand, { strict: true })) {
-                return ({ hangboard: null, hold: null, fingerPosition: null })
-            }
-            else if(oldHand.fingerPosition === null) {
-                return {
-                    ...newHand,
-                    fingerPosition: fingerPositions[0]
-                }
-            }
-            else {
-                return (newHand)
-            }
-        })
+    function handleLeftFingerPosition(fingerPosition: IFingerPosition, index:number) {
+        handleFingerPosition('leftHand', fingerPosition, index);
     }
 
-    function handleLeftFingerPosition(fingerPosition: IFingerPosition) {
-        let newLeft = {
-            ...leftHand,
-            fingerPosition
-        }
-        setLeftHand(newLeft);
+    function handleRightFingerPosition(fingerPosition: IFingerPosition, index:number) {
+        handleFingerPosition('righHand', fingerPosition, index);
     }
 
-    function handleRightFingerPosition(fingerPosition: IFingerPosition) {
-        let newRight = {
-            ...rightHand,
-            fingerPosition
-        }
-        setRightHand(newRight);
+    function handleFingerPosition(whichHand:string, fingerPosition:IFingerPosition, index: number) {
+        let newWorkout = produce(
+            workout,
+            draftWorkout => {
+                draftWorkout.intervals[index][whichHand].fingerPosition = fingerPosition;
+            }
+        )
+        setWorkout(newWorkout);
     }
 
     const getTimerTheme = () => {
@@ -279,16 +282,16 @@ export default function Timer() {
             <section id="hold-selection" className="max-w-3xl flex flex-col items-center w-5/6">
                 <div className="flex w-full rounded justify-center">
                     <SimpleboardSelector
-                        setHand={handleLeftHand}
+                        setHand={handleLeftHandClick}
                         currentHand={leftHand} />
                     <GrindStoneSelector
                         currentLeftHand={leftHand}
-                        handleLeftHand={handleLeftHand}
+                        handleLeftHand={handleLeftHandClick}
                         currentRightHand={rightHand}
-                        handleRightHand={handleRightHand} />
+                        handleRightHand={handleRightHandClick} />
                     <SimpleboardSelector
                         currentHand={rightHand}
-                        setHand={handleRightHand}
+                        setHand={handleRightHandClick}
                     />
                 </div>
             </section>
