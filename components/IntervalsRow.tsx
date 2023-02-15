@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 import { fingerPositions } from '../lib/fingerpositions';
 import { IFingerPosition, IHold, Action, IInterval, IHand, IHangboard } from "./Timer";
 import { grindstone, hangboards } from "../lib/hangboards";
+import produce from 'immer';
 
 export default function IntervalsRow({ interval, intervalIndex, handleEditInterval }: { interval: IInterval, intervalIndex: number, handleEditInterval: Function }) {
 
@@ -19,26 +20,23 @@ export default function IntervalsRow({ interval, intervalIndex, handleEditInterv
 
     const handleLeftFingerPosition = (name) => {
         let position = fingerPositions.find((el) => el.name === name);
-        interval = {
-            ...interval,
-            leftHand: {
-                ...interval.leftHand,
-                fingerPosition: position
+        const newInterval = produce(
+            interval,
+            draftInterval => {
+                draftInterval.leftHand.fingerPosition = position;
             }
-        }
-        handleEditInterval(interval, intervalIndex);
+        )
+        handleEditInterval(newInterval, intervalIndex);
     };
 
     const handleRightFingerPosition = (name) => {
         let position = fingerPositions.find((el) => el.name === name);
-        
-        let newInterval = {
-            ...interval,
-            rightHand: {
-                ...interval.rightHand,
-                fingerPosition: position
+        const newInterval = produce(
+            interval,
+            draftInterval => {
+                draftInterval.rightHand.fingerPosition = position;
             }
-        }
+        )
         handleEditInterval(newInterval, intervalIndex);
     };
 
@@ -54,96 +52,102 @@ export default function IntervalsRow({ interval, intervalIndex, handleEditInterv
 
     function handleLeftHand(name) {
         const [hangboard, hold] = handleHandString(name);
-        interval = {
-            ...interval,
-            leftHand: {
-                ...interval.leftHand,
-                hangboard,
-                hold
+        const newInterval = produce(
+            interval,
+            draftInterval => {
+                draftInterval.leftHand.hangboard = hangboard;
+                draftInterval.leftHand.hold = hold;
             }
-        };
-        handleEditInterval(interval, intervalIndex);
+        )
+        handleEditInterval(newInterval, intervalIndex);
     }
 
     function handleRightHand(name) {
         const [hangboard, hold] = handleHandString(name);
-        interval = {
-            ...interval,
-            rightHand: {
-                ...interval.rightHand,
-                hangboard,
-                hold
+        const newInterval = produce(
+            interval,
+            draftInterval => {
+                draftInterval.rightHand.hangboard = hangboard;
+                draftInterval.rightHand.hold = hold;
             }
-        };
-        handleEditInterval(interval, intervalIndex);
+        )
+        handleEditInterval(newInterval, intervalIndex);
 
     }
 
     function handleRestInterval(restInterval) {
-        interval = {
-            ...interval,
-            restInterval
-        }
-        handleEditInterval(interval, intervalIndex);
+        const newInterval = produce(
+            interval,
+            draftInterval => {
+                draftInterval.restInterval = restInterval;
+            }
+        );
+        handleEditInterval(newInterval, intervalIndex);
     }
 
     function handleWorkInterval(workInterval) {
-        interval = {
-            ...interval,
-            workInterval,
-        }
-        handleEditInterval(interval, intervalIndex);
+        const newInterval = produce(
+            interval,
+            draftInterval => {
+                draftInterval.restInterval = workInterval;
+            }
+        );
+        handleEditInterval(newInterval, intervalIndex);
     }
 
     function handleAction(name) {
+        let newInterval: IInterval;
         switch (name) {
             case "pullup":
-                let newInterval = {
-                    ...interval,
-                    action: {
-                        kind: 'pullup',
-                        title: 'Pullup',
-                        reps: reps
+                 newInterval = produce(
+                    interval,
+                    draftInterval => {
+                        draftInterval.action = { kind: 'pullup', title: 'Pullup', reps: reps }
                     }
-                }
+                );
                 handleEditInterval(newInterval, intervalIndex);
                 break;
             case "leglift":
-                interval = {
-                    ...interval,
-                    action: {
-                        kind: 'leglift',
-                        title: 'Leg lift',
-                        reps: reps,
-                    }
-                }
-                handleEditInterval(interval, intervalIndex);
+                    newInterval = produce(
+                        interval,
+                        draftInterval => {
+                            draftInterval.action = {
+                                kind: 'leglift',
+                                title: 'Leg lift',
+                                reps: reps,
+                            }
+                        }
+                    )
+                handleEditInterval(newInterval, intervalIndex);
                 break;
             case "hang":
-                interval = {
-                    ...interval,
-                    action: {
-                        kind: 'hang',
-                        title: 'Hang'
-                    }
-                };
-                handleEditInterval(interval, intervalIndex);
+                    newInterval = produce(
+                        interval,
+                        draftInterval => {
+                            draftInterval.action = {
+                                    kind: 'hang',
+                                    title: 'Hang'
+                            }
+                        }
+                    )
+                handleEditInterval(newInterval, intervalIndex);
                 break;
         }
     }
 
     function handleReps(numReps) {
-        if (interval.action.kind !== 'hang') {
-            setReps(numReps);
-            interval = {
-                ...interval,
-                action: {
-                    ...interval.action,
-                    reps: numReps
-                }
-            }
-            handleEditInterval(interval, intervalIndex);
-        }
+        // if (interval.action.kind !== 'hang') {
+        //     const newInterval = produce(
+        //         interval,
+        //         draftInterval => {
+        //             let kind = draftInterval.action.kind;
+        //             let title = draftInterval.action.title;
+        //             draftInterval.action = {kind, title, reps: numReps};
+        //         }
+        //     )
+        //     handleEditInterval(newInterval, intervalIndex);
+        // }
+        //todo
     }
 
     return (
