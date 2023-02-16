@@ -2,8 +2,9 @@ import { useState, useEffect } from 'react';
 import { fingerPositions } from '../lib/fingerpositions';
 import { IFingerPosition, IHold, Action, IInterval, IHand, IHangboard } from "./Timer";
 import { grindstone, hangboards } from "../lib/hangboards";
+import produce from 'immer';
 
-export default function IntervalsRow({ interval, intervalIndex, handleEditInterval }: { interval: IInterval, intervalIndex: number, handleEditInterval: Function }) {
+export default function IntervalsRow({ interval, intervalIndex, handleEditInterval, handleAddInterval, handleDeleteInterval }: { interval: IInterval, intervalIndex: number, handleEditInterval: Function, handleAddInterval: Function, handleDeleteInterval: Function }) {
 
 
     const [reps, setReps] = useState<number>();
@@ -19,26 +20,23 @@ export default function IntervalsRow({ interval, intervalIndex, handleEditInterv
 
     const handleLeftFingerPosition = (name) => {
         let position = fingerPositions.find((el) => el.name === name);
-        interval = {
-            ...interval,
-            leftHand: {
-                ...interval.leftHand,
-                fingerPosition: position
+        const newInterval = produce(
+            interval,
+            draftInterval => {
+                draftInterval.leftHand.fingerPosition = position;
             }
-        }
-        handleEditInterval(interval, intervalIndex);
+        )
+        handleEditInterval(newInterval, intervalIndex);
     };
 
     const handleRightFingerPosition = (name) => {
         let position = fingerPositions.find((el) => el.name === name);
-        
-        let newInterval = {
-            ...interval,
-            rightHand: {
-                ...interval.rightHand,
-                fingerPosition: position
+        const newInterval = produce(
+            interval,
+            draftInterval => {
+                draftInterval.rightHand.fingerPosition = position;
             }
-        }
+        )
         handleEditInterval(newInterval, intervalIndex);
     };
 
@@ -54,95 +52,100 @@ export default function IntervalsRow({ interval, intervalIndex, handleEditInterv
 
     function handleLeftHand(name) {
         const [hangboard, hold] = handleHandString(name);
-        interval = {
-            ...interval,
-            leftHand: {
-                ...interval.leftHand,
-                hangboard,
-                hold
+        const newInterval = produce(
+            interval,
+            draftInterval => {
+                draftInterval.leftHand.hangboard = hangboard;
+                draftInterval.leftHand.hold = hold;
             }
-        };
-        handleEditInterval(interval, intervalIndex);
+        )
+        handleEditInterval(newInterval, intervalIndex);
     }
 
     function handleRightHand(name) {
         const [hangboard, hold] = handleHandString(name);
-        interval = {
-            ...interval,
-            rightHand: {
-                ...interval.rightHand,
-                hangboard,
-                hold
+        const newInterval = produce(
+            interval,
+            draftInterval => {
+                draftInterval.rightHand.hangboard = hangboard;
+                draftInterval.rightHand.hold = hold;
             }
-        };
-        handleEditInterval(interval, intervalIndex);
+        )
+        handleEditInterval(newInterval, intervalIndex);
 
     }
 
     function handleRestInterval(restInterval) {
-        interval = {
-            ...interval,
-            restInterval
-        }
-        handleEditInterval(interval, intervalIndex);
+        const newInterval = produce(
+            interval,
+            draftInterval => {
+                draftInterval.restInterval = restInterval;
+            }
+        );
+        handleEditInterval(newInterval, intervalIndex);
     }
 
     function handleWorkInterval(workInterval) {
-        interval = {
-            ...interval,
-            workInterval,
-        }
-        handleEditInterval(interval, intervalIndex);
+        const newInterval = produce(
+            interval,
+            draftInterval => {
+                draftInterval.restInterval = workInterval;
+            }
+        );
+        handleEditInterval(newInterval, intervalIndex);
     }
 
     function handleAction(name) {
+        let newInterval: IInterval;
         switch (name) {
             case "pullup":
-                let newInterval = {
-                    ...interval,
-                    action: {
-                        kind: 'pullup',
-                        title: 'Pullup',
-                        reps: reps
+                newInterval = produce(
+                    interval,
+                    draftInterval => {
+                        draftInterval.action = { kind: 'pullup', title: 'Pullup', reps: reps }
                     }
-                }
+                );
                 handleEditInterval(newInterval, intervalIndex);
                 break;
             case "leglift":
-                interval = {
-                    ...interval,
-                    action: {
-                        kind: 'leglift',
-                        title: 'Leg lift',
-                        reps: reps,
+                newInterval = produce(
+                    interval,
+                    draftInterval => {
+                        draftInterval.action = {
+                            kind: 'leglift',
+                            title: 'Leg lift',
+                            reps: reps,
+                        }
                     }
-                }
-                handleEditInterval(interval, intervalIndex);
+                )
+                handleEditInterval(newInterval, intervalIndex);
                 break;
             case "hang":
-                interval = {
-                    ...interval,
-                    action: {
-                        kind: 'hang',
-                        title: 'Hang'
+                newInterval = produce(
+                    interval,
+                    draftInterval => {
+                        draftInterval.action = {
+                            kind: 'hang',
+                            title: 'Hang'
+                        }
                     }
-                };
-                handleEditInterval(interval, intervalIndex);
+                )
+                handleEditInterval(newInterval, intervalIndex);
                 break;
         }
     }
 
-    function handleReps(numReps) {
-        if (interval.action.kind !== 'hang') {
-            setReps(numReps);
-            interval = {
-                ...interval,
-                action: {
-                    ...interval.action,
-                    reps: numReps
+    function handleReps(numReps: number) {
+        if (interval.action.kind != 'hang') {
+            setReps(numReps)
+            let newAction = { ...interval.action, reps: numReps };
+            const newInterval = produce(
+                interval,
+                draftInterval => {
+                    draftInterval.action = newAction;
                 }
-            }
-            handleEditInterval(interval, intervalIndex);
+            )
+            handleEditInterval(newInterval, intervalIndex);
         }
     }
 
@@ -152,6 +155,7 @@ export default function IntervalsRow({ interval, intervalIndex, handleEditInterv
                 <select
                     className="bg-slate-700 text-slate-50 w-48 rounded px-1"
                     onChange={(e) => handleLeftHand(e.target.value)}
+                    value={`${interval?.leftHand?.hangboard?.name}-${interval?.leftHand?.hold?.name}`}
                 >
                     {hangboards.map((hangboard) =>
                         hangboard.holds.map((hold) => (
@@ -169,7 +173,7 @@ export default function IntervalsRow({ interval, intervalIndex, handleEditInterv
             <td className='px-4 py-1'>
                 <select
                     className="bg-slate-700 text-slate-50 w-24 px-1 rounded"
-                    value={interval.leftHand.fingerPosition.name}
+                    value={interval?.leftHand?.fingerPosition?.name}
                     onChange={(e) => {
                         handleLeftFingerPosition(e.target.value);
                     }}
@@ -177,7 +181,7 @@ export default function IntervalsRow({ interval, intervalIndex, handleEditInterv
                     {fingerPositions.map((fingerposition) => (
                         <option
                             key={fingerposition.name}
-                            className=""
+                            className="text-slate-100"
                             value={fingerposition.name}
                         >
                             {fingerposition.title}
@@ -189,6 +193,7 @@ export default function IntervalsRow({ interval, intervalIndex, handleEditInterv
                 <select
                     className="bg-slate-700 text-slate-100 w-48 rounded"
                     onChange={(e) => handleRightHand(e.target.value)}
+                    value={`${interval?.rightHand?.hangboard?.name}-${interval?.rightHand?.hold?.name}`}
                 >
                     {hangboards.map((hangboard) =>
                         hangboard.holds.map((hold) => (
@@ -206,14 +211,14 @@ export default function IntervalsRow({ interval, intervalIndex, handleEditInterv
             <td className='px-4 py-1'>
                 <select
                     className="bg-slate-700 text-slate-100 w-24 px-1 rounded"
-                    value={interval.rightHand.fingerPosition.name}
+                    value={interval?.rightHand?.fingerPosition?.name}
                     onChange={(e) => {
                         handleRightFingerPosition(e.target.value);
                     }}
                 >
                     {fingerPositions.map((fingerposition) => (
                         <option
-                            className="text-slate-600"
+                            className="text-slate-100"
                             key={fingerposition.name}
                             value={fingerposition.name}>
                             {fingerposition.title}
@@ -227,6 +232,7 @@ export default function IntervalsRow({ interval, intervalIndex, handleEditInterv
                     type="number"
                     placeholder={interval.workInterval.toString()}
                     onChange={(e) => handleWorkInterval(e.target.valueAsNumber)}
+                    min="1"
                 />
             </td>
             <td className='px-1 py-1'>
@@ -235,19 +241,20 @@ export default function IntervalsRow({ interval, intervalIndex, handleEditInterv
                     type="number"
                     placeholder={interval.restInterval.toString()}
                     onChange={(e) => handleRestInterval(e.target.valueAsNumber)}
+                    min="1"
                 />
             </td>
             <td className='px-1 py-1'>
                 <select
                     className="bg-slate-700 text-slate-100 rounded w-full text-center"
                     onChange={(e) => handleAction(e.target.value)}
+                    value={interval.action.kind}
                 >
                     <option value="hang">Hang</option>
                     <option value="pullup">Pullup</option>
                     <option value="leglift">Lift</option>
                 </select>
             </td>
-
             {interval.action.kind === "pullup" || interval.action.kind === "leglift" ? (
                 <td>
                     <div className="flex justify-between">
@@ -256,6 +263,7 @@ export default function IntervalsRow({ interval, intervalIndex, handleEditInterv
                             type="number"
                             onChange={(e) => handleReps(e.target.valueAsNumber)}
                             placeholder={Number(1).toString()}
+                            min={1}
                         />
                     </div>
                 </td>
@@ -264,6 +272,20 @@ export default function IntervalsRow({ interval, intervalIndex, handleEditInterv
                     <div className="w-full"></div>
                 </td>
             )}
+            <td className='px-1 py-1' title='Duplicate interval and add below'>
+                <button onClick={() => handleAddInterval(interval, intervalIndex)}>
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-6 h-6">
+                        <path strokeLinecap="round" strokeLinejoin="round" d="M12 6v12m6-6H6" />
+                    </svg>
+                </button>
+            </td>
+            <td className='px-1 py-1' title='Delete interval'>
+                <button onClick={() => handleDeleteInterval(interval, intervalIndex)}>
+                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-6 h-6">
+                    <path strokeLinecap="round" strokeLinejoin="round" d="M14.74 9l-.346 9m-4.788 0L9.26 9m9.968-3.21c.342.052.682.107 1.022.166m-1.022-.165L18.16 19.673a2.25 2.25 0 01-2.244 2.077H8.084a2.25 2.25 0 01-2.244-2.077L4.772 5.79m14.456 0a48.108 48.108 0 00-3.478-.397m-12 .562c.34-.059.68-.114 1.022-.165m0 0a48.11 48.11 0 013.478-.397m7.5 0v-.916c0-1.18-.91-2.164-2.09-2.201a51.964 51.964 0 00-3.32 0c-1.18.037-2.09 1.022-2.09 2.201v.916m7.5 0a48.667 48.667 0 00-7.5 0" />
+                </svg>
+                </button>
+            </td>
         </tr>
     )
 }

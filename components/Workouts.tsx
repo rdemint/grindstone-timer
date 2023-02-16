@@ -11,7 +11,7 @@ export default function Workouts({ workouts, setWorkouts}: { workouts: Array<IWo
     return (
         <div className="flex flex-col space-y-4">
             {workouts?.map((workout, i) => (
-                <Workout workout={workout} handleEditWorkout={handleEditWorkout} workoutIndex={i}/>
+                <Workout key={i} workout={workout} handleEditWorkout={handleEditWorkout} workoutIndex={i}/>
             ))}
 
         </div>

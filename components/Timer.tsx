@@ -11,6 +11,7 @@ import { grindstone, simpleboard, hangboards } from "../lib/hangboards"
 import GrindStoneSelector from "./GrindstoneSelector"
 import SimpleboardSelector from "./SimpleboardSelector"
 import FingerPositionSelector from "./FingerPositionSelector"
+import produce from "immer"
 
 const equal = require('deep-equal');
 
@@ -91,19 +92,14 @@ export default function Timer() {
     const [workout, setWorkout] = useState<IWorkout>(defaultWorkout);
     const [workoutStatus, setWorkoutStatus] = useState<string>(workoutStatusOptions.unconfigured);
     const [currentIntervalIndex, setCurrentIntervalIndex] = useState<number>(0);
-    const [workoutSummary, setWorkoutSummary] = useState<IWorkout>({ name: "New workout", date: new Date(), intervals: [] });
 
-    const [leftHand, setLeftHand] = useState<IHand>({ hangboard: hangboards[0], fingerPosition: fingerPositions[0], hold: hangboards[0].holds[0] })
-    const [rightHand, setRightHand] = useState<IHand>({ hangboard: hangboards[0], fingerPosition: fingerPositions[0], hold: hangboards[0].holds[0] })
-    const [action, setAction] = useState<Action>({ kind: 'hang', title: 'Hang' })
     let [reps, setReps] = useState<number>(1)
 
 
 
     useEffect(() => {
         handleResetTimer()
-    }, [workout])
-
+    }, [])
 
     const completeInterval = () => {
         if (workoutStatus == workoutStatusOptions.prep) {
@@ -113,24 +109,12 @@ export default function Timer() {
         }
 
         if (workoutStatus == workoutStatusOptions.work) {
-            const newInterval: IInterval = {
-                workInterval: workout.intervals[currentIntervalIndex].workInterval,
-                restInterval: workout.intervals[currentIntervalIndex].restInterval,
-                leftHand,
-                rightHand,
-                action,
-            }
-            setWorkoutSummary({
-                ...workoutSummary,
-                intervals: [...workoutSummary.intervals, newInterval]
-            }
-            )
             playSwitchFx()
             setWorkoutStatus(workoutStatusOptions.rest)
             restTimer.start()
         }
         else if (workoutStatus === workoutStatusOptions.rest) {
-            if (currentIntervalIndex < workout.intervals.length-1) {
+            if (currentIntervalIndex < workout.intervals.length - 1) {
                 setWorkoutStatus(workoutStatusOptions.work)
                 setCurrentIntervalIndex(currentIntervalIndex + 1)
                 workTimer.start()
@@ -187,60 +171,109 @@ export default function Timer() {
         restTimer.reset()
     }
 
-    function handleEditInterval(index, interval) {
-        workoutSummary.intervals[index] = interval;
-        setWorkoutSummary(workoutSummary);
+    function handleEditInterval(interval: IInterval, index: number) {
+        const newWorkout = produce(
+            workout,
+            draftWorkout => {
+                draftWorkout.intervals[index] = interval;
+            }
+        )
+        setWorkout(newWorkout);
     }
 
-    const handleRightHand = (newHand: IHand) => {
-        setRightHand((oldHand: IHand) => {
-            if (equal(oldHand, newHand, { strict: true })) {
-                return ({ hangboard: null, fingerPosition: null, hold: null })
-            }
-            else if(oldHand.fingerPosition === null) {
-                return {
-                    ...newHand,
-                    fingerPosition: fingerPositions[0]
-                }
-            }
-            else {
-                return (newHand)
-            }
-        })
+    function handleAddInterval(interval: IInterval, index: number) {
+        const newWorkout = setWorkout(
+            produce((draft)=> {
+                draft.intervals.splice(index, 0, {...interval});
+            })
+        )
     }
 
-    const handleLeftHand = (newHand: IHand) => {
-        setLeftHand((oldHand: IHand) => {
-            if (equal(oldHand, newHand, { strict: true })) {
-                return ({ hangboard: null, hold: null, fingerPosition: null })
-            }
-            else if(oldHand.fingerPosition === null) {
-                return {
-                    ...newHand,
-                    fingerPosition: fingerPositions[0]
-                }
-            }
-            else {
-                return (newHand)
-            }
-        })
+    function handleDeleteInterval(interval: IInterval, index: number) {
+        const newWorkot = setWorkout(
+            produce((draft)=> {
+                draft.intervals.splice(index, 1);
+            })
+        )
     }
 
-    function handleLeftFingerPosition(fingerPosition: IFingerPosition) {
-        let newLeft = {
-            ...leftHand,
-            fingerPosition
+    function handleRightHand(newHand: IHand, index: number) {
+        if (equal(workout.intervals[index].rightHand, newHand, { strict: true })) {
+            setWorkout(
+                produce((draft) => {
+                    draft.intervals[index].rightHand = { fingerPosition: null, hangboard: null, hold: null }
+                }));
         }
-        setLeftHand(newLeft);
+        else if (workout.intervals[index].rightHand.fingerPosition === null) {
+            setWorkout(
+                produce((draft) => {
+                    draft.intervals[index].rightHand = { ...newHand, fingerPosition: fingerPositions[0] };
+                })
+            )
+        }
+        else {
+            setWorkout(
+                produce((draft) => {
+                    draft.intervals[index].rightHand = newHand;
+                })
+            );
+        }
     }
 
-    function handleRightFingerPosition(fingerPosition: IFingerPosition) {
-        let newRight = {
-            ...rightHand,
-            fingerPosition
+    function handleLeftHand(newHand: IHand, index: number) {
+        if (equal(workout.intervals[index].leftHand, newHand, { strict: true })) {
+            setWorkout(
+                produce((draft) => {
+                    draft.intervals[index].leftHand = { fingerPosition: undefined, hangboard: undefined, hold: undefined }
+                }));
         }
-        setRightHand(newRight);
+        else if (workout.intervals[index].leftHand.fingerPosition === undefined) {
+            setWorkout(
+                produce((draft) => {
+                    draft.intervals[index].leftHand = { ...newHand, fingerPosition: fingerPositions[0] };
+                })
+            )
+        }
+        else {
+            setWorkout(
+                produce((draft) => {
+                    draft.intervals[index].leftHand = newHand;
+                })
+            );
+        }
+    };
+
+    function handleAction(action: Action, index) {
+        let newWorkout = produce(
+            workout,
+            draftWorkout => {
+                draftWorkout.intervals[index].action = action;
+            }
+        );
+        setWorkout(newWorkout);
     }
+
+
+
+    function handleLeftFingerPosition(fingerPosition: IFingerPosition, index: number) {
+        handleFingerPosition('leftHand', fingerPosition, index);
+    }
+
+    function handleRightFingerPosition(fingerPosition: IFingerPosition, index: number) {
+        handleFingerPosition('rightHand', fingerPosition, index);
+    }
+
+    function handleFingerPosition(whichHand: string, fingerPosition: IFingerPosition, index: number) {
+        let newWorkout = produce(
+            workout,
+            draftWorkout => {
+                draftWorkout.intervals[index][whichHand].fingerPosition = fingerPosition;
+            }
+        )
+        setWorkout(newWorkout);
+    }
+
+
 
     const getTimerTheme = () => {
         if (workoutStatus === workoutStatusOptions.completed) {
@@ -261,7 +294,7 @@ export default function Timer() {
             <section id="timerdisplay" className={`flex flex-col ${getTimerTheme()} justify-between rounded-sm max-w-3xl p-8 h-96 md:w-2/3`}>
                 <div className="flex justify-center text-center space-x-4">
                     <div>INTERVAL</div>
-                    <div>{currentIntervalIndex+1} / {workout.intervals.length}</div>
+                    <div>{currentIntervalIndex + 1} / {workout.intervals.length}</div>
                 </div>
                 <div className="flex flex-col justify-center items-center text-center space-y-4 text-6xl h-24 text-slate-50">
                     <div>{workoutStatus}</div>
@@ -280,52 +313,59 @@ export default function Timer() {
                 <div className="flex w-full rounded justify-center">
                     <SimpleboardSelector
                         setHand={handleLeftHand}
-                        currentHand={leftHand} />
+                        currentHand={workout.intervals[currentIntervalIndex].leftHand}
+                        index={currentIntervalIndex} />
                     <GrindStoneSelector
-                        currentLeftHand={leftHand}
+                        currentLeftHand={workout.intervals[currentIntervalIndex].leftHand}
                         handleLeftHand={handleLeftHand}
-                        currentRightHand={rightHand}
-                        handleRightHand={handleRightHand} />
+                        currentRightHand={workout.intervals[currentIntervalIndex].rightHand}
+                        handleRightHand={handleRightHand}
+                        index={currentIntervalIndex} />
                     <SimpleboardSelector
-                        currentHand={rightHand}
+                        currentHand={workout.intervals[currentIntervalIndex].rightHand}
                         setHand={handleRightHand}
+                        index={currentIntervalIndex}
                     />
                 </div>
             </section>
             <section className="flex max-w-3xl items-center">
                 <div className="flex space-x-6 justify-center w-full">
-                    <button className={`${action.kind === "hang" ? 'bg-emerald-500' : 'bg-slate-600'} p-2 text-slate-100 rounded-md`} onClick={() => setAction({ kind: "hang", title: 'Hang' })}>Hang</button>
-                    <button className={`${action.kind === "pullup" ? 'bg-emerald-500' : 'bg-slate-600'} p-2 text-slate-100 rounded-md`} onClick={() => setAction({ kind: "pullup", reps: reps, title: 'Pullup' })}>Pullup</button>
+                    <button className={`${workout.intervals[currentIntervalIndex].action.kind === "hang" ? 'bg-emerald-500' : 'bg-slate-600'} p-2 text-slate-100 rounded-md`} onClick={() => handleAction({ kind: "hang", title: 'Hang' }, currentIntervalIndex)}>Hang</button>
+                    <button className={`${workout.intervals[currentIntervalIndex].action.kind === "pullup" ? 'bg-emerald-500' : 'bg-slate-600'} p-2 text-slate-100 rounded-md`} onClick={() => handleAction({ kind: "pullup", reps: reps, title: 'Pullup' }, currentIntervalIndex)}>Pullup</button>
                 </div>
             </section>
             <section className="max-w-3xl flex items-center w-5/6">
 
                 <div className="w-1/2 flex flex-col items-center space-y-2">
                     <h3>Left Hand</h3>
-                    {leftHand.hold ? <div>
-                        <p>{leftHand.hold.title}</p>
-                        <p>{leftHand.hangboard.title}</p>
-                        <FingerPositionSelector fingerPosition={leftHand.fingerPosition} handleFingerPosition={handleLeftFingerPosition} />
+                    {workout.intervals[currentIntervalIndex].leftHand.hold ? <div>
+                        <p>{workout.intervals[currentIntervalIndex].leftHand.hold.title}</p>
+                        <p>{workout.intervals[currentIntervalIndex].leftHand.hangboard.title}</p>
+                        <FingerPositionSelector fingerPosition={workout.intervals[currentIntervalIndex].leftHand.fingerPosition} handleFingerPosition={handleLeftFingerPosition} index={currentIntervalIndex} />
                     </div> :
                         <p>None</p>
                     }
                 </div>
                 <div className="w-1/2 flex flex-col items-center space-y-2">
                     <h3>Right Hand</h3>
-                    {rightHand.hold ? <div>
-                        <p>{rightHand?.hold.title}</p>
-                        <p>{rightHand.hangboard.title}</p>
-                        <FingerPositionSelector fingerPosition={rightHand.fingerPosition} handleFingerPosition={handleRightFingerPosition} />
+                    {workout.intervals[currentIntervalIndex].rightHand.hold ? <div>
+                        <p>{workout.intervals[currentIntervalIndex].rightHand?.hold.title}</p>
+                        <p>{workout.intervals[currentIntervalIndex].rightHand.hangboard.title}</p>
+                        <FingerPositionSelector fingerPosition={workout.intervals[currentIntervalIndex].rightHand.fingerPosition} handleFingerPosition={handleRightFingerPosition} index={currentIntervalIndex} />
                     </div> :
                         <p>None</p>}
                 </div>
             </section>
             <section id="todo-intervals" className="flex flex-col items-center">
                 <h2 className="text-xl">Workout</h2>
-                <IntervalsTable intervals={workout.intervals} handleEditInterval={handleEditInterval} />
+                <IntervalsTable
+                    intervals={workout.intervals}
+                    handleEditInterval={handleEditInterval}
+                    handleAddInterval={handleAddInterval}
+                    handleDeleteInterval={handleDeleteInterval}
+                />
             </section>
             <section id="completed-intervals">
-                {/* <IntervalsTable intervals={null} handleEditInterval={null} /> */}
             </section>
             <section>
                 <h2 className="text-center mt-8">Quick Workout Options</h2>
