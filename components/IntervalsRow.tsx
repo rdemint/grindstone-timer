@@ -181,7 +181,7 @@ export default function IntervalsRow({ interval, intervalIndex, handleEditInterv
                     {fingerPositions.map((fingerposition) => (
                         <option
                             key={fingerposition.name}
-                            className=""
+                            className="text-slate-100"
                             value={fingerposition.name}
                         >
                             {fingerposition.title}
@@ -218,7 +218,7 @@ export default function IntervalsRow({ interval, intervalIndex, handleEditInterv
                 >
                     {fingerPositions.map((fingerposition) => (
                         <option
-                            className="text-slate-600"
+                            className="text-slate-100"
                             key={fingerposition.name}
                             value={fingerposition.name}>
                             {fingerposition.title}
@@ -232,6 +232,7 @@ export default function IntervalsRow({ interval, intervalIndex, handleEditInterv
                     type="number"
                     placeholder={interval.workInterval.toString()}
                     onChange={(e) => handleWorkInterval(e.target.valueAsNumber)}
+                    min="1"
                 />
             </td>
             <td className='px-1 py-1'>
@@ -240,6 +241,7 @@ export default function IntervalsRow({ interval, intervalIndex, handleEditInterv
                     type="number"
                     placeholder={interval.restInterval.toString()}
                     onChange={(e) => handleRestInterval(e.target.valueAsNumber)}
+                    min="1"
                 />
             </td>
             <td className='px-1 py-1'>
@@ -261,6 +263,7 @@ export default function IntervalsRow({ interval, intervalIndex, handleEditInterv
                             type="number"
                             onChange={(e) => handleReps(e.target.valueAsNumber)}
                             placeholder={Number(1).toString()}
+                            min={1}
                         />
                     </div>
                 </td>
