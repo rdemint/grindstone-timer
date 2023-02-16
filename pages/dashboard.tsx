@@ -1,6 +1,5 @@
 import { IWorkout } from "../components/Timer";
 import IntervalsTable from "../components/IntervalsTable";
-import NewWorkout from "../components/NewWorkout";
 import Workouts from "../components/Workouts"
 import { useState } from "react";
 import { grindstone, simpleboard } from "../lib/hangboards";
@@ -175,7 +174,6 @@ export default function Dashboard() {
 
     return (
         <div className="flex flex-col items-center mt-12">
-            <NewWorkout />
             <Workouts workouts={workouts} setWorkouts={(workouts)=>setWorkouts(workouts)} />
         </div>
     )
