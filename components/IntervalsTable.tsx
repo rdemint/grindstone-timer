@@ -1,8 +1,8 @@
 import React from 'react'
 import IntervalsRow from './IntervalsRow'
-import { IInterval} from './Timer'
+import { IInterval } from './Timer'
 
-export default function IntervalsTable ({ intervals, handleEditInterval }: {intervals: Array<IInterval>, handleEditInterval:Function}) {
+export default function IntervalsTable({ intervals, handleEditInterval, handleAddInterval, handleDeleteInterval }: { intervals: Array<IInterval>, handleEditInterval: Function, handleAddInterval: Function, handleDeleteInterval: Function }) {
     return (
         <div className='w-72 sm:w-96 lg:w-full'>
             {intervals.length > 0 ?
@@ -22,7 +22,14 @@ export default function IntervalsTable ({ intervals, handleEditInterval }: {inte
                             </thead>
                             <tbody>
                                 {intervals.map((interval, i) => (
-                                    <IntervalsRow key={i} intervalIndex={i} interval={interval} handleEditInterval={handleEditInterval}/>
+                                    <IntervalsRow
+                                        key={i}
+                                        intervalIndex={i}
+                                        interval={interval}
+                                        handleEditInterval={handleEditInterval}
+                                        handleAddInterval={handleAddInterval}
+                                        handleDeleteInterval={handleDeleteInterval}
+                                    />
                                 )
 
                                 )}

@@ -181,6 +181,14 @@ export default function Timer() {
         setWorkout(newWorkout);
     }
 
+    function handleAddInterval(interval: IInterval, index: number) {
+        //todo
+    }
+
+    function handleDeleteInterval(interval: IInterval, index: number) {
+        //todo
+    }
+
     function handleRightHand(newHand: IHand, index: number) {
         if (equal(workout.intervals[index].rightHand, newHand, { strict: true })) {
             setWorkout(
@@ -237,7 +245,7 @@ export default function Timer() {
         setWorkout(newWorkout);
     }
 
-    
+
 
     function handleLeftFingerPosition(fingerPosition: IFingerPosition, index: number) {
         handleFingerPosition('leftHand', fingerPosition, index);
@@ -342,7 +350,12 @@ export default function Timer() {
             </section>
             <section id="todo-intervals" className="flex flex-col items-center">
                 <h2 className="text-xl">Workout</h2>
-                <IntervalsTable intervals={workout.intervals} handleEditInterval={handleEditInterval} />
+                <IntervalsTable
+                    intervals={workout.intervals}
+                    handleEditInterval={handleEditInterval}
+                    handleAddInterval={handleAddInterval}
+                    handleDeleteInterval={handleDeleteInterval}
+                />
             </section>
             <section id="completed-intervals">
             </section>
