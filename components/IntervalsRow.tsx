@@ -4,7 +4,7 @@ import { IFingerPosition, IHold, Action, IInterval, IHand, IHangboard } from "./
 import { grindstone, hangboards } from "../lib/hangboards";
 import produce from 'immer';
 
-export default function IntervalsRow({ interval, intervalIndex, handleEditInterval }: { interval: IInterval, intervalIndex: number, handleEditInterval: Function }) {
+export default function IntervalsRow({ interval, intervalIndex, handleEditInterval }: { interval: IInterval, intervalIndex: number, handleEditInterval: Function}) {
 
 
     const [reps, setReps] = useState<number>();
@@ -99,7 +99,7 @@ export default function IntervalsRow({ interval, intervalIndex, handleEditInterv
         let newInterval: IInterval;
         switch (name) {
             case "pullup":
-                 newInterval = produce(
+                newInterval = produce(
                     interval,
                     draftInterval => {
                         draftInterval.action = { kind: 'pullup', title: 'Pullup', reps: reps }
@@ -108,46 +108,45 @@ export default function IntervalsRow({ interval, intervalIndex, handleEditInterv
                 handleEditInterval(newInterval, intervalIndex);
                 break;
             case "leglift":
-                    newInterval = produce(
-                        interval,
-                        draftInterval => {
-                            draftInterval.action = {
-                                kind: 'leglift',
-                                title: 'Leg lift',
-                                reps: reps,
-                            }
+                newInterval = produce(
+                    interval,
+                    draftInterval => {
+                        draftInterval.action = {
+                            kind: 'leglift',
+                            title: 'Leg lift',
+                            reps: reps,
                         }
-                    )
+                    }
+                )
                 handleEditInterval(newInterval, intervalIndex);
                 break;
             case "hang":
-                    newInterval = produce(
-                        interval,
-                        draftInterval => {
-                            draftInterval.action = {
-                                    kind: 'hang',
-                                    title: 'Hang'
-                            }
+                newInterval = produce(
+                    interval,
+                    draftInterval => {
+                        draftInterval.action = {
+                            kind: 'hang',
+                            title: 'Hang'
                         }
-                    )
+                    }
+                )
                 handleEditInterval(newInterval, intervalIndex);
                 break;
         }
     }
 
-    function handleReps(numReps) {
-        // if (interval.action.kind !== 'hang') {
-        //     const newInterval = produce(
-        //         interval,
-        //         draftInterval => {
-        //             let kind = draftInterval.action.kind;
-        //             let title = draftInterval.action.title;
-        //             draftInterval.action = {kind, title, reps: numReps};
-        //         }
-        //     )
-        //     handleEditInterval(newInterval, intervalIndex);
-        // }
-        //todo
+    function handleReps(numReps: number) {
+        if (interval.action.kind != 'hang') {
+            setReps(numReps)
+            let newAction = { ...interval.action, reps: numReps };
+            const newInterval = produce(
+                interval,
+                draftInterval => {
+                    draftInterval.action = newAction;
+                }
+            )
+            handleEditInterval(newInterval, intervalIndex);
+        }
     }
 
     return (

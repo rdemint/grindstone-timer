@@ -237,6 +237,8 @@ export default function Timer() {
         setWorkout(newWorkout);
     }
 
+    
+
     function handleLeftFingerPosition(fingerPosition: IFingerPosition, index: number) {
         handleFingerPosition('leftHand', fingerPosition, index);
     }
@@ -254,6 +256,8 @@ export default function Timer() {
         )
         setWorkout(newWorkout);
     }
+
+
 
     const getTimerTheme = () => {
         if (workoutStatus === workoutStatusOptions.completed) {
