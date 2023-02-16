@@ -182,11 +182,19 @@ export default function Timer() {
     }
 
     function handleAddInterval(interval: IInterval, index: number) {
-        //todo
+        const newWorkout = setWorkout(
+            produce((draft)=> {
+                draft.intervals.splice(index, 0, {...interval});
+            })
+        )
     }
 
     function handleDeleteInterval(interval: IInterval, index: number) {
-        //todo
+        const newWorkot = setWorkout(
+            produce((draft)=> {
+                draft.intervals.splice(index, 1);
+            })
+        )
     }
 
     function handleRightHand(newHand: IHand, index: number) {
