@@ -246,6 +246,7 @@ export default function IntervalsRow({ interval, intervalIndex, handleEditInterv
                 <select
                     className="bg-slate-700 text-slate-100 rounded w-full text-center"
                     onChange={(e) => handleAction(e.target.value)}
+                    value={interval.action.kind}
                 >
                     <option value="hang">Hang</option>
                     <option value="pullup">Pullup</option>
