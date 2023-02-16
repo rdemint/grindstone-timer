@@ -90,20 +90,16 @@ export default function Timer() {
 
     let [prepTime, setPrepTime] = useState<number>(2);
     const [workout, setWorkout] = useState<IWorkout>(defaultWorkout);
-    // const [workoutSummary, setWorkoutSummary] = useState<IWorkout>({ name: "New workout", date: new Date(), intervals: [] });
     const [workoutStatus, setWorkoutStatus] = useState<string>(workoutStatusOptions.unconfigured);
     const [currentIntervalIndex, setCurrentIntervalIndex] = useState<number>(0);
 
-    // const [leftHand, setLeftHand] = useState<IHand>({ hangboard: hangboards[0], fingerPosition: fingerPositions[0], hold: hangboards[0].holds[0] })
-    // const [rightHand, setRightHand] = useState<IHand>({ hangboard: hangboards[0], fingerPosition: fingerPositions[0], hold: hangboards[0].holds[0] })
-    // const [action, setAction] = useState<Action>({ kind: 'hang', title: 'Hang' })
     let [reps, setReps] = useState<number>(1)
 
 
 
     useEffect(() => {
         handleResetTimer()
-    }, [workout])
+    }, [])
 
     const completeInterval = () => {
         if (workoutStatus == workoutStatusOptions.prep) {
@@ -113,27 +109,12 @@ export default function Timer() {
         }
 
         if (workoutStatus == workoutStatusOptions.work) {
-            // const newInterval = produce(
-            //     workout.intervals[currentIntervalIndex],
-            //     draftInterval => {
-            //         draftInterval.rightHand = rightHand;
-            //         draftInterval.leftHand = leftHand;
-            //         draftInterval.action = action;
-            //     }
-            // )
-            // const newSummary: IWorkout = produce(
-            //     workout,
-            //     draftWorkout => {
-            //         draftWorkout.intervals.push(newInterval);
-            //     }
-            // );
-            // setWorkoutSummary(newSummary);
             playSwitchFx()
             setWorkoutStatus(workoutStatusOptions.rest)
             restTimer.start()
         }
         else if (workoutStatus === workoutStatusOptions.rest) {
-            if (currentIntervalIndex < workout.intervals.length-1) {
+            if (currentIntervalIndex < workout.intervals.length - 1) {
                 setWorkoutStatus(workoutStatusOptions.work)
                 setCurrentIntervalIndex(currentIntervalIndex + 1)
                 workTimer.start()
@@ -190,8 +171,7 @@ export default function Timer() {
         restTimer.reset()
     }
 
-    function handleEditInterval(interval:IInterval, index:number) {
-        // workoutSummary.intervals[index] = interval;
+    function handleEditInterval(interval: IInterval, index: number) {
         const newWorkout = produce(
             workout,
             draftWorkout => {
@@ -202,36 +182,50 @@ export default function Timer() {
     }
 
     function handleRightHand(newHand: IHand, index: number) {
-        handleHand('rightHand', newHand, index);
-    };
+        if (equal(workout.intervals[index].rightHand, newHand, { strict: true })) {
+            setWorkout(
+                produce((draft) => {
+                    draft.intervals[index].rightHand = { fingerPosition: null, hangboard: null, hold: null }
+                }));
+        }
+        else if (workout.intervals[index].rightHand.fingerPosition === null) {
+            setWorkout(
+                produce((draft) => {
+                    draft.intervals[index].rightHand = { ...newHand, fingerPosition: fingerPositions[0] };
+                })
+            )
+        }
+        else {
+            setWorkout(
+                produce((draft) => {
+                    draft.intervals[index].rightHand = newHand;
+                })
+            );
+        }
+    }
 
     function handleLeftHand(newHand: IHand, index: number) {
-        // handleHand('leftHand', newHand, index);
-        setWorkout(
-            produce((draft) => {
-            draft.intervals[index].leftHand = newHand;
+        if (equal(workout.intervals[index].leftHand, newHand, { strict: true })) {
+            setWorkout(
+                produce((draft) => {
+                    draft.intervals[index].leftHand = { fingerPosition: undefined, hangboard: undefined, hold: undefined }
+                }));
         }
-        ));
+        else if (workout.intervals[index].leftHand.fingerPosition === undefined) {
+            setWorkout(
+                produce((draft) => {
+                    draft.intervals[index].leftHand = { ...newHand, fingerPosition: fingerPositions[0] };
+                })
+            )
+        }
+        else {
+            setWorkout(
+                produce((draft) => {
+                    draft.intervals[index].leftHand = newHand;
+                })
+            );
+        }
     };
-    function handleHand(whichHand:string, newHand:IHand, index:number) {
-        const newWorkout = produce(
-            workout,
-            draftWorkout => {
-                let currentHand = draftWorkout.intervals[index][whichHand];
-                if(equal(currentHand, newHand, {strict: true})){
-                    draftWorkout.intervals[index][whichHand] = {fingerPosition: null, hangboard: null, hold: null}
-                }
-                else if(draftWorkout.intervals[index][whichHand].fingerPosition === null) {
-                    draftWorkout.intervals[index][whichHand] = { ...newHand, fingerPosition: fingerPositions[0]};
-                }
-                else {
-                    draftWorkout.intervals[index][whichHand] = currentHand;
-                }
-            }
-        );
-        console.log(newWorkout);
-        setWorkout(newWorkout);
-    }
 
     function handleAction(action: Action, index) {
         let newWorkout = produce(
@@ -243,22 +237,21 @@ export default function Timer() {
         setWorkout(newWorkout);
     }
 
-    function handleLeftFingerPosition(fingerPosition: IFingerPosition, index:number) {
+    function handleLeftFingerPosition(fingerPosition: IFingerPosition, index: number) {
         handleFingerPosition('leftHand', fingerPosition, index);
     }
 
-    function handleRightFingerPosition(fingerPosition: IFingerPosition, index:number) {
+    function handleRightFingerPosition(fingerPosition: IFingerPosition, index: number) {
         handleFingerPosition('rightHand', fingerPosition, index);
     }
 
-    function handleFingerPosition(whichHand:string, fingerPosition:IFingerPosition, index: number) {
+    function handleFingerPosition(whichHand: string, fingerPosition: IFingerPosition, index: number) {
         let newWorkout = produce(
             workout,
             draftWorkout => {
                 draftWorkout.intervals[index][whichHand].fingerPosition = fingerPosition;
             }
         )
-        
         setWorkout(newWorkout);
     }
 
@@ -281,7 +274,7 @@ export default function Timer() {
             <section id="timerdisplay" className={`flex flex-col ${getTimerTheme()} justify-between rounded-sm max-w-3xl p-8 h-96 md:w-2/3`}>
                 <div className="flex justify-center text-center space-x-4">
                     <div>INTERVAL</div>
-                    <div>{currentIntervalIndex+1} / {workout.intervals.length}</div>
+                    <div>{currentIntervalIndex + 1} / {workout.intervals.length}</div>
                 </div>
                 <div className="flex flex-col justify-center items-center text-center space-y-4 text-6xl h-24 text-slate-50">
                     <div>{workoutStatus}</div>
@@ -306,8 +299,8 @@ export default function Timer() {
                         currentLeftHand={workout.intervals[currentIntervalIndex].leftHand}
                         handleLeftHand={handleLeftHand}
                         currentRightHand={workout.intervals[currentIntervalIndex].rightHand}
-                        handleRightHand={handleRightHand} 
-                        index={currentIntervalIndex}/>
+                        handleRightHand={handleRightHand}
+                        index={currentIntervalIndex} />
                     <SimpleboardSelector
                         currentHand={workout.intervals[currentIntervalIndex].rightHand}
                         setHand={handleRightHand}
@@ -338,7 +331,7 @@ export default function Timer() {
                     {workout.intervals[currentIntervalIndex].rightHand.hold ? <div>
                         <p>{workout.intervals[currentIntervalIndex].rightHand?.hold.title}</p>
                         <p>{workout.intervals[currentIntervalIndex].rightHand.hangboard.title}</p>
-                        <FingerPositionSelector fingerPosition={workout.intervals[currentIntervalIndex].rightHand.fingerPosition} handleFingerPosition={handleRightFingerPosition} index={currentIntervalIndex}/>
+                        <FingerPositionSelector fingerPosition={workout.intervals[currentIntervalIndex].rightHand.fingerPosition} handleFingerPosition={handleRightFingerPosition} index={currentIntervalIndex} />
                     </div> :
                         <p>None</p>}
                 </div>
@@ -348,7 +341,6 @@ export default function Timer() {
                 <IntervalsTable intervals={workout.intervals} handleEditInterval={handleEditInterval} />
             </section>
             <section id="completed-intervals">
-                {/* <IntervalsTable intervals={null} handleEditInterval={null} /> */}
             </section>
             <section>
                 <h2 className="text-center mt-8">Quick Workout Options</h2>

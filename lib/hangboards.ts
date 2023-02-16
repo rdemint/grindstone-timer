@@ -1,5 +1,16 @@
 import { IHangboard } from '../components/Timer'
 
+export const noHangboard: IHangboard = {
+    name: 'undefined',
+    title: 'None',
+    holds: [
+        {
+            name: 'undefined',
+            title: ''
+        }
+    ]
+}
+
 export const grindstone: IHangboard = {
     name: 'grindstone',
     title: 'Grindstone mk2',
@@ -51,4 +62,4 @@ export const simpleboard = {
     ]
 }
 
-export const hangboards: Array<IHangboard> = [grindstone, simpleboard]
+export const hangboards: Array<IHangboard> = [grindstone, simpleboard, noHangboard]

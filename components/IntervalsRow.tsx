@@ -156,6 +156,7 @@ export default function IntervalsRow({ interval, intervalIndex, handleEditInterv
                 <select
                     className="bg-slate-700 text-slate-50 w-48 rounded px-1"
                     onChange={(e) => handleLeftHand(e.target.value)}
+                    value={`${interval?.leftHand?.hangboard?.name}-${interval?.leftHand?.hold?.name}`}
                 >
                     {hangboards.map((hangboard) =>
                         hangboard.holds.map((hold) => (
@@ -173,7 +174,7 @@ export default function IntervalsRow({ interval, intervalIndex, handleEditInterv
             <td className='px-4 py-1'>
                 <select
                     className="bg-slate-700 text-slate-50 w-24 px-1 rounded"
-                    value={interval.leftHand.fingerPosition.name}
+                    value={interval?.leftHand?.fingerPosition?.name}
                     onChange={(e) => {
                         handleLeftFingerPosition(e.target.value);
                     }}
@@ -193,6 +194,7 @@ export default function IntervalsRow({ interval, intervalIndex, handleEditInterv
                 <select
                     className="bg-slate-700 text-slate-100 w-48 rounded"
                     onChange={(e) => handleRightHand(e.target.value)}
+                    value={`${interval?.rightHand?.hangboard?.name}-${interval?.rightHand?.hold?.name}`}
                 >
                     {hangboards.map((hangboard) =>
                         hangboard.holds.map((hold) => (
@@ -210,7 +212,7 @@ export default function IntervalsRow({ interval, intervalIndex, handleEditInterv
             <td className='px-4 py-1'>
                 <select
                     className="bg-slate-700 text-slate-100 w-24 px-1 rounded"
-                    value={interval.rightHand.fingerPosition.name}
+                    value={interval?.rightHand?.fingerPosition?.name}
                     onChange={(e) => {
                         handleRightFingerPosition(e.target.value);
                     }}
