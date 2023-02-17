@@ -296,17 +296,17 @@ export default function Timer() {
                     <div>INTERVAL</div>
                     <div>{currentIntervalIndex + 1} / {workout.intervals.length}</div>
                 </div>
-                <div className="flex flex-col justify-center items-center text-center space-y-4 text-6xl h-24 text-slate-50">
+                <div className="flex flex-col justify-center items-center text-center space-y-4 text-6xl h-24 text-slate-200">
                     <div>{workoutStatus}</div>
                     {workoutStatus === workoutStatusOptions.prep && <div>{prepTimer.countdown / 1000}</div>}
                     {workoutStatus === workoutStatusOptions.work && <div>{workTimer.countdown / 1000}</div>}
                     {workoutStatus === workoutStatusOptions.rest && <div>{restTimer.countdown / 1000}</div>}
                 </div>
-                <div className="flex items-center justify-center space-x-4 text-slate-100">
+                <div className="flex items-center justify-center space-x-4 text-slate-900">
                     {!prepTimer.isRunning && !workTimer.isRunning && !restTimer.isRunning ?
                         <button onClick={() => handleStartTimer()} id="startTimer" className="bg-green-500 rounded p-2 w-16 md:w-36 hover:scale-105">START</button> :
                         <button onClick={() => handlePauseTimer()} id="pauseTimer" className="bg-sky-600  rounded p-2 w-16 md:w-36 hover:scale-105">PAUSE</button>}
-                    <button onClick={() => handleResetTimer()} id="resetTimer" className="bg-pink-600 rounded p-2 w-16 md:w-36 hover:scale-105">RESET</button>
+                    <button onClick={() => handleResetTimer()} id="resetTimer" className="bg-pink-500 rounded p-2 w-16 md:w-36 hover:scale-105">RESET</button>
                 </div>
             </section>
             <section id="hold-selection" className="max-w-3xl flex flex-col items-center w-5/6">
