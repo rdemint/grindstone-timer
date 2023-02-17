@@ -183,15 +183,15 @@ export default function Timer() {
 
     function handleAddInterval(interval: IInterval, index: number) {
         const newWorkout = setWorkout(
-            produce((draft)=> {
-                draft.intervals.splice(index, 0, {...interval});
+            produce((draft) => {
+                draft.intervals.splice(index, 0, { ...interval });
             })
         )
     }
 
     function handleDeleteInterval(interval: IInterval, index: number) {
         const newWorkot = setWorkout(
-            produce((draft)=> {
+            produce((draft) => {
                 draft.intervals.splice(index, 1);
             })
         )
@@ -284,14 +284,16 @@ export default function Timer() {
             return 'bg-green-700'
         }
         else {
-            return 'bg-slate-800'
+            return ''
         }
     }
 
 
     return (
         <div className="flex flex-col space-y-6 justify-center items-center w-full py-8">
-            <section id="timerdisplay" className={`flex flex-col ${getTimerTheme()} justify-between rounded-sm max-w-3xl p-8 h-96 md:w-2/3`}>
+            <section
+                id="timerdisplay"
+                className={`flex flex-col border border-slate-700 shadow shadow-slate-700 ${getTimerTheme()} justify-between rounded-sm max-w-3xl p-8 h-96 md:w-5/6`}>
                 <div className="flex justify-center text-center space-x-4">
                     <div>INTERVAL</div>
                     <div>{currentIntervalIndex + 1} / {workout.intervals.length}</div>
@@ -310,7 +312,7 @@ export default function Timer() {
                 </div>
             </section>
             <section id="hold-selection" className="max-w-3xl flex flex-col items-center w-5/6">
-                <div className="flex w-full rounded justify-center">
+                <div className="flex w-full rounded justify-center mt-12 border border-slate-700 shadow p-2 shadow-slate-700">
                     <SimpleboardSelector
                         setHand={handleLeftHand}
                         currentHand={workout.intervals[currentIntervalIndex].leftHand}
@@ -328,33 +330,35 @@ export default function Timer() {
                     />
                 </div>
             </section>
-            <section className="flex max-w-3xl items-center">
-                <div className="flex space-x-6 justify-center w-full">
-                    <button className={`${workout.intervals[currentIntervalIndex].action.kind === "hang" ? 'bg-emerald-500' : 'bg-slate-600'} p-2 text-slate-100 rounded-md`} onClick={() => handleAction({ kind: "hang", title: 'Hang' }, currentIntervalIndex)}>Hang</button>
-                    <button className={`${workout.intervals[currentIntervalIndex].action.kind === "pullup" ? 'bg-emerald-500' : 'bg-slate-600'} p-2 text-slate-100 rounded-md`} onClick={() => handleAction({ kind: "pullup", reps: reps, title: 'Pullup' }, currentIntervalIndex)}>Pullup</button>
-                </div>
-            </section>
-            <section className="max-w-3xl flex items-center w-5/6">
-
-                <div className="w-1/2 flex flex-col items-center space-y-2">
-                    <h3>Left Hand</h3>
-                    {workout.intervals[currentIntervalIndex].leftHand.hold ? <div>
-                        <p>{workout.intervals[currentIntervalIndex].leftHand.hold.title}</p>
-                        <p>{workout.intervals[currentIntervalIndex].leftHand.hangboard.title}</p>
-                        <FingerPositionSelector fingerPosition={workout.intervals[currentIntervalIndex].leftHand.fingerPosition} handleFingerPosition={handleLeftFingerPosition} index={currentIntervalIndex} />
-                    </div> :
-                        <p>None</p>
-                    }
-                </div>
-                <div className="w-1/2 flex flex-col items-center space-y-2">
-                    <h3>Right Hand</h3>
-                    {workout.intervals[currentIntervalIndex].rightHand.hold ? <div>
-                        <p>{workout.intervals[currentIntervalIndex].rightHand?.hold.title}</p>
-                        <p>{workout.intervals[currentIntervalIndex].rightHand.hangboard.title}</p>
-                        <FingerPositionSelector fingerPosition={workout.intervals[currentIntervalIndex].rightHand.fingerPosition} handleFingerPosition={handleRightFingerPosition} index={currentIntervalIndex} />
-                    </div> :
-                        <p>None</p>}
-                </div>
+            <section className="flex flex-col max-w-3xl w-5/6 shadow shadow-slate-700 p-2 items-center border border-slate-700">
+                <section className="flex max-w-3xl items-center">
+                    <div className="flex space-x-6 justify-center w-full">
+                        <button 
+                        className={`w-24 h-8 text-sm text-center ${workout.intervals[currentIntervalIndex].action.kind === "hang" ? 'shadow shadow-sky-500 border border-sky-600 text-sky-300' : 'border-border-slate-700'} text-slate-100 rounded-md`} onClick={() => handleAction({ kind: "hang", title: 'Hang' }, currentIntervalIndex)}>Hang</button>
+                        <button className={`w-24 h-8 text-sm text-center ${workout.intervals[currentIntervalIndex].action.kind === "pullup" ? 'shadow shadow-sky-500 border border-sky-600 text-sky-300' : 'border border-slate-700'} text-slate-100 rounded-md`} onClick={() => handleAction({ kind: "pullup", reps: reps, title: 'Pullup' }, currentIntervalIndex)}>Pullup</button>
+                    </div>
+                </section>
+                <section className="max-w-3xl flex items-center w-5/6">
+                    <div className="w-1/2 flex flex-col items-center space-y-2">
+                        <h3>Left Hand</h3>
+                        {workout.intervals[currentIntervalIndex].leftHand.hold ? <div>
+                            <p>{workout.intervals[currentIntervalIndex].leftHand.hold.title}</p>
+                            <p>{workout.intervals[currentIntervalIndex].leftHand.hangboard.title}</p>
+                            <FingerPositionSelector fingerPosition={workout.intervals[currentIntervalIndex].leftHand.fingerPosition} handleFingerPosition={handleLeftFingerPosition} index={currentIntervalIndex} />
+                        </div> :
+                            <p>None</p>
+                        }
+                    </div>
+                    <div className="w-1/2 flex flex-col items-center space-y-2">
+                        <h3>Right Hand</h3>
+                        {workout.intervals[currentIntervalIndex].rightHand.hold ? <div>
+                            <p>{workout.intervals[currentIntervalIndex].rightHand?.hold.title}</p>
+                            <p>{workout.intervals[currentIntervalIndex].rightHand.hangboard.title}</p>
+                            <FingerPositionSelector fingerPosition={workout.intervals[currentIntervalIndex].rightHand.fingerPosition} handleFingerPosition={handleRightFingerPosition} index={currentIntervalIndex} />
+                        </div> :
+                            <p>None</p>}
+                    </div>
+                </section>
             </section>
             <section id="todo-intervals" className="flex flex-col items-center">
                 <h2 className="text-xl">Workout</h2>

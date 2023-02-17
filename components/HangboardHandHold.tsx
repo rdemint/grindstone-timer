@@ -4,6 +4,6 @@ export default function HangBoardHandHold({currentHand, hangboard, hold, handleS
     return (
         <button 
         onClick={() => handleSetHand({...currentHand, hangboard, hold}, index)} 
-        className={`bg-slate-500 text-slate-200 h-8 w-full rounded-md ${ hangboard?.name === currentHand?.hangboard?.name && hold?.name === currentHand?.hold?.name ? 'bg-green-400 text-slate-900' : ''}`}>{hold.name}</button>
+        className={`border border-slate-600 text-slate-300 h-8 w-full rounded-md ${ hangboard?.name === currentHand?.hangboard?.name && hold?.name === currentHand?.hold?.name ? 'shadow shadow-sky-500 border border-sky-600 text-sky-300' : ''}`}>{hold.name}</button>
     )
 }

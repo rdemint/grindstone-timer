@@ -13,7 +13,7 @@ export const noHangboard: IHangboard = {
 
 export const grindstone: IHangboard = {
     name: 'grindstone',
-    title: 'Grindstone mk2',
+    title: 'Grindstone',
     holds: [
         {
             name: 'jug',

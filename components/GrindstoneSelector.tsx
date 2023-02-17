@@ -9,14 +9,14 @@ export default function GrindstoneSelector({ currentLeftHand, handleLeftHand, cu
     const [slot] = useState(grindstone.holds.find((el)=> el.name === 'slot'));
     return (
         <section id="edge-selector" className="grow">
-            <div className="bg-slate-700 rounded-md mx-1 text-slate-50">
+            <div className="bg-slate-900 rounded-md mx-2 text-slate-50">
                 <div className='flex space-x-1 mb-2 w-full'>
                     <button 
                     onClick={() => handleLeftHand({ ...currentLeftHand, hangboard: grindstone, hold: jug }, currentIndex)} 
-                    className={`grow bg-slate-500 text-slate-200 h-8 px-2 rounded-md ${currentLeftHand?.hangboard?.name === grindstone.name && currentLeftHand?.hold?.name === jug.name ? 'bg-green-400 text-slate-900' : ''}`}>Jug</button>
+                    className={`grow border border-slate-600 text-slate-200 h-8 px-2 rounded-md ${currentLeftHand?.hangboard?.name === grindstone.name && currentLeftHand?.hold?.name === jug.name ? 'bg-green-400 text-slate-900' : ''}`}>Jug</button>
                     <button 
                     onClick={() => handleRightHand({ ...currentRightHand, hangboard: grindstone, hold: jug }, currentIndex)} 
-                    className={`grow bg-slate-500 text-slate-200 h-8 px-2 rounded-md ${currentRightHand?.hangboard?.name === grindstone.name && currentRightHand?.hold?.name === jug.name ? 'bg-green-400 text-slate-900' : ''}`}>Jug</button>
+                    className={`grow border border-slate-600 h-8 px-2 rounded-md ${currentRightHand?.hangboard?.name === grindstone.name && currentRightHand?.hold?.name === jug.name ? 'bg-green-400 text-slate-900' : ''}`}>Jug</button>
                 </div>
                 <div className="flex items-center justify-center w-full">
                     <div className="flex flex-col space-y-4 w-full">
@@ -36,11 +36,11 @@ export default function GrindstoneSelector({ currentLeftHand, handleLeftHand, cu
                     <div className="flex sm:w-96">
                         <button 
                         onClick={() => handleLeftHand({...currentLeftHand, hangboard:grindstone, hold: slot}, currentIndex)} 
-                        className={`grow bg-slate-500 text-slate-200 h-8 px-2 rounded ml-1 ${currentLeftHand?.hangboard?.name === grindstone.name && currentLeftHand?.hold?.name === slot.name ? 'bg-green-400 text-slate-800' : ''}`}
+                        className={`grow border border-slate-600 text-slate-200 h-8 px-2 ml-2 ${currentLeftHand?.hangboard?.name === grindstone.name && currentLeftHand?.hold?.name === slot.name ? 'bg-green-400 text-slate-800' : ''}`}
                         >L</button>
                         <button 
                         onClick={() => handleRightHand({...currentRightHand, hangboard:grindstone, hold: slot}, currentIndex)} 
-                        className={`grow bg-slate-500 text-slate-200 h-8 px-2 rounded mr-1 ${currentRightHand?.hangboard?.name === grindstone.name && currentRightHand?.hold?.name === slot.name ? 'bg-green-400 text-slate-800' : ''}`}
+                        className={`grow border border-slate-600border border-slate-600 text-slate-200 h-8 px-2  mr-2 ${currentRightHand?.hangboard?.name === grindstone.name && currentRightHand?.hold?.name === slot.name ? 'bg-green-400 text-slate-800' : ''}`}
                         >R</button>
                     </div>
                     <div className="flex flex-col space-y-4 w-full">
