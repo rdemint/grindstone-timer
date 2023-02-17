@@ -290,11 +290,11 @@ export default function Timer() {
 
 
     return (
-        <div className="flex flex-col space-y-6 justify-center items-center w-full py-8">
+        <div className="flex flex-col justify-center items-center w-full py-8">
             <section
                 id="timerdisplay"
                 className={`flex flex-col border border-slate-700 shadow shadow-slate-700 ${getTimerTheme()} justify-between rounded-sm max-w-3xl p-8 h-96 md:w-5/6`}>
-                <div className="flex justify-center text-center space-x-4">
+                <div className="flex justify-center text-center space-x-4 text-slate-400">
                     <div>INTERVAL</div>
                     <div>{currentIntervalIndex + 1} / {workout.intervals.length}</div>
                 </div>
@@ -306,9 +306,9 @@ export default function Timer() {
                 </div>
                 <div className="flex items-center justify-center space-x-4 text-slate-900">
                     {!prepTimer.isRunning && !workTimer.isRunning && !restTimer.isRunning ?
-                        <button onClick={() => handleStartTimer()} id="startTimer" className="bg-green-500 rounded p-2 w-16 md:w-36 hover:scale-105">START</button> :
-                        <button onClick={() => handlePauseTimer()} id="pauseTimer" className="bg-sky-600  rounded p-2 w-16 md:w-36 hover:scale-105">PAUSE</button>}
-                    <button onClick={() => handleResetTimer()} id="resetTimer" className="bg-pink-500 rounded p-2 w-16 md:w-36 hover:scale-105">RESET</button>
+                        <button onClick={() => handleStartTimer()} id="startTimer" className="bg-green-500 rounded text-2xl py-1 w-16 md:w-36 hover:scale-105">START</button> :
+                        <button onClick={() => handlePauseTimer()} id="pauseTimer" className="bg-sky-500 text-slate-200 rounded text-2xl py-1 w-16 md:w-36 hover:scale-105">PAUSE</button>}
+                    <button onClick={() => handleResetTimer()} id="resetTimer" className="bg-pink-600 text-slate-900 rounded text-2xl py-1 w-16 md:w-36 hover:scale-105">RESET</button>
                 </div>
             </section>
             <section id="hold-selection" className="max-w-3xl flex flex-col items-center w-5/6">
@@ -330,30 +330,30 @@ export default function Timer() {
                     />
                 </div>
             </section>
-            <section className="flex flex-col max-w-3xl w-5/6 shadow shadow-slate-700 p-2 items-center border border-slate-700">
-                <section className="flex max-w-3xl items-center">
+            <section id="current-detail" className="flex flex-col max-w-3xl w-5/6 shadow shadow-slate-800 p-2 items-center">
+                <section id="action-detail" className="flex max-w-3xl mt-6 items-center">
                     <div className="flex space-x-6 justify-center w-full">
                         <button 
                         className={`w-24 h-8 text-sm text-center ${workout.intervals[currentIntervalIndex].action.kind === "hang" ? 'shadow shadow-sky-500 border border-sky-600 text-sky-300' : 'border-border-slate-700'} text-slate-100 rounded-md`} onClick={() => handleAction({ kind: "hang", title: 'Hang' }, currentIntervalIndex)}>Hang</button>
                         <button className={`w-24 h-8 text-sm text-center ${workout.intervals[currentIntervalIndex].action.kind === "pullup" ? 'shadow shadow-sky-500 border border-sky-600 text-sky-300' : 'border border-slate-700'} text-slate-100 rounded-md`} onClick={() => handleAction({ kind: "pullup", reps: reps, title: 'Pullup' }, currentIntervalIndex)}>Pullup</button>
                     </div>
                 </section>
-                <section className="max-w-3xl flex items-center w-5/6">
+                <section id="hand-position-detail" className="max-w-3xl mt-6 flex items-center w-5/6">
                     <div className="w-1/2 flex flex-col items-center space-y-2">
-                        <h3>Left Hand</h3>
+                        <h3 className="font-md text-sm text-slate-200">Left Hand</h3>
                         {workout.intervals[currentIntervalIndex].leftHand.hold ? <div>
-                            <p>{workout.intervals[currentIntervalIndex].leftHand.hold.title}</p>
-                            <p>{workout.intervals[currentIntervalIndex].leftHand.hangboard.title}</p>
+                            <p className="mt-1 text-center text-sm text-slate-300">{workout.intervals[currentIntervalIndex].leftHand.hold.title}</p>
+                            <p className="mt-1 mb-2 text-center text-sm text-slate-300">{workout.intervals[currentIntervalIndex].leftHand.hangboard.title}</p>
                             <FingerPositionSelector fingerPosition={workout.intervals[currentIntervalIndex].leftHand.fingerPosition} handleFingerPosition={handleLeftFingerPosition} index={currentIntervalIndex} />
                         </div> :
                             <p>None</p>
                         }
                     </div>
                     <div className="w-1/2 flex flex-col items-center space-y-2">
-                        <h3>Right Hand</h3>
+                        <h3 className="font-md text-sm text-slate-200">Right Hand</h3>
                         {workout.intervals[currentIntervalIndex].rightHand.hold ? <div>
-                            <p>{workout.intervals[currentIntervalIndex].rightHand?.hold.title}</p>
-                            <p>{workout.intervals[currentIntervalIndex].rightHand.hangboard.title}</p>
+                            <p className="mt-1 text-center text-sm text-slate-300">{workout.intervals[currentIntervalIndex].rightHand?.hold.title}</p>
+                            <p className="mt-1 mb-2 text-center text-sm text-slate-300">{workout.intervals[currentIntervalIndex].rightHand.hangboard.title}</p>
                             <FingerPositionSelector fingerPosition={workout.intervals[currentIntervalIndex].rightHand.fingerPosition} handleFingerPosition={handleRightFingerPosition} index={currentIntervalIndex} />
                         </div> :
                             <p>None</p>}
