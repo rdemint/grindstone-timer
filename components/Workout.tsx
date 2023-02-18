@@ -24,7 +24,7 @@ export default function Workout({ workout, handleEditWorkout, workoutIndex=-1 }:
             handleEditInterval={handleEditInterval} 
             handleAddInterval={handleAddInterval} 
             handleDeleteInterval={handleDeleteInterval}
-            currentIntervalIndex={-1}/>
+            currentIntervalIndex={Infinity}/>
         </div>
     )
 }
