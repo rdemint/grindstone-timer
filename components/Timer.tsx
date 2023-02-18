@@ -46,7 +46,7 @@ interface IWorkoutConfig {
 }
 
 export interface IWorkout {
-    id?: number,
+    id: number,
     name?: string;
     date?: Date;
     intervals: Array<IInterval>;
@@ -104,7 +104,8 @@ export default function Timer() {
     
     useEffect(() => {
         if(prevWorkoutRef.current.id !== workout.id){
-            handleResetTimer()
+            handleResetTimer();
+            prevWorkoutRef.current = workout;
         }
     }, [workout]);
 
