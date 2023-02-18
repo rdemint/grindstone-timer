@@ -293,7 +293,7 @@ export default function Timer() {
         <div className="flex flex-col justify-center items-center w-full py-8">
             <section
                 id="timerdisplay"
-                className={`flex flex-col border border-slate-700 shadow shadow-slate-700 ${getTimerTheme()} justify-between rounded-sm max-w-3xl p-8 h-96 md:w-5/6`}>
+                className={`flex flex-col border border-slate-700 shadow shadow-slate-500 ${getTimerTheme()} justify-between rounded-sm max-w-3xl p-8 h-96 md:w-5/6`}>
                 <div className="flex justify-center text-center space-x-4 text-slate-400">
                     <div>INTERVAL</div>
                     <div>{currentIntervalIndex + 1} / {workout.intervals.length}</div>
@@ -360,8 +360,8 @@ export default function Timer() {
                     </div>
                 </section>
             </section>
-            <section id="todo-intervals" className="flex flex-col items-center">
-                <h2 className="text-xl">Workout</h2>
+            <section id="todo-intervals" className="flex flex-col items-center mt-16 shadow shadow-slate-700">
+                <h2 className="text-med font-md text-slate-200">Workout</h2>
                 <IntervalsTable
                     intervals={workout.intervals}
                     handleEditInterval={handleEditInterval}
