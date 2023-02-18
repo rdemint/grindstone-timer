@@ -82,7 +82,7 @@ export interface IInterval {
 
 export default function Timer() {
 
-    const workoutStatusOptions = { unconfigured: 'Please select an edge', ready: 'Ready', rest: 'REST', work: 'WORK', prep: 'PREP', completed: 'DONE!' }
+    const workoutStatusOptions = { unconfigured: 'Please select an edge', ready: 'Ready', rest: 'REST', work: 'WORK', prep: 'PREP', pause: 'PAUSED', completed: 'DONE!' }
 
     const [playPopFx] = useSound('/sounds/pop.mp3')
     const [playIntroFx] = useSound('/sounds/intro.wav')
@@ -97,13 +97,14 @@ export default function Timer() {
     let [reps, setReps] = useState<number>(1)
 
     const prevWorkoutRef = useRef(workout);
+    const prevWorkoutStatusRef = useRef(workoutStatus);
 
-    useEffect(()=> {
+    useEffect(() => {
         handleResetTimer();
     }, []);
-    
+
     useEffect(() => {
-        if(prevWorkoutRef.current.id !== workout.id){
+        if (prevWorkoutRef.current.id !== workout.id) {
             handleResetTimer();
             prevWorkoutRef.current = workout;
         }
@@ -111,25 +112,25 @@ export default function Timer() {
 
     function completeInterval() {
         if (workoutStatus == workoutStatusOptions.prep) {
-            setWorkoutStatus(workoutStatusOptions.work)
+            handleWorkoutStatus(workoutStatusOptions.work)
             workTimer.start()
             playSwitchFx()
         }
 
         if (workoutStatus == workoutStatusOptions.work) {
-            setWorkoutStatus(workoutStatusOptions.rest)
+            handleWorkoutStatus(workoutStatusOptions.rest)
             restTimer.start()
             playSwitchFx()
         }
         else if (workoutStatus === workoutStatusOptions.rest) {
             if (currentIntervalIndex < workout.intervals.length - 1) {
-                setWorkoutStatus(workoutStatusOptions.work)
+                handleWorkoutStatus(workoutStatusOptions.work)
                 setCurrentIntervalIndex(currentIntervalIndex + 1)
                 workTimer.start()
                 playSwitchFx()
             }
             else {
-                setWorkoutStatus(workoutStatusOptions.completed)
+                handleWorkoutStatus(workoutStatusOptions.completed)
                 playEndFx()
             }
         }
@@ -157,7 +158,7 @@ export default function Timer() {
 
 
     const handleStartTimer = () => {
-        setWorkoutStatus(workoutStatusOptions.prep)
+        handleWorkoutStatus(workoutStatusOptions.prep)
         prepTimer.start()
         playIntroFx()
     }
@@ -168,15 +169,36 @@ export default function Timer() {
             case workoutStatusOptions.work: workTimer.pause()
             case workoutStatusOptions.rest: restTimer.pause()
         }
+        handleWorkoutStatus(workoutStatusOptions.pause);
     }
 
     const handleResetTimer = () => {
-        playPopFx()
-        setWorkoutStatus(workoutStatusOptions.ready)
+        handleWorkoutStatus(workoutStatusOptions.ready)
         setCurrentIntervalIndex(0);
         prepTimer.reset()
         workTimer.reset()
         restTimer.reset()
+        playPopFx()
+    };
+
+    function handleResumeTimer() {
+        switch (prevWorkoutStatusRef.current) {
+            case workoutStatusOptions.prep: 
+                prepTimer.start();
+                break;
+            case workoutStatusOptions.rest: 
+                restTimer.start();
+                break;
+            case workoutStatusOptions.work: 
+                workTimer.start();
+                break;
+        }
+        handleWorkoutStatus(prevWorkoutStatusRef.current);
+    }
+
+    function handleWorkoutStatus(newWorkoutStatus: string) {
+        prevWorkoutStatusRef.current = workoutStatus;
+        setWorkoutStatus(newWorkoutStatus);
     }
 
     function handleEditInterval(interval: IInterval, index: number) {
@@ -281,7 +303,7 @@ export default function Timer() {
         setWorkout(newWorkout);
     }
 
-    function handleQuickWorkout(newWorkout:IWorkout) {
+    function handleQuickWorkout(newWorkout: IWorkout) {
         setWorkout(newWorkout);
         // handleResetTimer(); 
     }
@@ -318,11 +340,29 @@ export default function Timer() {
                     {workoutStatus === workoutStatusOptions.rest && <div>{restTimer.countdown / 1000}</div>}
                 </div>
                 <div className="flex items-center justify-center space-x-4 text-slate-800">
-                    {prepTimer.isRunning || workTimer.isRunning || restTimer.isRunning ?
-                        <button onClick={() => handlePauseTimer()} id="pauseTimer" className="bg-sky-500 rounded text-2xl py-1 w-16 md:w-36 hover:scale-105">PAUSE</button> :
-                        <button onClick={() => handleStartTimer()} id="startTimer" className="bg-green-500 rounded text-2xl py-1 w-16 md:w-36 hover:scale-105">START</button> 
-                        }
-                    <button onClick={() => handleResetTimer()} id="resetTimer" className="bg-yellow-500 rounded text-2xl py-1 w-16 md:w-36 hover:scale-105">RESET</button>
+                    {workoutStatus === workoutStatusOptions.ready ?
+                        <button onClick={() => handleStartTimer()} id="startTimer" className="bg-green-500 rounded text-2xl py-1 w-16 md:w-36">START</button> :
+                        <></>
+                    }
+                    {workoutStatus === workoutStatusOptions.rest || workoutStatus === workoutStatusOptions.work || workoutStatus === workoutStatusOptions.prep?
+                        <button
+                            onClick={() => handlePauseTimer()}
+                            id="pauseTimer"
+                            className="bg-sky-500 rounded text-2xl py-1 w-16 md:w-36 disabled:hidden"
+                            disabled={workoutStatus === workoutStatusOptions.completed}
+                        >PAUSE</button> :
+                        <></>
+                    }
+                    {workoutStatus === workoutStatusOptions.pause ?
+                        <button
+                            onClick={() => handleResumeTimer()}
+                            id="pauseTimer"
+                            className="bg-sky-500 rounded text-2xl py-1 w-16 md:w-36 disabled:hidden"
+                            disabled={workoutStatus === workoutStatusOptions.completed}
+                        >RESUME</button> :
+                        <></>
+                    }
+                    <button onClick={() => handleResetTimer()} id="resetTimer" className="bg-yellow-500 rounded text-2xl py-1 w-16 md:w-36">RESET</button>
                 </div>
             </section>
             <section id="hold-selection" className="max-w-3xl flex flex-col items-center w-5/6">
@@ -347,8 +387,8 @@ export default function Timer() {
             <section id="current-detail" className="flex flex-col max-w-3xl w-5/6 shadow shadow-slate-800 p-2 items-center">
                 <section id="action-detail" className="flex max-w-3xl mt-6 items-center">
                     <div className="flex space-x-6 justify-center w-full">
-                        <button 
-                        className={`w-24 h-8 text-sm text-center ${workout.intervals[currentIntervalIndex].action.kind === "hang" ? 'shadow shadow-sky-500 border border-sky-600 text-sky-300' : 'border-border-slate-700'} text-slate-100 rounded-md`} onClick={() => handleAction({ kind: "hang", title: 'Hang' }, currentIntervalIndex)}>Hang</button>
+                        <button
+                            className={`w-24 h-8 text-sm text-center ${workout.intervals[currentIntervalIndex].action.kind === "hang" ? 'shadow shadow-sky-500 border border-sky-600 text-sky-300' : 'border-border-slate-700'} text-slate-100 rounded-md`} onClick={() => handleAction({ kind: "hang", title: 'Hang' }, currentIntervalIndex)}>Hang</button>
                         <button className={`w-24 h-8 text-sm text-center ${workout.intervals[currentIntervalIndex].action.kind === "pullup" ? 'shadow shadow-sky-500 border border-sky-600 text-sky-300' : 'border border-slate-700'} text-slate-100 rounded-md`} onClick={() => handleAction({ kind: "pullup", reps: reps, title: 'Pullup' }, currentIntervalIndex)}>Pullup</button>
                     </div>
                 </section>
