@@ -4,6 +4,7 @@ import { fingerPositions } from "./fingerpositions";
 
  
  const defaultWorkout: IWorkout = {
+    id: 0,
     name: null,
     date: new Date(),
     intervals: [

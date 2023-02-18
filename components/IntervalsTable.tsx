@@ -2,15 +2,16 @@ import React from 'react'
 import IntervalsRow from './IntervalsRow'
 import { IInterval } from './Timer'
 
-export default function IntervalsTable({ intervals, handleEditInterval, handleAddInterval, handleDeleteInterval }: { intervals: Array<IInterval>, handleEditInterval: Function, handleAddInterval: Function, handleDeleteInterval: Function }) {
+export default function IntervalsTable({ intervals, handleEditInterval, handleAddInterval, handleDeleteInterval, currentIntervalIndex }: { intervals: Array<IInterval>, handleEditInterval: Function, handleAddInterval: Function, handleDeleteInterval: Function, currentIntervalIndex:number }) {
     return (
-        <div className='sm:5/6 lg:w-full mt-4'>
+        <div className='sm:w-96 lg:w-full mt-4'>
             {intervals.length > 0 ?
                 <div className='rounded  py-4'>
-                    <div className="overflow-auto whitespace-nowrap p-4">
+                    <div className="overflow-auto whitespace-nowrap px-2">
                         <table>
                             <thead>
-                                <tr className="text-left text-slate-300 text-sm">
+                                <tr className="text-left text-slate-200 text-sm">
+                                    <th></th>
                                     <th className='px-4 py-1 font-normal'>Left Hold</th>
                                     <th className='px-4 py-1 font-normal'>Finger Position</th>
                                     <th className='px-4 py-1 font-normal'>Right Hold</th>
@@ -29,6 +30,7 @@ export default function IntervalsTable({ intervals, handleEditInterval, handleAd
                                         handleEditInterval={handleEditInterval}
                                         handleAddInterval={handleAddInterval}
                                         handleDeleteInterval={handleDeleteInterval}
+                                        currentIntervalIndex={currentIntervalIndex}
                                     />
                                 )
 

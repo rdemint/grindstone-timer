@@ -4,6 +4,7 @@ import { fingerPositions } from "./fingerpositions";
 
 const quickWorkouts: Array<IWorkout> = [
     {
+        id: 1,
         name: 'Test',
         date: new Date(),
         intervals: [
@@ -52,6 +53,7 @@ const quickWorkouts: Array<IWorkout> = [
         ]
     },
     {
+        id: 2,
         name: 'High intensity',
         date: new Date(),
         intervals: [

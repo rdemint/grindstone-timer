@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react"
+import React, { useState, useEffect, useRef } from "react"
 import useSound from "use-sound"
 import { ICountdownTimerParams } from 'use-countdown-timer'
 import { useCountdownTimer } from "use-countdown-timer"
@@ -46,6 +46,7 @@ interface IWorkoutConfig {
 }
 
 export interface IWorkout {
+    id?: number,
     name?: string;
     date?: Date;
     intervals: Array<IInterval>;
@@ -95,13 +96,19 @@ export default function Timer() {
 
     let [reps, setReps] = useState<number>(1)
 
+    const prevWorkoutRef = useRef(workout);
 
-
+    useEffect(()=> {
+        handleResetTimer();
+    }, []);
+    
     useEffect(() => {
-        handleResetTimer()
-    }, [])
+        if(prevWorkoutRef.current.id !== workout.id){
+            handleResetTimer()
+        }
+    }, [workout]);
 
-    const completeInterval = () => {
+    function completeInterval() {
         if (workoutStatus == workoutStatusOptions.prep) {
             setWorkoutStatus(workoutStatusOptions.work)
             workTimer.start()
@@ -273,15 +280,20 @@ export default function Timer() {
         setWorkout(newWorkout);
     }
 
+    function handleQuickWorkout(newWorkout:IWorkout) {
+        setWorkout(newWorkout);
+        // handleResetTimer(); 
+    }
+
 
 
     const getTimerTheme = () => {
         if (workoutStatus === workoutStatusOptions.completed) {
-            return 'bg-yellow-500'
+            return 'bg-yellow-500 text-slate-600'
         }
 
         else if (workoutStatus === workoutStatusOptions.work) {
-            return 'bg-green-700'
+            return 'bg-green-700 text-slate-200'
         }
         else {
             return ''
@@ -294,11 +306,11 @@ export default function Timer() {
             <section
                 id="timerdisplay"
                 className={`flex flex-col border border-slate-700 shadow shadow-slate-500 ${getTimerTheme()} justify-between rounded-sm max-w-3xl p-8 h-96 md:w-5/6`}>
-                <div className="flex justify-center text-center space-x-4 text-slate-400">
+                <div className="flex justify-center text-center space-x-4">
                     <div>INTERVAL</div>
                     <div>{currentIntervalIndex + 1} / {workout.intervals.length}</div>
                 </div>
-                <div className="flex flex-col justify-center items-center text-center space-y-4 text-6xl h-24 text-slate-200">
+                <div className="flex flex-col justify-center items-center text-center space-y-4 text-6xl h-24">
                     <div>{workoutStatus}</div>
                     {workoutStatus === workoutStatusOptions.prep && <div>{prepTimer.countdown / 1000}</div>}
                     {workoutStatus === workoutStatusOptions.work && <div>{workTimer.countdown / 1000}</div>}
@@ -308,7 +320,7 @@ export default function Timer() {
                     {!prepTimer.isRunning && !workTimer.isRunning && !restTimer.isRunning ?
                         <button onClick={() => handleStartTimer()} id="startTimer" className="bg-green-500 rounded text-2xl py-1 w-16 md:w-36 hover:scale-105">START</button> :
                         <button onClick={() => handlePauseTimer()} id="pauseTimer" className="bg-sky-500 text-slate-200 rounded text-2xl py-1 w-16 md:w-36 hover:scale-105">PAUSE</button>}
-                    <button onClick={() => handleResetTimer()} id="resetTimer" className="bg-pink-600 text-slate-900 rounded text-2xl py-1 w-16 md:w-36 hover:scale-105">RESET</button>
+                    <button onClick={() => handleResetTimer()} id="resetTimer" className="bg-yellow-600 text-slate-900 rounded text-2xl py-1 w-16 md:w-36 hover:scale-105">RESET</button>
                 </div>
             </section>
             <section id="hold-selection" className="max-w-3xl flex flex-col items-center w-5/6">
@@ -367,18 +379,19 @@ export default function Timer() {
                     handleEditInterval={handleEditInterval}
                     handleAddInterval={handleAddInterval}
                     handleDeleteInterval={handleDeleteInterval}
+                    currentIntervalIndex={currentIntervalIndex}
                 />
             </section>
             <section id="completed-intervals">
             </section>
             <section>
-                <h2 className="text-center mt-8">Quick Workout Options</h2>
+                <h2 className="text-center mt-24 text-slate-200">Quick Workout Options</h2>
                 {quickWorkouts.map(
                     (workout) => (
                         <div key={workout.name} className="flex flex-col">
                             <WorkoutOption
                                 workout={workout}
-                                setWorkoutConfig={setWorkout}
+                                handleQuickWorkout={handleQuickWorkout}
                             />
                         </div>
                     )
