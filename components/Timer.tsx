@@ -441,5 +441,4 @@ export default function Timer() {
             </section>
         </div>
     )
-
 }
