@@ -2,22 +2,21 @@ import React from 'react'
 import IntervalsRow from './IntervalsRow'
 import { IInterval } from './Timer'
 
-export default function IntervalsTable({ intervals, handleEditInterval, handleAddInterval, handleDeleteInterval }: { intervals: Array<IInterval>, handleEditInterval: Function, handleAddInterval: Function, handleDeleteInterval: Function }) {
+export default function IntervalsTable({ intervals, handleEditInterval, handleAddInterval, handleDeleteInterval, currentIntervalIndex }: { intervals: Array<IInterval>, handleEditInterval: Function, handleAddInterval: Function, handleDeleteInterval: Function, currentIntervalIndex:number }) {
     return (
-        <div className='w-72 sm:w-96 lg:w-full'>
+        <>
             {intervals.length > 0 ?
-                <div className='bg-gray-800 rounded  py-4'>
-                    <div className="overflow-auto whitespace-nowrap">
-                        <table>
+                        <table className='w-full px-4'>
                             <thead>
-                                <tr className="text-left">
-                                    <th className='p-4'>Left Hold</th>
-                                    <th className='p-4'>Finger Position</th>
-                                    <th className='p-4'>Right Hold</th>
-                                    <th className='p-4'>Finger Position</th>
-                                    <th className='p-2'>Work</th>
-                                    <th className='p-2'>Rest</th>
-                                    <th className='p-4'>Action</th>
+                                <tr className="text-left text-slate-200 text-sm">
+                                    <th></th>
+                                    <th className='px-4 py-1 font-normal'>Left Hold</th>
+                                    <th className='px-4 py-1 font-normal'>Finger Position</th>
+                                    <th className='px-4 py-1 font-normal'>Right Hold</th>
+                                    <th className='px-4 py-1 font-normal'>Finger Position</th>
+                                    <th className='px-4 py-1 font-normal'>Work</th>
+                                    <th className='px-4 py-1 font-normal'>Rest</th>
+                                    <th className='px-4 py-1 font-normal'>Action</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -29,6 +28,7 @@ export default function IntervalsTable({ intervals, handleEditInterval, handleAd
                                         handleEditInterval={handleEditInterval}
                                         handleAddInterval={handleAddInterval}
                                         handleDeleteInterval={handleDeleteInterval}
+                                        currentIntervalIndex={currentIntervalIndex}
                                     />
                                 )
 
@@ -36,14 +36,11 @@ export default function IntervalsTable({ intervals, handleEditInterval, handleAd
 
                             </tbody>
                         </table>
-                    </div>
-
-                </div>
                 :
                 <div className='flex justify-center'>
                     <div className="text-slate-400 py-4">No intervals yet.</div>
                 </div>
             }
-        </div>
+        </>
     )
 }

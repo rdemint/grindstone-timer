@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react"
+import React, { useState, useEffect, useRef } from "react"
 import useSound from "use-sound"
 import { ICountdownTimerParams } from 'use-countdown-timer'
 import { useCountdownTimer } from "use-countdown-timer"
@@ -46,6 +46,7 @@ interface IWorkoutConfig {
 }
 
 export interface IWorkout {
+    id: number,
     name?: string;
     date?: Date;
     intervals: Array<IInterval>;
@@ -81,7 +82,7 @@ export interface IInterval {
 
 export default function Timer() {
 
-    const workoutStatusOptions = { unconfigured: 'Please select an edge', ready: 'Ready', rest: 'REST', work: 'WORK', prep: 'PREP', completed: 'DONE!' }
+    const workoutStatusOptions = { unconfigured: 'Please select an edge', ready: 'Ready', rest: 'REST', work: 'WORK', prep: 'PREP', pause: 'PAUSED', completed: 'DONE!' }
 
     const [playPopFx] = useSound('/sounds/pop.mp3')
     const [playIntroFx] = useSound('/sounds/intro.wav')
@@ -95,33 +96,41 @@ export default function Timer() {
 
     let [reps, setReps] = useState<number>(1)
 
-
+    const prevWorkoutRef = useRef(workout);
+    const prevWorkoutStatusRef = useRef(workoutStatus);
 
     useEffect(() => {
-        handleResetTimer()
-    }, [])
+        handleResetTimer();
+    }, []);
 
-    const completeInterval = () => {
+    useEffect(() => {
+        if (prevWorkoutRef.current.id !== workout.id) {
+            handleResetTimer();
+            prevWorkoutRef.current = workout;
+        }
+    }, [workout]);
+
+    function completeInterval() {
         if (workoutStatus == workoutStatusOptions.prep) {
-            setWorkoutStatus(workoutStatusOptions.work)
+            handleWorkoutStatus(workoutStatusOptions.work)
             workTimer.start()
             playSwitchFx()
         }
 
         if (workoutStatus == workoutStatusOptions.work) {
-            playSwitchFx()
-            setWorkoutStatus(workoutStatusOptions.rest)
+            handleWorkoutStatus(workoutStatusOptions.rest)
             restTimer.start()
+            playSwitchFx()
         }
         else if (workoutStatus === workoutStatusOptions.rest) {
             if (currentIntervalIndex < workout.intervals.length - 1) {
-                setWorkoutStatus(workoutStatusOptions.work)
+                handleWorkoutStatus(workoutStatusOptions.work)
                 setCurrentIntervalIndex(currentIntervalIndex + 1)
                 workTimer.start()
                 playSwitchFx()
             }
             else {
-                setWorkoutStatus(workoutStatusOptions.completed)
+                handleWorkoutStatus(workoutStatusOptions.completed)
                 playEndFx()
             }
         }
@@ -149,7 +158,7 @@ export default function Timer() {
 
 
     const handleStartTimer = () => {
-        setWorkoutStatus(workoutStatusOptions.prep)
+        handleWorkoutStatus(workoutStatusOptions.prep)
         prepTimer.start()
         playIntroFx()
     }
@@ -160,15 +169,36 @@ export default function Timer() {
             case workoutStatusOptions.work: workTimer.pause()
             case workoutStatusOptions.rest: restTimer.pause()
         }
+        handleWorkoutStatus(workoutStatusOptions.pause);
     }
 
     const handleResetTimer = () => {
-        playPopFx()
-        setWorkoutStatus(workoutStatusOptions.ready)
+        handleWorkoutStatus(workoutStatusOptions.ready)
         setCurrentIntervalIndex(0);
         prepTimer.reset()
         workTimer.reset()
         restTimer.reset()
+        playPopFx()
+    };
+
+    function handleResumeTimer() {
+        switch (prevWorkoutStatusRef.current) {
+            case workoutStatusOptions.prep: 
+                prepTimer.start();
+                break;
+            case workoutStatusOptions.rest: 
+                restTimer.start();
+                break;
+            case workoutStatusOptions.work: 
+                workTimer.start();
+                break;
+        }
+        handleWorkoutStatus(prevWorkoutStatusRef.current);
+    }
+
+    function handleWorkoutStatus(newWorkoutStatus: string) {
+        prevWorkoutStatusRef.current = workoutStatus;
+        setWorkoutStatus(newWorkoutStatus);
     }
 
     function handleEditInterval(interval: IInterval, index: number) {
@@ -183,15 +213,15 @@ export default function Timer() {
 
     function handleAddInterval(interval: IInterval, index: number) {
         const newWorkout = setWorkout(
-            produce((draft)=> {
-                draft.intervals.splice(index, 0, {...interval});
+            produce((draft) => {
+                draft.intervals.splice(index, 0, { ...interval });
             })
         )
     }
 
     function handleDeleteInterval(interval: IInterval, index: number) {
         const newWorkot = setWorkout(
-            produce((draft)=> {
+            produce((draft) => {
                 draft.intervals.splice(index, 1);
             })
         )
@@ -273,44 +303,73 @@ export default function Timer() {
         setWorkout(newWorkout);
     }
 
+    function handleQuickWorkout(newWorkout: IWorkout) {
+        setWorkout(newWorkout);
+        // handleResetTimer(); 
+    }
+
 
 
     const getTimerTheme = () => {
         if (workoutStatus === workoutStatusOptions.completed) {
-            return 'bg-yellow-500'
+            return 'bg-yellow-400 text-slate-600'
         }
 
         else if (workoutStatus === workoutStatusOptions.work) {
-            return 'bg-green-700'
+            return 'bg-green-700 text-slate-200'
         }
         else {
-            return 'bg-slate-800'
+            return ''
         }
     }
 
 
     return (
-        <div className="flex flex-col space-y-6 justify-center items-center w-full py-8">
-            <section id="timerdisplay" className={`flex flex-col ${getTimerTheme()} justify-between rounded-sm max-w-3xl p-8 h-96 md:w-2/3`}>
+        <div className="flex flex-col justify-center items-center w-full py-8">
+            <section
+                id="timerdisplay"
+                className={`flex flex-col border border-slate-700 shadow shadow-slate-500 ${getTimerTheme()} justify-between rounded-sm max-w-3xl p-8 h-96 md:w-5/6`}>
                 <div className="flex justify-center text-center space-x-4">
                     <div>INTERVAL</div>
                     <div>{currentIntervalIndex + 1} / {workout.intervals.length}</div>
                 </div>
-                <div className="flex flex-col justify-center items-center text-center space-y-4 text-6xl h-24 text-slate-50">
+                <div className="flex flex-col justify-center items-center text-center space-y-4 text-6xl h-24">
                     <div>{workoutStatus}</div>
                     {workoutStatus === workoutStatusOptions.prep && <div>{prepTimer.countdown / 1000}</div>}
                     {workoutStatus === workoutStatusOptions.work && <div>{workTimer.countdown / 1000}</div>}
                     {workoutStatus === workoutStatusOptions.rest && <div>{restTimer.countdown / 1000}</div>}
                 </div>
-                <div className="flex items-center justify-center space-x-4 text-slate-100">
-                    {!prepTimer.isRunning && !workTimer.isRunning && !restTimer.isRunning ?
-                        <button onClick={() => handleStartTimer()} id="startTimer" className="bg-green-500 rounded p-2 w-16 md:w-36 hover:scale-105">START</button> :
-                        <button onClick={() => handlePauseTimer()} id="pauseTimer" className="bg-sky-600  rounded p-2 w-16 md:w-36 hover:scale-105">PAUSE</button>}
-                    <button onClick={() => handleResetTimer()} id="resetTimer" className="bg-pink-600 rounded p-2 w-16 md:w-36 hover:scale-105">RESET</button>
+                <div className="flex items-center justify-center space-x-4 text-slate-800">
+                    {workoutStatus === workoutStatusOptions.ready ?
+                        <button 
+                        onClick={() => handleStartTimer()} 
+                        id="startTimer" 
+                        className="bg-green-500 rounded text-2xl py-1 px-1 w-24 md:w-36">START</button> :
+                        <></>
+                    }
+                    {workoutStatus === workoutStatusOptions.rest || workoutStatus === workoutStatusOptions.work || workoutStatus === workoutStatusOptions.prep?
+                        <button
+                            onClick={() => handlePauseTimer()}
+                            id="pauseTimer"
+                            className="bg-sky-500 rounded text-2xl py-1 w-24 md:w-36 disabled:hidden"
+                            disabled={workoutStatus === workoutStatusOptions.completed}
+                        >PAUSE</button> :
+                        <></>
+                    }
+                    {workoutStatus === workoutStatusOptions.pause ?
+                        <button
+                            onClick={() => handleResumeTimer()}
+                            id="pauseTimer"
+                            className="bg-sky-500 rounded text-2xl py-1 w-24 md:w-36 disabled:hidden"
+                            disabled={workoutStatus === workoutStatusOptions.completed}
+                        >RESUME</button> :
+                        <></>
+                    }
+                    <button onClick={() => handleResetTimer()} id="resetTimer" className="bg-yellow-500 rounded text-2xl py-1 w-24 md:w-36">RESET</button>
                 </div>
             </section>
             <section id="hold-selection" className="max-w-3xl flex flex-col items-center w-5/6">
-                <div className="flex w-full rounded justify-center">
+                <div className="flex w-full rounded justify-center mt-12 border border-slate-700 shadow p-2 shadow-slate-700">
                     <SimpleboardSelector
                         setHand={handleLeftHand}
                         currentHand={workout.intervals[currentIntervalIndex].leftHand}
@@ -328,53 +387,56 @@ export default function Timer() {
                     />
                 </div>
             </section>
-            <section className="flex max-w-3xl items-center">
-                <div className="flex space-x-6 justify-center w-full">
-                    <button className={`${workout.intervals[currentIntervalIndex].action.kind === "hang" ? 'bg-emerald-500' : 'bg-slate-600'} p-2 text-slate-100 rounded-md`} onClick={() => handleAction({ kind: "hang", title: 'Hang' }, currentIntervalIndex)}>Hang</button>
-                    <button className={`${workout.intervals[currentIntervalIndex].action.kind === "pullup" ? 'bg-emerald-500' : 'bg-slate-600'} p-2 text-slate-100 rounded-md`} onClick={() => handleAction({ kind: "pullup", reps: reps, title: 'Pullup' }, currentIntervalIndex)}>Pullup</button>
-                </div>
+            <section id="current-detail" className="flex flex-col max-w-3xl w-5/6 shadow shadow-slate-800 p-2 items-center">
+                <section id="action-detail" className="flex max-w-3xl mt-6 items-center">
+                    <div className="flex space-x-6 justify-center w-full">
+                        <button
+                            className={`w-24 h-8 text-sm text-center ${workout.intervals[currentIntervalIndex].action.kind === "hang" ? 'shadow shadow-sky-500 border border-sky-600 text-sky-300' : 'border-border-slate-700'} text-slate-100 rounded-md`} onClick={() => handleAction({ kind: "hang", title: 'Hang' }, currentIntervalIndex)}>Hang</button>
+                        <button className={`w-24 h-8 text-sm text-center ${workout.intervals[currentIntervalIndex].action.kind === "pullup" ? 'shadow shadow-sky-500 border border-sky-600 text-sky-300' : 'border border-slate-700'} text-slate-100 rounded-md`} onClick={() => handleAction({ kind: "pullup", reps: reps, title: 'Pullup' }, currentIntervalIndex)}>Pullup</button>
+                    </div>
+                </section>
+                <section id="hand-position-detail" className="max-w-3xl mt-6 flex items-center w-5/6">
+                    <div className="w-1/2 flex flex-col items-center space-y-2">
+                        <h3 className="font-md text-sm text-slate-200">Left Hand</h3>
+                        {workout.intervals[currentIntervalIndex].leftHand.hold ? <div>
+                            <p className="mt-1 text-center text-sm text-slate-300">{workout.intervals[currentIntervalIndex].leftHand.hold.title}</p>
+                            <p className="mt-1 mb-2 text-center text-sm text-slate-300">{workout.intervals[currentIntervalIndex].leftHand.hangboard.title}</p>
+                            <FingerPositionSelector fingerPosition={workout.intervals[currentIntervalIndex].leftHand.fingerPosition} handleFingerPosition={handleLeftFingerPosition} index={currentIntervalIndex} />
+                        </div> :
+                            <p>None</p>
+                        }
+                    </div>
+                    <div className="w-1/2 flex flex-col items-center space-y-2">
+                        <h3 className="font-md text-sm text-slate-200">Right Hand</h3>
+                        {workout.intervals[currentIntervalIndex].rightHand.hold ? <div>
+                            <p className="mt-1 text-center text-sm text-slate-300">{workout.intervals[currentIntervalIndex].rightHand?.hold.title}</p>
+                            <p className="mt-1 mb-2 text-center text-sm text-slate-300">{workout.intervals[currentIntervalIndex].rightHand.hangboard.title}</p>
+                            <FingerPositionSelector fingerPosition={workout.intervals[currentIntervalIndex].rightHand.fingerPosition} handleFingerPosition={handleRightFingerPosition} index={currentIntervalIndex} />
+                        </div> :
+                            <p>None</p>}
+                    </div>
+                </section>
             </section>
-            <section className="max-w-3xl flex items-center w-5/6">
-
-                <div className="w-1/2 flex flex-col items-center space-y-2">
-                    <h3>Left Hand</h3>
-                    {workout.intervals[currentIntervalIndex].leftHand.hold ? <div>
-                        <p>{workout.intervals[currentIntervalIndex].leftHand.hold.title}</p>
-                        <p>{workout.intervals[currentIntervalIndex].leftHand.hangboard.title}</p>
-                        <FingerPositionSelector fingerPosition={workout.intervals[currentIntervalIndex].leftHand.fingerPosition} handleFingerPosition={handleLeftFingerPosition} index={currentIntervalIndex} />
-                    </div> :
-                        <p>None</p>
-                    }
-                </div>
-                <div className="w-1/2 flex flex-col items-center space-y-2">
-                    <h3>Right Hand</h3>
-                    {workout.intervals[currentIntervalIndex].rightHand.hold ? <div>
-                        <p>{workout.intervals[currentIntervalIndex].rightHand?.hold.title}</p>
-                        <p>{workout.intervals[currentIntervalIndex].rightHand.hangboard.title}</p>
-                        <FingerPositionSelector fingerPosition={workout.intervals[currentIntervalIndex].rightHand.fingerPosition} handleFingerPosition={handleRightFingerPosition} index={currentIntervalIndex} />
-                    </div> :
-                        <p>None</p>}
-                </div>
-            </section>
-            <section id="todo-intervals" className="flex flex-col items-center">
-                <h2 className="text-xl">Workout</h2>
+            <section id="todo-intervals" className="flex flex-col mt-16 shadow shadow-slate-700 w-5/6 p-4 overflow-auto">
+                <h2 className="text-med font-md text-slate-200 text-center">Workout</h2>
                 <IntervalsTable
                     intervals={workout.intervals}
                     handleEditInterval={handleEditInterval}
                     handleAddInterval={handleAddInterval}
                     handleDeleteInterval={handleDeleteInterval}
+                    currentIntervalIndex={currentIntervalIndex}
                 />
             </section>
             <section id="completed-intervals">
             </section>
             <section>
-                <h2 className="text-center mt-8">Quick Workout Options</h2>
+                <h2 className="text-center mt-24 text-slate-200">Quick Workout Options</h2>
                 {quickWorkouts.map(
                     (workout) => (
                         <div key={workout.name} className="flex flex-col">
                             <WorkoutOption
                                 workout={workout}
-                                setWorkoutConfig={setWorkout}
+                                handleQuickWorkout={handleQuickWorkout}
                             />
                         </div>
                     )
@@ -382,5 +444,4 @@ export default function Timer() {
             </section>
         </div>
     )
-
 }

@@ -19,7 +19,12 @@ export default function Workout({ workout, handleEditWorkout, workoutIndex=-1 }:
     return (
         <div>
             <h2 className="text-xl">{workout.date.toDateString()}</h2>
-            <IntervalsTable intervals={workout.intervals} handleEditInterval={handleEditInterval} handleAddInterval={handleAddInterval} handleDeleteInterval={handleDeleteInterval}/>
+            <IntervalsTable 
+            intervals={workout.intervals} 
+            handleEditInterval={handleEditInterval} 
+            handleAddInterval={handleAddInterval} 
+            handleDeleteInterval={handleDeleteInterval}
+            currentIntervalIndex={Infinity}/>
         </div>
     )
 }

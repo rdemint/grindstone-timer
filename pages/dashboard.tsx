@@ -11,6 +11,7 @@ import { fingerPositions } from "../lib/fingerpositions";
 export default function Dashboard() {
     const initialWorkouts: Array<IWorkout> = [
         {
+            id: 0,
             date: new Date('2022-10-30'),
             intervals: [
                 {
@@ -86,6 +87,7 @@ export default function Dashboard() {
             ]
         },
         {
+            id:1,
             date: new Date('2022-11-04'),
             intervals: [
                 {
@@ -126,6 +128,7 @@ export default function Dashboard() {
             ]
         },
         {
+            id: 2,
             date: new Date('2023-01-14'),
             intervals: [
                 {
@@ -167,10 +170,6 @@ export default function Dashboard() {
         }
     ];
     const [workouts, setWorkouts] = useState<Array<IWorkout>>([...initialWorkouts].sort((a, b) => b.date.getTime() - a.date.getTime()));
-
-    function handleEditInterval(intervalIndex, workoutIndex) {
-
-    }
 
     return (
         <div className="flex flex-col items-center mt-12">
