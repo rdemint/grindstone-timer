@@ -341,14 +341,17 @@ export default function Timer() {
                 </div>
                 <div className="flex items-center justify-center space-x-4 text-slate-800">
                     {workoutStatus === workoutStatusOptions.ready ?
-                        <button onClick={() => handleStartTimer()} id="startTimer" className="bg-green-500 rounded text-2xl py-1 w-16 md:w-36">START</button> :
+                        <button 
+                        onClick={() => handleStartTimer()} 
+                        id="startTimer" 
+                        className="bg-green-500 rounded text-2xl py-1 px-1 w-24 md:w-36">START</button> :
                         <></>
                     }
                     {workoutStatus === workoutStatusOptions.rest || workoutStatus === workoutStatusOptions.work || workoutStatus === workoutStatusOptions.prep?
                         <button
                             onClick={() => handlePauseTimer()}
                             id="pauseTimer"
-                            className="bg-sky-500 rounded text-2xl py-1 w-16 md:w-36 disabled:hidden"
+                            className="bg-sky-500 rounded text-2xl py-1 w-24 md:w-36 disabled:hidden"
                             disabled={workoutStatus === workoutStatusOptions.completed}
                         >PAUSE</button> :
                         <></>
@@ -357,12 +360,12 @@ export default function Timer() {
                         <button
                             onClick={() => handleResumeTimer()}
                             id="pauseTimer"
-                            className="bg-sky-500 rounded text-2xl py-1 w-16 md:w-36 disabled:hidden"
+                            className="bg-sky-500 rounded text-2xl py-1 w-24 md:w-36 disabled:hidden"
                             disabled={workoutStatus === workoutStatusOptions.completed}
                         >RESUME</button> :
                         <></>
                     }
-                    <button onClick={() => handleResetTimer()} id="resetTimer" className="bg-yellow-500 rounded text-2xl py-1 w-16 md:w-36">RESET</button>
+                    <button onClick={() => handleResetTimer()} id="resetTimer" className="bg-yellow-500 rounded text-2xl py-1 w-24 md:w-36">RESET</button>
                 </div>
             </section>
             <section id="hold-selection" className="max-w-3xl flex flex-col items-center w-5/6">
