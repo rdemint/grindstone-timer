@@ -117,9 +117,9 @@ export default function Timer() {
         }
 
         if (workoutStatus == workoutStatusOptions.work) {
-            playSwitchFx()
             setWorkoutStatus(workoutStatusOptions.rest)
             restTimer.start()
+            playSwitchFx()
         }
         else if (workoutStatus === workoutStatusOptions.rest) {
             if (currentIntervalIndex < workout.intervals.length - 1) {
@@ -290,7 +290,7 @@ export default function Timer() {
 
     const getTimerTheme = () => {
         if (workoutStatus === workoutStatusOptions.completed) {
-            return 'bg-yellow-500 text-slate-600'
+            return 'bg-yellow-400 text-slate-600'
         }
 
         else if (workoutStatus === workoutStatusOptions.work) {
@@ -317,11 +317,12 @@ export default function Timer() {
                     {workoutStatus === workoutStatusOptions.work && <div>{workTimer.countdown / 1000}</div>}
                     {workoutStatus === workoutStatusOptions.rest && <div>{restTimer.countdown / 1000}</div>}
                 </div>
-                <div className="flex items-center justify-center space-x-4 text-slate-900">
-                    {!prepTimer.isRunning && !workTimer.isRunning && !restTimer.isRunning ?
-                        <button onClick={() => handleStartTimer()} id="startTimer" className="bg-green-500 rounded text-2xl py-1 w-16 md:w-36 hover:scale-105">START</button> :
-                        <button onClick={() => handlePauseTimer()} id="pauseTimer" className="bg-sky-500 text-slate-200 rounded text-2xl py-1 w-16 md:w-36 hover:scale-105">PAUSE</button>}
-                    <button onClick={() => handleResetTimer()} id="resetTimer" className="bg-yellow-600 text-slate-900 rounded text-2xl py-1 w-16 md:w-36 hover:scale-105">RESET</button>
+                <div className="flex items-center justify-center space-x-4 text-slate-800">
+                    {prepTimer.isRunning || workTimer.isRunning || restTimer.isRunning ?
+                        <button onClick={() => handlePauseTimer()} id="pauseTimer" className="bg-sky-500 rounded text-2xl py-1 w-16 md:w-36 hover:scale-105">PAUSE</button> :
+                        <button onClick={() => handleStartTimer()} id="startTimer" className="bg-green-500 rounded text-2xl py-1 w-16 md:w-36 hover:scale-105">START</button> 
+                        }
+                    <button onClick={() => handleResetTimer()} id="resetTimer" className="bg-yellow-500 rounded text-2xl py-1 w-16 md:w-36 hover:scale-105">RESET</button>
                 </div>
             </section>
             <section id="hold-selection" className="max-w-3xl flex flex-col items-center w-5/6">
