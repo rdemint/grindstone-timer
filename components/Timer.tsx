@@ -414,8 +414,8 @@ export default function Timer() {
                     </div>
                 </section>
             </section>
-            <section id="todo-intervals" className="flex flex-col items-center mt-16 shadow shadow-slate-700">
-                <h2 className="text-med font-md text-slate-200">Workout</h2>
+            <section id="todo-intervals" className="flex flex-col mt-16 shadow shadow-slate-700 w-5/6 p-4 overflow-auto">
+                <h2 className="text-med font-md text-slate-200 text-center">Workout</h2>
                 <IntervalsTable
                     intervals={workout.intervals}
                     handleEditInterval={handleEditInterval}

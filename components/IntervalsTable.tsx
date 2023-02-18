@@ -4,11 +4,9 @@ import { IInterval } from './Timer'
 
 export default function IntervalsTable({ intervals, handleEditInterval, handleAddInterval, handleDeleteInterval, currentIntervalIndex }: { intervals: Array<IInterval>, handleEditInterval: Function, handleAddInterval: Function, handleDeleteInterval: Function, currentIntervalIndex:number }) {
     return (
-        <div className='sm:w-96 lg:w-full mt-4'>
+        <>
             {intervals.length > 0 ?
-                <div className='rounded  py-4'>
-                    <div className="overflow-auto whitespace-nowrap px-2">
-                        <table>
+                        <table className='w-full px-4'>
                             <thead>
                                 <tr className="text-left text-slate-200 text-sm">
                                     <th></th>
@@ -38,14 +36,11 @@ export default function IntervalsTable({ intervals, handleEditInterval, handleAd
 
                             </tbody>
                         </table>
-                    </div>
-
-                </div>
                 :
                 <div className='flex justify-center'>
                     <div className="text-slate-400 py-4">No intervals yet.</div>
                 </div>
             }
-        </div>
+        </>
     )
 }
