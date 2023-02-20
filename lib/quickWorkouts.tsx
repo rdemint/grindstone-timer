@@ -100,6 +100,83 @@ const quickWorkouts: Array<IWorkout> = [
                 action: { kind: 'hang', title: 'Hang' }
             },
         ]
+    },
+    {
+        id: 3,
+        name: 'Repeaters',
+        date: new Date(),
+        intervals: [
+            {
+                workInterval: 10,
+                restInterval: 15,
+                leftHand: { hangboard: grindstone, fingerPosition: fingerPositions[0], hold: grindstone.holds[0] },
+                rightHand: { hangboard: grindstone, fingerPosition: fingerPositions[0], hold: grindstone.holds[0] },
+                action: { kind: 'hang', title: 'Hang' }
+            },
+            {
+                workInterval: 10,
+                restInterval: 15,
+                leftHand: { hangboard: grindstone, fingerPosition: fingerPositions[0], hold: grindstone.holds[0] },
+                rightHand: { hangboard: grindstone, fingerPosition: fingerPositions[0], hold: grindstone.holds[0] },
+                action: { kind: 'hang', title: 'Hang' }
+            },
+            {
+                workInterval: 10,
+                restInterval: 15,
+                leftHand: { hangboard: grindstone, fingerPosition: fingerPositions[0], hold: grindstone.holds[0] },
+                rightHand: { hangboard: grindstone, fingerPosition: fingerPositions[0], hold: grindstone.holds[0] },
+                action: { kind: 'hang', title: 'Hang' }
+            },
+            {
+                workInterval: 10,
+                restInterval: 15,
+                leftHand: { hangboard: grindstone, fingerPosition: fingerPositions[0], hold: grindstone.holds[0] },
+                rightHand: { hangboard: grindstone, fingerPosition: fingerPositions[0], hold: grindstone.holds[0] },
+                action: { kind: 'hang', title: 'Hang' }
+            },
+            {
+                workInterval: 10,
+                restInterval: 15,
+                leftHand: { hangboard: grindstone, fingerPosition: fingerPositions[0], hold: grindstone.holds[0] },
+                rightHand: { hangboard: grindstone, fingerPosition: fingerPositions[0], hold: grindstone.holds[0] },
+                action: { kind: 'hang', title: 'Hang' }
+            },
+            {
+                workInterval: 10,
+                restInterval: 15,
+                leftHand: { hangboard: grindstone, fingerPosition: fingerPositions[0], hold: grindstone.holds[0] },
+                rightHand: { hangboard: grindstone, fingerPosition: fingerPositions[0], hold: grindstone.holds[0] },
+                action: { kind: 'hang', title: 'Hang' }
+            },
+            {
+                workInterval: 8,
+                restInterval: 20,
+                leftHand: { hangboard: grindstone, fingerPosition: fingerPositions[0], hold: grindstone.holds[0] },
+                rightHand: { hangboard: grindstone, fingerPosition: fingerPositions[0], hold: grindstone.holds[0] },
+                action: { kind: 'hang', title: 'Hang' }
+            },
+            {
+                workInterval: 8,
+                restInterval: 20,
+                leftHand: { hangboard: grindstone, fingerPosition: fingerPositions[0], hold: grindstone.holds[0] },
+                rightHand: { hangboard: grindstone, fingerPosition: fingerPositions[0], hold: grindstone.holds[0] },
+                action: { kind: 'hang', title: 'Hang' }
+            },
+            {
+                workInterval: 8,
+                restInterval: 20,
+                leftHand: { hangboard: grindstone, fingerPosition: fingerPositions[0], hold: grindstone.holds[0] },
+                rightHand: { hangboard: grindstone, fingerPosition: fingerPositions[0], hold: grindstone.holds[0] },
+                action: { kind: 'hang', title: 'Hang' }
+            },
+            {
+                workInterval: 8,
+                restInterval: 20,
+                leftHand: { hangboard: grindstone, fingerPosition: fingerPositions[0], hold: grindstone.holds[0] },
+                rightHand: { hangboard: grindstone, fingerPosition: fingerPositions[0], hold: grindstone.holds[0] },
+                action: { kind: 'hang', title: 'Hang' }
+            },
+        ]
     }
 ]
 
